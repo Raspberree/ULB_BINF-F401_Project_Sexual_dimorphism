@@ -14,7 +14,7 @@ format:
     embed-resources: true
     df-print: kable
 execute:
-  cache: false
+  cache: true
   warning: false
 project:
   execute-dir: project
@@ -392,8 +392,6 @@ pcaData <- plotPCA(vst_counts[,colData(vst_counts)$SEX == "F"], intgroup = c("AG
 
 percentVar <- round(100 * attr(pcaData, "percentVar"))
 
-
-
 # Create the PCA plot
 p <- ggplot(pcaData, aes(PC1, PC2, color = AGE_DECADE)) + 
   geom_point(size = 3) +
@@ -418,14 +416,81 @@ p_combined <- insert_xaxis_grob(p, xdens, grid::unit(1, "in"), position = "top")
 print(p_combined)
 ```
 
-Conclusion: technical variables that we will take into account: SEX + RNA_DI + HARDY_SCALE
-
+Conclusion: technical variables that we will take into account: `SEX, RNA_DI, AGE_CONTINUOUS, HARDY_SCALE`.
+Contrasts that were are interested in: "SEX_M_vs_"F (differentially expressed genes in males vs. females), "SEXF.RNA_DI" (to identify the genes associated with the female dimorphism index), and "SEXM.RNA_DI" (to find the genes associated with the male dimorphism index). In `DESeq2`, this corresponds to the design: `~ HARDY_SCALE + AGE_CONTINUOUS + SEX + SEX:RNA_DI ` (see next section). 
 
 # Q2: the scale of DI-associated gene expression
 
-- Filter the genes with counts too low and too low variance.
+## Filtering the counts
+- Filter the genes with counts (too low and) too low variance:
 
-1. Separate male and female samples ? --> Do a differential expression analysis with DESeq2 (design / formula = confounding technical variables + rna_dimorphism_index) --> look at the differentially expressed genes --> vocano plot
+Wikipedia: "In statistics, the median absolute deviation (MAD) is a robust measure of the variability of a univariate sample of quantitative data."
+"For a univariate data set $X_1, X_2, ..., X_n$, the MAD is defined as the median of the absolute deviations from the data's median $\tilde{X} = \text{median}(X)$:
+
+$$\text{MAD} = \text{median}(|X_i - \tilde{X}|)$$
+
+We will only keep the 50% most variant genes (50% of genes with the highest median absolute deviation):
+
+```{r Filtering the counts}
+filtered_counts <- RNA_counts_adjusted |>
+  rownames_to_column("gene") |> 
+  as_tibble() |> 
+  rowwise() |> 
+  mutate(mad= c_across(2:ncol(RNA_counts_adjusted)) |> mad()) |> 
+  ungroup() |> 
+  slice_max(n = round(nrow(RNA_counts_adjusted) / 2), order_by = mad) |> 
+  select(- mad) |> 
+  as.data.frame() |> 
+  column_to_rownames("gene")
+```
+
+The variables in the design formula cannot contain missing values (NAs). However, the HARDY_SCALE variable does contain missing values:
+```{r}
+cat("Missing HARDY_SCALE values:", is.na(covariates$HARDY_SCALE) |> sum())
+```
+For simplicity, and since the number of samples with missing values is relatively small compared to the total number of samples (`r nrow(covariates)` samples; The missing values thus represent `r sum(is.na(covariates$HARDY_SCALE)) / nrow(covariates) * 100`%), we will simply discard the samples with a missing `HARDY_SCALE` value. Other, more sophisticated methods could have been used, such as replacing the missing values by the most common one (`HARDY_SCALE` = 0 with our data set), or creating a classifier model to predict the missing values using the other covariates. (source?) We could also have replaced the "NA" value by a new category called "unknown". However, since there are only 12 samples in that category, and there quite a lot of variables in the design, we would risk having a low statistical power (very few degrees of freedom).
+
+```{r}
+non_na_samples <- !is.na(covariates$HARDY_SCALE)
+
+non_na_covariates <- covariates[non_na_samples,]
+
+filtered_counts <- filtered_counts[, non_na_samples]
+
+```
+
+As recommended by `DESeq2`, we will center and scale the continuous variables (`AGE_CONTINUOUS`, and `RNA_DI`) to improve GLM convergence.
+
+```{r}
+non_na_covariates$AGE_CONTINUOUS <- scale(non_na_covariates$AGE_CONTINUOUS, center = TRUE, scale = TRUE)
+
+non_na_covariates$RNA_DI <- scale(non_na_covariates$RNA_DI, center = TRUE, scale = TRUE)
+```
+
+
+Creating the DESeq2 object with the filtered counts:
+```{r}
+
+mt <- match(colnames(filtered_counts), non_na_covariates$SUBJID)
+
+filtered_counts_ds <- DESeqDataSetFromMatrix(
+  countData = filtered_counts,
+  colData = non_na_covariates[mt, ],
+  design = ~ HARDY_SCALE + AGE_CONTINUOUS + SEX + SEX:RNA_DI # Design decided in Q1
+)
+
+```
+
+
+```{r running DESeq function}
+filtered_counts_ds <- DESeq(filtered_counts_ds)
+
+resultsNames(filtered_counts_ds)
+```
+
+
+
+1. Look at the differentially expressed genes --> volcano plot
 
 2. DESeq2 with age and sex, etc.
 
