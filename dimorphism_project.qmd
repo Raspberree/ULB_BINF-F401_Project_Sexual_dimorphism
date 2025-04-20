@@ -1,0 +1,457 @@
+---
+title: "BINF-F401 - Quantifying human sexual dimorphism with the dimorphism index"
+author: 
+  - Youmna Ayadi
+  - Kevin Straatman
+date: today 
+format:
+  html:
+    code-fold: true
+    toc: true
+    toc-location: left
+    theme: lumen
+    number-sections: true
+    embed-resources: true
+    df-print: kable
+execute:
+  cache: false
+  warning: false
+project:
+  execute-dir: project
+editor: 
+  markdown: 
+    wrap: 80
+---
+
+```{r}
+#| include: false
+library(tidyverse)
+library(magrittr)
+library(gt)
+library(ggrepel)
+library(patchwork)
+library(DESeq2) # BiocManager::install("DESeq2")
+library(pheatmap)
+library(scales)
+library(GGally) # install.packages("GGally")
+library(viridis)
+
+options(knitr.kable.NA = '', digits = 3)
+
+```
+
+
+```{css}
+#| echo: false
+p {
+  text-align: justify
+}
+```
+
+```{r}
+#| include: false
+# customizations
+theme_set(theme_light())
+
+default_col <-  hue_pal()(4)[4]
+```
+
+
+# Importing and pre-processing the data
+
+```{r}
+RNA_counts_adjusted <- read.csv("data/RNA_counts_adjusted.csv", 
+                                header = TRUE, row.names = 1)
+
+covariates_original <- read.csv("data/covariates.csv", header = TRUE)
+```
+
+
+```{r}
+head(RNA_counts_adjusted)
+
+dim(RNA_counts_adjusted)
+
+head(covariates_original)
+
+str(covariates_original)
+```
+
+
+There are 12 samples with missing value of the hardy scale. What to do with it?
+```{r}
+is.na(covariates_original) |> sum()
+is.na(covariates_original$HARDY_SCALE) |> sum()
+
+```
+
+There are counts for `r nrow(RNA_counts_adjusted)` genes measured in `r ncol(RNA_counts_adjusted)` samples.
+
+
+We start by creating a copy of the `covariates` data frame that we can modify:
+```{r}
+covariates <- covariates_original
+```
+
+Replace the "." in column of so `RNA_counts_adjusted` so that they match the `SUBJID`from `covariates`.
+```{r}
+colnames(RNA_counts_adjusted) <- gsub(".", "-", colnames(RNA_counts_adjusted), fixed = TRUE)
+```
+
+
+Replace SEX column by "M" for male, and "F" for female
+```{r}
+covariates$SEX[covariates$SEX == "1"] <- "M"
+covariates$SEX[covariates$SEX == "2"] <- "F"
+```
+
+Replace the blank PATHOLOGY_CATEGORIES by something more explicit:
+```{r}
+covariates$PATHOLOGY_CATEGORIES[covariates$PATHOLOGY_CATEGORIES == ""] <- "unspecified"
+```
+
+
+AGE_DECADE: replace by a number instead? --> ex: 60-69 -> we should probably replace by 65 (if we assume that the age in that range is normally distributed)
+```{r}
+age_continuous <- substr(covariates$AGE_DECADE, start = 1, stop = 1) |> paste0("5") |> as.numeric()
+
+covariates <- covariates |> 
+  mutate(AGE_CONTINUOUS = age_continuous)
+```
+
+
+Replace the correct variables by factors:
+```{r}
+covariates <- covariates |> 
+  mutate(SEX = factor(SEX),
+         HARDY_SCALE = factor(HARDY_SCALE),
+         PATHOLOGY_CATEGORIES = factor(PATHOLOGY_CATEGORIES)
+         )
+
+covariates |>  str()
+
+```
+
+
+# Q1: Descriptive analysis of the clinical and technical variables, and of the dimoprphism indices
+
+*Distribution*:
+- Histograms of the variables
+
+```{r}
+colnames(covariates)
+```
+
+
+```{r}
+#| fig-height: 10
+#| label: fig-covariates_distribution
+#| fig-cap: distribution of the covariates
+
+
+plot_sex <- ggplot(covariates, aes(x = SEX,fill = SEX)) +
+  geom_bar() +
+  xlab("Sex")
+
+plot_age_decade <- ggplot(covariates, aes(x = AGE_DECADE, fill = SEX)) +
+  geom_bar(position = "dodge") +
+  xlab("Age decade")
+
+plot_hardy_scale <- ggplot(covariates, aes(x = HARDY_SCALE, fill = SEX)) +
+  geom_bar(position = "dodge") +
+  xlab("Hardy scale")
+
+plot_rni <- ggplot(covariates, aes(x = RNA_INTEGRITY_NUMBER, fill = SEX)) +
+  geom_histogram(bins = 20, position = "dodge") +
+  xlab("RNA Integrity Number")
+
+plot_ischemic_time <- ggplot(covariates, aes(x = ISCHEMIC_TIME, fill = SEX)) +
+  geom_histogram(bins = 30, position = "dodge") +
+  xlab("Ischemic time")
+
+plot_pathology_categories <- ggplot(covariates, aes(x = PATHOLOGY_CATEGORIES, fill = SEX)) +
+  geom_bar(position = "dodge") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 10)) +
+  xlab("Pathology categories")
+
+plot_histo_di <- ggplot(covariates, aes(x = HISTO_DI, fill = SEX)) +
+  geom_histogram(position = "dodge", bins = 30) +
+  xlab("Dimorphism indices from histology profiles")
+
+plot_rna_di <- ggplot(covariates, aes(x = RNA_DI, fill = SEX)) +
+  geom_histogram(bins = 30, position = "dodge") +
+  xlab("Dimorphism indices from RNA-seq transcriptomes")
+
+
+(plot_sex + plot_age_decade + plot_hardy_scale) / 
+  (plot_rni + plot_ischemic_time) +
+  (free(plot_pathology_categories) + (plot_histo_di / plot_rna_di)) +
+  plot_annotation(tag_levels = "a") +
+  plot_layout(guides = "collect")
+  
+```
+
+
+*Correlation*:
+- Correlation of the variables with one another: for correlation between two categorical variables, the Chi-square test of independence is commonly used
+- For continuous variables: pairs plot + calculate Pearson correlation.
+- ANOVA for link between categorical and continuous variables??
+
+
+```{r}
+#| warning: false
+
+covariates |>
+  select(AGE_CONTINUOUS, RNA_INTEGRITY_NUMBER, ISCHEMIC_TIME, HISTO_DI, RNA_DI) |> 
+  ggpairs(aes(col = covariates$SEX, alpha = 0.5), progress = FALSE)
+
+```
+
+
+*Confounding variables (confounding for dimorphism indices and clinical variables)*:
+- Look at RNA integrity and ischemic time
+- do a PCA on the counts and color the points by a technical factor: see if we observe a gradient. 
+[example for detecting batch effect](https://evayiwenwang.github.io/Managing_batch_effects/detect.html)
+
+
+To estimate the size factors and the vst (variance stabilizing transformation) with DESeq2: every gene contains at least one zero, cannot compute log geometric means. Solution: add a pseudo-count of 1 to every entry:
+
+```{r}
+mt <- match(colnames(RNA_counts_adjusted), covariates$SUBJID)
+
+RNA_counts_ds <- DESeqDataSetFromMatrix(
+  countData = RNA_counts_adjusted + 1,
+  colData = covariates[mt, ],
+  design = ~ 1 # no design yet, as we have to determine the confounding factors
+)
+```
+
+
+
+
+```{r}
+vst_counts <- vst(RNA_counts_ds)
+
+plotPCA(vst_counts, intgroup = c("SEX"), ntop = 500) +
+  coord_fixed() +
+  aes(alpha = 0.8) +
+  scale_color_discrete(name = "Sex")
+
+
+plotPCA(vst_counts, intgroup = c("SEX"), ntop = 200) +
+  coord_fixed() +
+  geom_point(alpha = 0.5) +
+  scale_color_discrete(name = "Sex")
+
+```
+
+```{r}
+#| label: fig-PCA_rnadi
+#| fig-cap: PCA individuals map of the samples colored by their dimorphism index. (a) Male samples (b) Female samples.
+
+PCA_rnadi_M <- vst_counts[,colData(vst_counts)$SEX == "M"] |> 
+  plotPCA(intgroup = c("RNA_DI"), ntop = 500) +
+  scale_color_continuous(type = "viridis", name = "RNA DI") +
+  coord_fixed() +
+  ggtitle("Males")
+
+PCA_rnadi_F <- vst_counts[,colData(vst_counts)$SEX == "F"] |> 
+  plotPCA(intgroup = c("RNA_DI"), ntop = 500) +
+  scale_color_continuous(type = "viridis", name = "RNA DI") +
+  coord_fixed() +
+  ggtitle("Females")
+
+PCA_rnadi_M + PCA_rnadi_F + plot_annotation(tag_levels = "a") + 
+  plot_layout(guides = "collect")  & theme(legend.position = 'bottom')
+
+```
+
+```{r}
+#| label: fig-PCA_histodi
+#| fig-cap: PCA individuals map of the samples colored by their histological dimorphism index. (a) Male samples (b) Female samples.
+
+PCA_histodi_M <- vst_counts[,colData(vst_counts)$SEX == "M"] |> 
+  plotPCA(intgroup = c("HISTO_DI"), ntop = 500) +
+  scale_color_continuous(type = "viridis", name = "HISTO DI") +
+  coord_fixed() +
+  ggtitle("Males")
+
+PCA_histodi_F <- vst_counts[,colData(vst_counts)$SEX == "F"] |> 
+  plotPCA(intgroup = c("HISTO_DI"), ntop = 500) +
+  scale_color_continuous(type = "viridis", name = "HISTO DI") +
+  coord_fixed() +
+  ggtitle("Females")
+
+PCA_histodi_M + PCA_histodi_F + plot_annotation(tag_levels = "a") + 
+  plot_layout(guides = "collect")  & theme(legend.position = 'bottom')
+
+```
+
+
+
+```{r}
+plotPCA(vst_counts, intgroup = c("AGE_CONTINUOUS"), ntop = 500) +
+  scale_color_continuous(type = "viridis", name = "Age (continuous)") +
+  coord_fixed()
+
+PCA_age_M <- plotPCA(vst_counts[,colData(vst_counts)$SEX == "M"], intgroup = c("AGE_CONTINUOUS"), ntop = 500, pcsToUse = 1:2) +
+  scale_color_continuous(type = "viridis", name = "Age (continuous)") +
+  coord_fixed() +
+  ggtitle("Males")
+
+PCA_age_F <- plotPCA(vst_counts[,colData(vst_counts)$SEX == "F"], intgroup = c("AGE_CONTINUOUS"), ntop = 500, pcsToUse = 1:2) +
+  scale_color_continuous(type = "viridis", name = "Age (continuous)") +
+  coord_fixed() +
+  ggtitle("Females")
+
+PCA_age_M + PCA_age_F + plot_annotation(tag_levels = "a") + 
+  plot_layout(guides = "collect") & theme(legend.position = 'bottom')
+
+```
+Women of age below 40 seem to cluster more to the right of the plot --> possible confounding factor.
+
+```{r}
+plotPCA(vst_counts, intgroup = c("RNA_INTEGRITY_NUMBER"), ntop = 500) +
+  scale_color_continuous(type = "viridis", name = "RNA integrity number") +
+  coord_fixed()
+
+ plotPCA(vst_counts[,colData(vst_counts)$SEX == "M"], intgroup = c("RNA_INTEGRITY_NUMBER"), ntop = 500, pcsToUse = 1:2) +
+  scale_color_continuous(type = "viridis", name = "RIN") +
+  coord_fixed()
+ 
+ 
+  plotPCA(vst_counts[,colData(vst_counts)$SEX == "F"], intgroup = c("RNA_INTEGRITY_NUMBER"), ntop = 500, pcsToUse = 1:2) +
+  scale_color_continuous(type = "viridis", name = "RIN") +
+  coord_fixed()
+```
+
+
+If we take a lot of top genes (selected by row variance) into account for the PCA, the samples seem to form clusters based on the Hardy scale value.
+```{r}
+plotPCA(vst_counts, intgroup = c("HARDY_SCALE"), ntop = 10000) +
+  coord_fixed() +
+  aes(alpha = 0.5) +
+  scale_color_discrete(name = "Hardy scale")
+```
+
+
+```{r}
+plotPCA(vst_counts[,colData(vst_counts)$PATHOLOGY_CATEGORIES != "unspecified"], intgroup = c("PATHOLOGY_CATEGORIES"), ntop = 500, pcsToUse = 1:2) +
+  coord_fixed() +
+  aes(alpha = 0.8) +
+  scale_color_discrete(name = "Pathology categories") +
+  ggtitle("PCA - individuals' map with samples colored by pathology category", subtitle = "Unspecified pathology categories are removed")
+
+
+plotPCA(vst_counts, intgroup = c("PATHOLOGY_CATEGORIES"), ntop = 500, pcsToUse = 1:2) +
+  coord_fixed() +
+  aes(alpha = 0.8) +
+  scale_color_discrete(name = "Pathology categories")
+```
+
+
+
+```{r}
+library("cowplot")
+
+pcaData <- plotPCA(vst_counts, intgroup = c("HARDY_SCALE"), ntop = 10000, returnData = TRUE)
+
+percentVar <- round(100 * attr(pcaData, "percentVar"))
+
+
+
+# Create the PCA plot
+p <- ggplot(pcaData, aes(PC1, PC2, color = HARDY_SCALE)) + 
+  geom_point(size = 3, alpha = 0.5) +
+  xlab(paste0("PC1: ", percentVar[1], "% variance")) +
+  ylab(paste0("PC2: ", percentVar[2], "% variance")) +
+  theme_minimal()
+
+# Create density plots for the x and y axes
+xdens <- axis_canvas(p, axis = "x") +
+  geom_histogram(data = pcaData, aes(x = PC1, fill = HARDY_SCALE), alpha = 0.7, position = "identity")
+
+ydens <- axis_canvas(p, axis = "y", coord_flip = TRUE) +
+  geom_histogram(data = pcaData, aes(x = PC2, fill = HARDY_SCALE), alpha = 0.7, position = "identity") +
+  coord_flip()
+
+# Combine the PCA plot with the density plots
+p_combined <- insert_xaxis_grob(p, xdens, grid::unit(1, "in"), position = "top") %>%
+  insert_yaxis_grob(ydens, grid::unit(1, "in"), position = "right") %>%
+  ggdraw()
+
+# Display the combined plot
+print(p_combined)
+
+
+
+```
+
+```{r}
+pcaData <- plotPCA(vst_counts[,colData(vst_counts)$SEX == "F"], intgroup = c("AGE_DECADE"), ntop = 500, returnData = TRUE)
+
+percentVar <- round(100 * attr(pcaData, "percentVar"))
+
+
+
+# Create the PCA plot
+p <- ggplot(pcaData, aes(PC1, PC2, color = AGE_DECADE)) + 
+  geom_point(size = 3) +
+  xlab(paste0("PC1: ", percentVar[1], "% variance")) +
+  ylab(paste0("PC2: ", percentVar[2], "% variance")) +
+  theme_minimal()
+
+# Create density plots for the x and y axes
+xdens <- axis_canvas(p, axis = "x") +
+  geom_density(data = pcaData, aes(x = PC1, fill = AGE_DECADE), alpha = 0.5)
+
+ydens <- axis_canvas(p, axis = "y", coord_flip = TRUE) +
+  geom_density(data = pcaData, aes(x = PC2, fill = AGE_DECADE), alpha = 0.5) +
+  coord_flip()
+
+# Combine the PCA plot with the density plots
+p_combined <- insert_xaxis_grob(p, xdens, grid::unit(1, "in"), position = "top") %>%
+  insert_yaxis_grob(ydens, grid::unit(1, "in"), position = "right") %>%
+  ggdraw()
+
+# Display the combined plot
+print(p_combined)
+```
+
+Conclusion: technical variables that we will take into account: SEX + RNA_DI + HARDY_SCALE
+
+
+# Q2: the scale of DI-associated gene expression
+
+- Filter the genes with counts too low and too low variance.
+
+1. Separate male and female samples ? --> Do a differential expression analysis with DESeq2 (design / formula = confounding technical variables + rna_dimorphism_index) --> look at the differentially expressed genes --> vocano plot
+
+2. DESeq2 with age and sex, etc.
+
+3. Compare genes that were detected as differentially expressed in each test?
+
+Question about statistical power: see my project P3 from traitement statistique des données -omiques.
+
+# Q3:
+1. GSEA using fgsea package (see my main project traitement statistique des données -omiques) using the reactome gmt file? Or just find genes associated with receptors?
+
+
+
+# Annex: session information {.unnumbered}
+
+```{r}
+sessionInfo()
+```
+
+
+
+
+
+
+
+
+
+
+
+
