@@ -459,6 +459,13 @@ filtered_counts <- filtered_counts[, non_na_samples]
 
 ```
 
+
+## Differential gene expression analysis
+```{r}
+alpha <- 0.05
+```
+
+
 As recommended by `DESeq2`, we will center and scale the continuous variables (`AGE_CONTINUOUS`, and `RNA_DI`) to improve GLM convergence.
 
 ```{r}
@@ -487,7 +494,92 @@ filtered_counts_ds <- DESeq(filtered_counts_ds)
 
 resultsNames(filtered_counts_ds)
 ```
+Genes associated with the female dimorphism index:
+```{r}
+rna_di_F_res <- results(filtered_counts_ds, name = "SEXF.RNA_DI", alpha = alpha)
 
+NotSig_F <- sum(rna_di_F_res$padj >= alpha, na.rm = TRUE)
+Down_F <- sum(rna_di_F_res$padj <= alpha & rna_di_F_res$log2FoldChange < 0, na.rm = TRUE)
+Up_F <- sum(rna_di_F_res$padj <= alpha & rna_di_F_res$log2FoldChange >= 0, na.rm = TRUE)
+
+```
+
+Genes associated with the male dimorphism index:
+```{r}
+rna_di_M_res <- results(filtered_counts_ds, name = "SEXM.RNA_DI", alpha = alpha)
+
+NotSig_M <- sum(rna_di_M_res$padj >= alpha, na.rm = TRUE)
+Down_M <- sum(rna_di_M_res$padj <= alpha & rna_di_M_res$log2FoldChange < 0, na.rm = TRUE)
+Up_M <- sum(rna_di_M_res$padj <= alpha & rna_di_M_res$log2FoldChange >= 0, na.rm = TRUE)
+```
+
+```{r}
+rna_di_res_df <- data.frame("Female RNA DI" = c(Down_F, NotSig_F, Up_F),
+                           "Male RNA DI" = c(Down_M, NotSig_M, Up_M))
+
+rownames(rna_di_res_df) <- c("Down", "NotSig", "Up")
+
+rna_di_res_df |> gt(rownames_to_stub = TRUE)
+```
+Volcano plots
+```{r}
+volcano_plot <- function(data, title){
+  alpha <- 0.05
+  
+  data <- data |> 
+    as.data.frame() |> 
+    rownames_to_column("gene_id")
+    
+  data <- data |> 
+    arrange(padj) |>
+    mutate(rank = row_number()) 
+  
+  # all genes are set to non-significant by default
+  data$category <- "NS"
+  
+  # Significant genes + up/down-regulated
+  data$category[data$padj < alpha & data$log2FoldChange < 0] <- "Down"
+  data$category[data$padj < alpha & data$log2FoldChange > 0] <- "Up"
+  
+  data$category <- factor(data$category)
+  
+  # Plot colors
+  plot_cols <- c("NS" = "grey",
+                 "Up" =  hue_pal()(2)[1],
+                 "Down" =  hue_pal()(2)[2])
+  
+  # Creating the volcano plot
+  plot <- data |> ggplot(aes(x = log2FoldChange, y = -log10(pvalue), color = category)) +
+    geom_point(alpha = 0.7) +
+    geom_vline(xintercept = c(-1, 0, 1), col = "gray", linetype = "dashed") +
+    # Name added to the plot for the 20 genes with lowest adjusted p-values
+    ggrepel::geom_text_repel(
+      data = data |> filter(rank <= 20, padj < rank),
+      aes(label = gene_id),
+      size = 3,
+      max.overlaps = getOption("ggrepel.max.overlaps", default = 30)) + 
+    scale_color_manual(values = plot_cols, guide = "none") +
+    labs(title = title,
+         x = expression("log"[2]*"Fold Change"),  
+         y = expression("-log"[10]*"(p-value)")) +
+    
+    geom_hline(yintercept = -log10(alpha), linetype = "dashed", col = "grey") +
+    #annotate("text", x = -0.75, y = -log10(alpha) + 3 , label = paste0("FDR - ", alpha), col ="grey") +
+    theme_light()
+    
+    return(plot)
+}
+
+volcano_plot(rna_di_F_res, "Female RNA Dimorphism index") +
+volcano_plot(rna_di_M_res, "Male RNA Dimorphism index")
+```
+
+
+### Genes associated with sex
+
+### Genes associated with age
+
+### Genes associated with the hardy scale (?)
 
 
 1. Look at the differentially expressed genes --> volcano plot
