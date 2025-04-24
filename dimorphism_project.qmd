@@ -35,8 +35,11 @@ library(pheatmap)
 library(scales)
 library(GGally) # install.packages("GGally")
 library(viridis)
+library(VennDiagram)
 
 options(knitr.kable.NA = '', digits = 3)
+
+flog.threshold(ERROR) # To not have *.log files created when plotting venn diagrams
 
 ```
 
@@ -530,6 +533,9 @@ volcano_plot <- function(data, title){
     as.data.frame() |> 
     rownames_to_column("gene_id")
     
+  
+  data <- data |> filter(!is.na(pvalue))
+  
   data <- data |> 
     arrange(padj) |>
     mutate(rank = row_number()) 
@@ -543,10 +549,16 @@ volcano_plot <- function(data, title){
   
   data$category <- factor(data$category)
   
+  counts <- c(
+    "Down" = sum(data$category == "Down"),
+    "NS" = sum(data$category == "NS"),
+    "Up" = sum(data$category == "Up")) |> 
+    as.character()
+  
   # Plot colors
-  plot_cols <- c("NS" = "grey",
-                 "Up" =  hue_pal()(2)[1],
-                 "Down" =  hue_pal()(2)[2])
+  plot_cols <- c("Down" =  hue_pal()(2)[1],
+                 "NS" = "grey",
+                 "Up" =  hue_pal()(2)[2])
   
   # Creating the volcano plot
   plot <- data |> ggplot(aes(x = log2FoldChange, y = -log10(pvalue), color = category)) +
@@ -557,15 +569,17 @@ volcano_plot <- function(data, title){
       data = data |> filter(rank <= 20, padj < rank),
       aes(label = gene_id),
       size = 3,
+      show.legend = FALSE,
       max.overlaps = getOption("ggrepel.max.overlaps", default = 30)) + 
-    scale_color_manual(values = plot_cols, guide = "none") +
+    scale_color_manual(values = plot_cols, labels = counts, name = "") +
     labs(title = title,
          x = expression("log"[2]*"Fold Change"),  
          y = expression("-log"[10]*"(p-value)")) +
     
     geom_hline(yintercept = -log10(alpha), linetype = "dashed", col = "grey") +
-    #annotate("text", x = -0.75, y = -log10(alpha) + 3 , label = paste0("FDR - ", alpha), col ="grey") +
-    theme_light()
+    theme_light() +
+    theme(legend.position = "bottom")
+    
     
     return(plot)
 }
@@ -573,9 +587,64 @@ volcano_plot <- function(data, title){
 volcano_plot(rna_di_F_res, "Female RNA Dimorphism index") +
 volcano_plot(rna_di_M_res, "Male RNA Dimorphism index")
 ```
+```{r}
+# Up- and down-regulated genes according to dimorphism index in females
+set_up_F <- rna_di_F_res |> as.data.frame() |> filter(padj < alpha & log2FoldChange > 0) |> rownames()
+set_down_F <- rna_di_F_res |> as.data.frame() |> filter(padj < alpha & log2FoldChange < 0) |> rownames()
+
+set_di_F <- c(set_up_F, set_down_F)
+
+# Up- and down-regulated genes according to dimorphism index in males
+set_up_M <- rna_di_M_res |> as.data.frame() |> filter(padj < alpha & log2FoldChange > 0) |> rownames()
+set_down_M <- rna_di_M_res |> as.data.frame() |> filter(padj < alpha & log2FoldChange < 0) |> rownames()
+
+set_di_M <- c(set_up_M, set_down_M)
+```
+```{r}
+venn_cols <- hue_pal()(4)
+
+venn.plot <- venn.diagram(
+  x = list(up_F = set_up_F, down_F = set_down_F, up_M = set_up_M, down_M = set_down_M),
+  category.names = c("Females Up", "Females Down", "Males Up", "Males Down"),
+  filename = NULL,
+  fill = venn_cols,
+  col = venn_cols,
+  fontfamily = "sans",
+  # Set names
+  cat.cex = 1,
+  cat.fontface = "bold",
+  cat.default.pos = "outer",
+  cat.fontfamily = "sans",
+  cat.col = venn_cols,
+  height = 480,
+  width = 480,
+  scaled = TRUE
+)
+
+# Plot the Venn diagram
+grid.newpage()
+grid.draw(venn.plot)
+```
 
 
 ### Genes associated with sex
+
+```{r}
+sex_res <- results(filtered_counts_ds, contrast = c("SEX", "M", "F")) # log2 Fold-Change = Male / Female
+
+NotSig_SEX <- sum(sex_res$padj >= alpha, na.rm = TRUE)
+Dow_SEX <- sum(sex_res$padj <= alpha & sex_res$log2FoldChange < 0, na.rm = TRUE)
+Up_SEX <- sum(sex_res$padj <= alpha & sex_res$log2FoldChange > 0, na.rm = TRUE)
+
+# Showing the results
+sex_res_df <- data.frame("SEX_M_vs_F" = c(Dow_SEX, NotSig_SEX, Up_SEX))
+rownames(sex_res_df) <- c("Down", "NotSig", "Up")
+sex_res_df |> gt(rownames_to_stub = TRUE)
+```
+```{r}
+volcano_plot(sex_res, "Differentially expressed genes according to sex")
+```
+
 
 ### Genes associated with age
 
