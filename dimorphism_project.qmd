@@ -486,7 +486,7 @@ mt <- match(colnames(filtered_counts), non_na_covariates$SUBJID)
 filtered_counts_ds <- DESeqDataSetFromMatrix(
   countData = filtered_counts,
   colData = non_na_covariates[mt, ],
-  design = ~ HARDY_SCALE + AGE_CONTINUOUS + SEX + SEX:RNA_DI # Design decided in Q1
+  design = ~ HARDY_SCALE + AGE_CONTINUOUS + SEX + SEX:RNA_DI# Design decided in Q1
 )
 
 ```
@@ -587,6 +587,8 @@ volcano_plot <- function(data, title){
 volcano_plot(rna_di_F_res, "Female RNA Dimorphism index") +
 volcano_plot(rna_di_M_res, "Male RNA Dimorphism index")
 ```
+(Interpretation of the log2 FC:  If the variable of interest is continuous-valued, then the reported log2 fold change is per unit of change of that variable.)
+
 ```{r}
 # Up- and down-regulated genes according to dimorphism index in females
 set_up_F <- rna_di_F_res |> as.data.frame() |> filter(padj < alpha & log2FoldChange > 0) |> rownames()
@@ -647,6 +649,56 @@ volcano_plot(sex_res, "Differentially expressed genes according to sex")
 
 
 ### Genes associated with age
+
+```{r}
+age_res <- results(filtered_counts_ds, name = "AGE_CONTINUOUS", alpha = alpha)
+
+NotSig_AGE <- sum(age_res$padj >= alpha, na.rm = TRUE)
+Dow_AGE <- sum(age_res$padj <= alpha & age_res$log2FoldChange < 0, na.rm = TRUE)
+Up_AGE <- sum(age_res$padj <= alpha & age_res$log2FoldChange > 0, na.rm = TRUE)
+
+# Showing the results
+age_res_df <- data.frame("AGE_CONTINUOUS" = c(Dow_AGE, NotSig_AGE, Up_AGE))
+rownames(age_res_df) <- c("Down", "NotSig", "Up")
+age_res_df |> gt(rownames_to_stub = TRUE)
+```
+```{r}
+volcano_plot(age_res, "Differentially expressed genes according to age (continuous)")
+```
+Heatmap of the VST transformed counts of the 30 most significant genes (lowest adjusted p-values), with samples annotated with sex, age, as color annotation.
+
+```{r}
+top30_age_genes <- age_res |> as.data.frame() |> 
+  slice_min(padj, n = 30) |> 
+  rownames()
+
+female_samples <- covariates |> 
+  filter(SEX == "F") |> 
+  select(SUBJID) |> 
+  unlist(use.names = FALSE)
+
+male_samples <- covariates |> 
+  filter(SEX == "M") |> 
+  select(SUBJID) |> 
+  unlist(use.names = FALSE)
+
+# Female heatmap
+assay(vst_counts)[top30_age_genes, female_samples] |>
+  pheatmap(scale = "row",
+           cluster_cols = TRUE,
+           annotation_col = covariates |> column_to_rownames(var ="SUBJID") |>  select("AGE_DECADE"))
+
+
+# Male heatmap
+assay(vst_counts)[top30_age_genes, male_samples] |>
+  pheatmap(scale = "row",
+           cluster_cols = TRUE,
+           show_colnames = FALSE,
+           annotation_col = covariates |> column_to_rownames(var ="SUBJID") |>  select("AGE_DECADE"))
+
+
+```
+
 
 ### Genes associated with the hardy scale (?)
 
