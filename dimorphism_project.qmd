@@ -391,6 +391,9 @@ print(p_combined)
 ```
 
 ```{r}
+#| label: fig-pca_plot_with_hisograms_females_age
+#| fig-cap: Individual's plot of the PCA performed on the female samples only. The samples are colored by their age at death (in decades).
+
 pcaData <- plotPCA(vst_counts[,colData(vst_counts)$SEX == "F"], intgroup = c("AGE_DECADE"), ntop = 500, returnData = TRUE)
 
 percentVar <- round(100 * attr(pcaData, "percentVar"))
@@ -419,8 +422,8 @@ p_combined <- insert_xaxis_grob(p, xdens, grid::unit(1, "in"), position = "top")
 print(p_combined)
 ```
 
-Conclusion: technical variables that we will take into account: `SEX, RNA_DI, AGE_CONTINUOUS, HARDY_SCALE`.
-Contrasts that were are interested in: "SEX_M_vs_"F (differentially expressed genes in males vs. females), "SEXF.RNA_DI" (to identify the genes associated with the female dimorphism index), and "SEXM.RNA_DI" (to find the genes associated with the male dimorphism index). In `DESeq2`, this corresponds to the design: `~ HARDY_SCALE + AGE_CONTINUOUS + SEX + SEX:RNA_DI ` (see next section). 
+**Conclusion**: technical variables that will be taken into account: `SEX, RNA_DI, AGE_CONTINUOUS, HARDY_SCALE`.
+Contrasts that were are most interested in: "SEX_M_vs_"F (differentially expressed genes in males vs. females), "SEXF.RNA_DI" (to identify the genes associated with the female dimorphism index), and "SEXM.RNA_DI" (to find the genes associated with the male dimorphism index). In `DESeq2`, this corresponds to the design: `~ HARDY_SCALE + AGE_CONTINUOUS + SEX + SEX:RNA_DI ` (see next section). 
 
 # Q2: the scale of DI-associated gene expression
 
@@ -451,7 +454,7 @@ The variables in the design formula cannot contain missing values (NAs). However
 ```{r}
 cat("Missing HARDY_SCALE values:", is.na(covariates$HARDY_SCALE) |> sum())
 ```
-For simplicity, and since the number of samples with missing values is relatively small compared to the total number of samples (`r nrow(covariates)` samples; The missing values thus represent `r sum(is.na(covariates$HARDY_SCALE)) / nrow(covariates) * 100`%), we will simply discard the samples with a missing `HARDY_SCALE` value. Other, more sophisticated methods could have been used, such as replacing the missing values by the most common one (`HARDY_SCALE` = 0 with our data set), or creating a classifier model to predict the missing values using the other covariates. (source?) We could also have replaced the "NA" value by a new category called "unknown". However, since there are only 12 samples in that category, and there quite a lot of variables in the design, we would risk having a low statistical power (very few degrees of freedom).
+For simplicity, and since the number of samples with missing values is relatively small compared to the total number of samples (`r nrow(covariates)` samples; The missing values thus represent `r (sum(is.na(covariates$HARDY_SCALE)) / nrow(covariates) |> round(3)) * 100`%), we will simply discard the samples with a missing `HARDY_SCALE` value. Other, more sophisticated methods could have been used, such as replacing the missing values by the most common one (`HARDY_SCALE` = 0 with our data set), or creating a classifier model to predict the missing values using the other covariates (source?). We could also have replaced the "NA" value by a new category called "unknown". However, since there are only 12 samples in that category, and there quite a lot of variables in the design, we would risk having a low statistical power (very few degrees of freedom).
 
 ```{r}
 non_na_samples <- !is.na(covariates$HARDY_SCALE)
@@ -497,8 +500,12 @@ filtered_counts_ds <- DESeq(filtered_counts_ds)
 
 resultsNames(filtered_counts_ds)
 ```
-Genes associated with the female dimorphism index:
+### Genes associated with the female and male dimorphism indices
+
+
 ```{r}
+# Genes associated with the female dimorphism index
+
 rna_di_F_res <- results(filtered_counts_ds, name = "SEXF.RNA_DI", alpha = alpha)
 
 NotSig_F <- sum(rna_di_F_res$padj >= alpha, na.rm = TRUE)
@@ -507,8 +514,9 @@ Up_F <- sum(rna_di_F_res$padj <= alpha & rna_di_F_res$log2FoldChange >= 0, na.rm
 
 ```
 
-Genes associated with the male dimorphism index:
 ```{r}
+# Genes associated with the male dimorphism index
+
 rna_di_M_res <- results(filtered_counts_ds, name = "SEXM.RNA_DI", alpha = alpha)
 
 NotSig_M <- sum(rna_di_M_res$padj >= alpha, na.rm = TRUE)
@@ -517,6 +525,8 @@ Up_M <- sum(rna_di_M_res$padj <= alpha & rna_di_M_res$log2FoldChange >= 0, na.rm
 ```
 
 ```{r}
+#| label: tab-rna_di_de_genes
+
 rna_di_res_df <- data.frame("Female RNA DI" = c(Down_F, NotSig_F, Up_F),
                            "Male RNA DI" = c(Down_M, NotSig_M, Up_M))
 
@@ -682,6 +692,12 @@ male_samples <- covariates |>
   select(SUBJID) |> 
   unlist(use.names = FALSE)
 
+# All sexes confounded
+assay(vst_counts)[top30_age_genes,] |> 
+  pheatmap(scale = "row",
+           cluster_cols = TRUE,
+           annotation_col = covariates |> column_to_rownames(var ="SUBJID") |>  select("AGE_DECADE", "SEX"))
+
 # Female heatmap
 assay(vst_counts)[top30_age_genes, female_samples] |>
   pheatmap(scale = "row",
@@ -700,14 +716,30 @@ assay(vst_counts)[top30_age_genes, male_samples] |>
 ```
 
 
-### Genes associated with the hardy scale (?)
+### Genes associated with the hardy scale
+
+```{r}
+hardy_scale_deg_num <- matrix()
+
+for (i in 0:4){
+  for (j in 0:4){
+    if (j > i){
+      cat("Hardy level ", i, "vs", j, "\n")
+      res_hardy_scale <- results(filtered_counts_ds, contrast = c("HARDY_SCALE", 
+                                                                  as.character(i), 
+                                                                  as.character(j)))
+      
+      num_DEGs <- sum(res_hardy_scale$padj < alpha, na.rm = TRUE)
+      cat("Number of DEGs:", num_DEGs, "\n")
+      
+    }
+  }
+}
+
+```
 
 
-1. Look at the differentially expressed genes --> volcano plot
 
-2. DESeq2 with age and sex, etc.
-
-3. Compare genes that were detected as differentially expressed in each test?
 
 Question about statistical power: see my project P3 from traitement statistique des données -omiques.
 
