@@ -36,6 +36,7 @@ library(scales)
 library(GGally) # install.packages("GGally")
 library(viridis)
 library(VennDiagram)
+library(corrplot)
 
 options(knitr.kable.NA = '', digits = 3)
 
@@ -718,8 +719,10 @@ assay(vst_counts)[top30_age_genes, male_samples] |>
 
 ### Genes associated with the hardy scale
 
+Correction for multiple testing (lots of contrasts performed)? 
+
 ```{r}
-hardy_scale_deg_num <- matrix()
+hardy_scale_deg_num <- matrix(, nrow = 5, ncol = 5)
 
 for (i in 0:4){
   for (j in 0:4){
@@ -732,9 +735,27 @@ for (i in 0:4){
       num_DEGs <- sum(res_hardy_scale$padj < alpha, na.rm = TRUE)
       cat("Number of DEGs:", num_DEGs, "\n")
       
+      hardy_scale_deg_num[i + 1, j + 1] <- num_DEGs
+      hardy_scale_deg_num[j + 1, i + 1] <- num_DEGs
+      
     }
   }
 }
+```
+
+
+```{r}
+hardy_scale_deg_num <- hardy_scale_deg_num |> as.matrix()
+colnames(hardy_scale_deg_num) <-  paste0("level", 0:4)
+rownames(hardy_scale_deg_num) <-  paste0("level", 0:4)
+
+corrplot(hardy_scale_deg_num, type = "upper", order = "original", 
+         tl.srt = 45, is.corr = FALSE, method = "color",
+         na.label = " ",
+          col = COL2('RdBu'),
+          cl.pos = 'r', addgrid.col = 'white', addCoef.col = 'white')
+
+
 
 ```
 
