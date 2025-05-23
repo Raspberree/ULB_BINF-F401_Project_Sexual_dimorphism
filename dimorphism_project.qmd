@@ -490,7 +490,7 @@ mt <- match(colnames(filtered_counts), non_na_covariates$SUBJID)
 filtered_counts_ds <- DESeqDataSetFromMatrix(
   countData = filtered_counts,
   colData = non_na_covariates[mt, ],
-  design = ~ HARDY_SCALE + AGE_CONTINUOUS + SEX + SEX:RNA_DI# Design decided in Q1
+  design = ~ HARDY_SCALE + AGE_CONTINUOUS + SEX + SEX:RNA_DI # Design decided in Q1
 )
 
 ```
@@ -719,50 +719,57 @@ assay(vst_counts)[top30_age_genes, male_samples] |>
 
 ### Genes associated with the hardy scale
 
-Correction for multiple testing (lots of contrasts performed)? 
+Hypothèse principale testée en ANOVA 1: tester si toutes les populations sont de même moyenne (H0: mu1 = mu2 = mu3 = ... = mu, H1: deux moyennes au moins sont différentes) --> We want to do something similar with the HARDY_SCALE variable. With the other covariates (SEX, RNA_DI and AGE_CONTINUOUS), we used the Wald significance test. The Wald test tests "for significance of coefficients in a Negative Binomial GLM" (H0: beta = 0). However, the Hardy scale has 5 different levels, and testing if genes are differentially expressed between each level (e.g. level 0 vs level 1, level 0 vs level 2, etc.), would require to make 10 (5*(5-1)/2) contrasts. This is called multiple testing and it would thus require corrections of the p-value to control the type 1 error rate.
+
+But, with our biological question, which is to identify genes associated with sexual dimorphism in adipose tissue, knowing which genes are associated with each hardy scale level is not biologically interesting. Therefore, we will use the likelihood ratio test which is "an alternative to pair-wise comparisons" and is used "to analyze all levels of a factor at once" (like in ANOVA). (source: https://hbctraining.github.io/DGE_workshop/lessons/08_DGE_LRT.html)
 
 ```{r}
-hardy_scale_deg_num <- matrix(, nrow = 5, ncol = 5)
+dds_lrt <- DESeq(filtered_counts_ds, test = "LRT", reduced = ~ AGE_CONTINUOUS + SEX + SEX:RNA_DI)
+res_lrt <- results(dds_lrt)
 
-for (i in 0:4){
-  for (j in 0:4){
-    if (j > i){
-      cat("Hardy level ", i, "vs", j, "\n")
-      res_hardy_scale <- results(filtered_counts_ds, contrast = c("HARDY_SCALE", 
-                                                                  as.character(i), 
-                                                                  as.character(j)))
-      
-      num_DEGs <- sum(res_hardy_scale$padj < alpha, na.rm = TRUE)
-      cat("Number of DEGs:", num_DEGs, "\n")
-      
-      hardy_scale_deg_num[i + 1, j + 1] <- num_DEGs
-      hardy_scale_deg_num[j + 1, i + 1] <- num_DEGs
-      
-    }
-  }
-}
 ```
-
+```{r}
+volcano_plot(res_lrt, "Hardy scale")
+```
 
 ```{r}
-hardy_scale_deg_num <- hardy_scale_deg_num |> as.matrix()
-colnames(hardy_scale_deg_num) <-  paste0("level", 0:4)
-rownames(hardy_scale_deg_num) <-  paste0("level", 0:4)
+sig_hardy_genes <- res_lrt |> 
+  as.data.frame() |> 
+  slice_min(order_by = padj, n = 9) |> 
+  rownames()
 
-corrplot(hardy_scale_deg_num, type = "upper", order = "original", 
-         tl.srt = 45, is.corr = FALSE, method = "color",
-         na.label = " ",
-          col = COL2('RdBu'),
-          cl.pos = 'r', addgrid.col = 'white', addCoef.col = 'white')
-
-
-
+length(sig_hardy_genes)
 ```
+
+```{r}
+fcounts_long <- filtered_counts |> rownames_to_column("gene_id") |> 
+  pivot_longer(cols = - gene_id, names_to = "SUBJID", values_to = "counts")
+
+fcounts_long <- left_join(fcounts_long, covariates |> select(SUBJID, HARDY_SCALE), by = "SUBJID")
+
+fcounts_long |> 
+  filter(gene_id %in% sig_hardy_genes) |> 
+  ggplot(aes(x = HARDY_SCALE, y = counts, fill = HARDY_SCALE)) +
+  geom_boxplot(outlier.size = 0.8, outlier.alpha = 0.6) +
+  facet_wrap(~ gene_id, scales = "free_y", ncol = 3) +
+  labs(x = "Hardy Scale",
+       y = "Raw Counts") +
+  ggtitle("Top 9 genes with lowest adjusted p-value for the \n 
+          likelihood ratio test on HARDY_SCALE covariate")
+  
+
+  
+```
+
 
 
 
 
 Question about statistical power: see my project P3 from traitement statistique des données -omiques.
+
+
+--> Résumé: table of (FDR) adjusted p-values or heatmap (gene vs. factor + color = adjusted p-value)
+
 
 # Q3:
 1. GSEA using fgsea package (see my main project traitement statistique des données -omiques) using the reactome gmt file? Or just find genes associated with receptors?
