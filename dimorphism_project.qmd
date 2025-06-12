@@ -37,8 +37,11 @@ library(GGally) # install.packages("GGally")
 library(viridis)
 library(VennDiagram)
 library(corrplot)
+library(fgsea)
 
-options(knitr.kable.NA = '', digits = 3)
+#library(clusterProfiler) #BiocManager::install("clusterProfiler")
+
+options(knitr.kable.NA = '', digits = 3) # For table formating
 
 flog.threshold(ERROR) # To not have *.log files created when plotting venn diagrams
 
@@ -58,6 +61,105 @@ p {
 theme_set(theme_light())
 
 default_col <-  hue_pal()(4)[4]
+```
+
+```{r}
+# Custom functions
+# Function to reactome pathway names
+process_strings <- function(x) {
+  x <- gsub("_", " ", x)          # Replace underscores with spaces
+  #x <- tolower(x)                 # Convert to lower case
+  x <- sub("^\\S+\\s+", "", x)    # Remove the first word
+  return(x)
+}
+
+# Customized volcano plot
+volcano_plot <- function(data, title){
+  alpha <- 0.05
+  
+  data <- data |> 
+    as.data.frame() |> 
+    rownames_to_column("gene_id")
+    
+  
+  data <- data |> filter(!is.na(pvalue))
+  
+  data <- data |> 
+    arrange(padj) |>
+    mutate(rank = row_number()) 
+  
+  # all genes are set to non-significant by default
+  data$category <- "NS"
+  
+  # Significant genes + up/down-regulated
+  data$category[data$padj < alpha & data$log2FoldChange < 0] <- "Down"
+  data$category[data$padj < alpha & data$log2FoldChange > 0] <- "Up"
+  
+  data$category <- factor(data$category)
+  
+  counts <- c(
+    "Down" = sum(data$category == "Down"),
+    "NS" = sum(data$category == "NS"),
+    "Up" = sum(data$category == "Up")) |> 
+    as.character()
+  
+  # Plot colors
+  plot_cols <- c("Down" =  hue_pal()(2)[1],
+                 "NS" = "grey",
+                 "Up" =  hue_pal()(2)[2])
+  
+  # Creating the volcano plot
+  plot <- data |> ggplot(aes(x = log2FoldChange, y = -log10(pvalue), color = category)) +
+    geom_point(alpha = 0.7) +
+    geom_vline(xintercept = c(-1, 0, 1), col = "gray", linetype = "dashed") +
+    # Name added to the plot for the 20 genes with lowest adjusted p-values
+    ggrepel::geom_text_repel(
+      data = data |> filter(rank <= 20, padj < rank),
+      aes(label = gene_id),
+      size = 3,
+      show.legend = FALSE,
+      max.overlaps = getOption("ggrepel.max.overlaps", default = 30)) + 
+    scale_color_manual(values = plot_cols, labels = counts, name = "") +
+    labs(title = title,
+         x = expression("log"[2]*"Fold Change"),  
+         y = expression("-log"[10]*"(p-value)")) +
+    
+    geom_hline(yintercept = -log10(alpha), linetype = "dashed", col = "grey") +
+    theme_light() +
+    theme(legend.position = "bottom")
+    
+    
+    return(plot)
+}
+
+
+# Plot of the GSEA results (Significantly up- or down-regulated pathways)
+gsea_res_plots <- function(fgsea_results, alpha = 0.05){
+  topPathwaysUp <- fgsea_results |> filter(ES > 0 & padj < alpha)
+  topPathwaysDown <- fgsea_results |> filter(ES < 0 & padj < alpha)
+
+# Plots of the results
+  plot_up <- topPathwaysUp |> 
+    mutate(pathway = pathway |> process_strings() |>  str_wrap(width = 40) ) |> 
+    ggplot(aes(reorder(pathway, NES), NES)) +
+      geom_col(fill = hue_pal()(2)[2]) +
+      coord_flip() +
+      labs(x="Pathway", y="Normalized Enrichment Score",
+           title="Top upregulated Reactome pathways") 
+  
+  plot_down <- topPathwaysDown |> 
+    mutate(pathway = pathway |> process_strings() |>  str_wrap(width = 40) ) |> 
+    ggplot(aes(reorder(pathway, NES), NES)) +
+      geom_col(fill = hue_pal()(2)[1]) +
+      coord_flip() +
+      labs(x="Pathway", y="Normalized Enrichment Score",
+           title="Top upregulated Reactome pathways") 
+
+  return (plot_up + plot_down)
+
+}
+
+
 ```
 
 
@@ -148,7 +250,6 @@ colnames(covariates)
 
 
 ```{r}
-#| fig-height: 10
 #| label: fig-covariates_distribution
 #| fig-cap: distribution of the covariates
 
@@ -537,64 +638,6 @@ rna_di_res_df |> gt(rownames_to_stub = TRUE)
 ```
 Volcano plots
 ```{r}
-volcano_plot <- function(data, title){
-  alpha <- 0.05
-  
-  data <- data |> 
-    as.data.frame() |> 
-    rownames_to_column("gene_id")
-    
-  
-  data <- data |> filter(!is.na(pvalue))
-  
-  data <- data |> 
-    arrange(padj) |>
-    mutate(rank = row_number()) 
-  
-  # all genes are set to non-significant by default
-  data$category <- "NS"
-  
-  # Significant genes + up/down-regulated
-  data$category[data$padj < alpha & data$log2FoldChange < 0] <- "Down"
-  data$category[data$padj < alpha & data$log2FoldChange > 0] <- "Up"
-  
-  data$category <- factor(data$category)
-  
-  counts <- c(
-    "Down" = sum(data$category == "Down"),
-    "NS" = sum(data$category == "NS"),
-    "Up" = sum(data$category == "Up")) |> 
-    as.character()
-  
-  # Plot colors
-  plot_cols <- c("Down" =  hue_pal()(2)[1],
-                 "NS" = "grey",
-                 "Up" =  hue_pal()(2)[2])
-  
-  # Creating the volcano plot
-  plot <- data |> ggplot(aes(x = log2FoldChange, y = -log10(pvalue), color = category)) +
-    geom_point(alpha = 0.7) +
-    geom_vline(xintercept = c(-1, 0, 1), col = "gray", linetype = "dashed") +
-    # Name added to the plot for the 20 genes with lowest adjusted p-values
-    ggrepel::geom_text_repel(
-      data = data |> filter(rank <= 20, padj < rank),
-      aes(label = gene_id),
-      size = 3,
-      show.legend = FALSE,
-      max.overlaps = getOption("ggrepel.max.overlaps", default = 30)) + 
-    scale_color_manual(values = plot_cols, labels = counts, name = "") +
-    labs(title = title,
-         x = expression("log"[2]*"Fold Change"),  
-         y = expression("-log"[10]*"(p-value)")) +
-    
-    geom_hline(yintercept = -log10(alpha), linetype = "dashed", col = "grey") +
-    theme_light() +
-    theme(legend.position = "bottom")
-    
-    
-    return(plot)
-}
-
 volcano_plot(rna_di_F_res, "Female RNA Dimorphism index") +
 volcano_plot(rna_di_M_res, "Male RNA Dimorphism index")
 ```
@@ -774,7 +817,176 @@ Question about statistical power: see my project P3 from traitement statistique 
 # Q3:
 1. GSEA using fgsea package (see my main project traitement statistique des données -omiques) using the reactome gmt file? Or just find genes associated with receptors?
 
+Importing the REACTOME GMT file
+```{r}
+gmt.file <- "resources/c2.cp.reactome.v2024.1.Hs.symbols.gmt"
+reactome <- gmtPathways(gmt.file)
+```
 
+## ((Gene Ontology Analysis)) (to identify hormone receptors associated with the dimorphism indices and sex)
+
+```{r}
+all_genes <- rownames(rna_di_F_res)
+
+sig_di_f_genes <- rna_di_F_res |>  as.data.frame() |> 
+  filter(padj <= alpha) |> 
+  rownames()
+
+sig_di_m_genes <- rna_di_M_res |>  as.data.frame() |> 
+  filter(padj <= alpha) |> 
+  rownames()
+
+sig_sex_genes <- sex_res |>  as.data.frame() |> 
+  filter(padj <= alpha) |> 
+  rownames()
+
+```
+
+
+```{r}
+#hormone_pathways <- reactome[str_detect(names(reactome),"HORMONE")]
+receptor_pathways <- reactome[str_detect(names(reactome),"RECEPTOR")]
+
+sig_receptor_genes <- data.frame(
+  pathway = character(),
+  f_di = numeric(),
+  m_di = numeric(),
+  sex = numeric(),
+  stringsAsFactors = FALSE
+)
+
+for (i in 1:length(receptor_pathways)){
+  found_genes_f_di <- sum(sig_di_f_genes %in% receptor_pathways[[i]])
+  found_genes_m_di <- sum(sig_di_m_genes %in% receptor_pathways[[i]])
+  found_genes_sex <- sum(sig_sex_genes %in% receptor_pathways[[i]])
+  
+  sig_receptor_genes <- sig_receptor_genes |> add_row(pathway = names(receptor_pathways)[i],
+                                              f_di = found_genes_f_di,
+                                              m_di = found_genes_m_di,
+                                              sex = found_genes_sex)
+}
+```
+
+
+```{r}
+# Function to process the strings
+process_strings <- function(x) {
+  x <- gsub("_", " ", x)          # Replace underscores with spaces
+  x <- tolower(x)                 # Convert to lower case
+  x <- sub("^\\S+\\s+", "", x)    # Remove the first word
+  return(x)
+}
+```
+
+```{r}
+sig_receptor_genes |> 
+  mutate(pathway = process_strings(pathway)) |> 
+  filter(f_di != 0 & m_di != 0 & sex != 0) |>
+  rowwise() |>
+  mutate(total_sig = sum(c_across(c(f_di, m_di, sex)))) |>
+  ungroup() |>
+  mutate(pathway = fct_reorder(pathway, total_sig, .desc = FALSE)) |>
+  pivot_longer(cols = c(f_di, m_di, sex),
+               names_to = "covariate",
+               values_to = "n_sig_genes") |>
+  ggplot(aes(x = covariate, y = pathway, fill = n_sig_genes)) +
+  geom_tile() +
+  viridis::scale_fill_viridis(option = "turbo")
+```
+
+Do it manually instead????
+
+
+### Female Dimorphism Index
+
+### Male Dimorphism Index
+
+### Sex
+
+
+## Gene Set Enrichment Analysis (to identify pathways associated with the dimorphism indices and sex)
+
+
+```{r}
+# Female dimorphism index - genes ranked by log2 FC
+ranked_genes_di_F <- rna_di_F_res$log2FoldChange
+names(ranked_genes_di_F) <- rownames(rna_di_F_res)
+ranked_genes_di_F <- sort(ranked_genes_di_F, decreasing = TRUE)
+
+# Male dimorphism index
+ranked_genes_di_M <- rna_di_M_res$log2FoldChange
+names(ranked_genes_di_M) <- rownames(rna_di_M_res)
+ranked_genes_di_M <- sort(ranked_genes_di_M, decreasing = TRUE)
+
+# Sex
+ranked_genes_sex <- sex_res$log2FoldChange
+names(ranked_genes_sex) <- rownames(sex_res)
+ranked_genes_sex <- sort(ranked_genes_sex, decreasing = TRUE)
+```
+
+### Female dimorphism index
+
+```{r}
+fgsea_results_di_F <- fgsea(
+    pathways = reactome,
+    stats = ranked_genes_di_F,
+    minSize = 15,
+    maxSize = Inf
+)
+
+gsea_res_plots(fgsea_results_di_F)
+```
+
+
+```{r}
+#plotEnrichment(reactome[[head(fgsea_results_di_F[order(padj), ], 1)$pathway]],
+#               ranked_genes_di_F) + 
+#  labs(title = head(fgsea_results_di_F[order(padj), ], 1)$pathway)
+```
+
+### Male dimorphism index
+
+```{r}
+fgsea_results_di_M <- fgsea(
+    pathways = reactome,
+    stats = ranked_genes_di_M,
+    minSize = 15,
+    maxSize = Inf
+)
+
+topPathwaysUp_M <- fgsea_results_di_M |> filter(ES > 0 & padj < alpha)
+topPathwaysDown_M <- fgsea_results_di_M |> filter(ES < 0 & padj < alpha)
+
+# Plots of the results
+plot_up_di_M <- topPathwaysUp_M |> 
+  mutate(pathway = pathway |> process_strings() |>  str_wrap(width = 40) ) |> 
+  ggplot(aes(reorder(pathway, NES), NES)) +
+    geom_col(fill = hue_pal()(2)[2]) +
+    coord_flip() +
+    labs(x="Pathway", y="Normalized Enrichment Score",
+         title="Top upregulated Reactome pathways") 
+
+plot_down_di_M <- topPathwaysDown_M |> 
+  mutate(pathway = pathway |> process_strings() |>  str_wrap(width = 40) ) |> 
+  ggplot(aes(reorder(pathway, NES), NES)) +
+    geom_col(fill = hue_pal()(2)[1]) +
+    coord_flip() +
+    labs(x="Pathway", y="Normalized Enrichment Score",
+         title="Top upregulated Reactome pathways") 
+
+plot_up_di_M + plot_down_di_M
+```
+
+
+```{r}
+
+fgsea_results_di_M |> gsea_res_plots()
+```
+
+# Analyses supplémentaires
+idées:
+- Clustering hiérarchique ou k-means avec k = 2, pour voir si bonne séparation homme-femmes
+- Machine learning: régression logistique régularisée pour voir si àpd expression gènes, on peut identifier hommes et femmes + quels gènes sont importants.
 
 # Annex: session information {.unnumbered}
 

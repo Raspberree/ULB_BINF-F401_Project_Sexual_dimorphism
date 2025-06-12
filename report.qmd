@@ -1,0 +1,293 @@
+---
+title: Quantification of human sexual dimorphism with the dimorphism index in subcutaneous adipose tissue
+format: 
+  pdf:
+    colorlinks: true 
+    include-in-header:
+      text: |
+       \usepackage[font=small,labelfont={bf,small}, format=plain]{caption}
+    
+author: 
+  - Youmna Ayadi
+  - Kevin Straatman
+date: today 
+
+geometry:                             
+  - top=25mm
+  - bottom=25mm
+  - right=20mm
+  - left=20mm
+fontsize: 12pt
+
+df-print: kable
+
+knitr:
+  opts_chunk: 
+    echo: false
+    tidy: styler
+    fig.align: center
+    fig-width: 9
+    fig-asp: 0.65
+    
+toc: true
+toc-depth: 3
+number-sections: true
+            
+editor: source 
+---
+```{r}
+#| include: false
+library(tidyverse)
+library(magrittr)
+library(gt)
+library(ggrepel)
+library(patchwork)
+library(DESeq2) # BiocManager::install("DESeq2")
+library(pheatmap)
+library(scales)
+library(GGally) # install.packages("GGally")
+library(viridis)
+library(VennDiagram)
+library(corrplot)
+library(fgsea)
+
+#library(clusterProfiler) #BiocManager::install("clusterProfiler")
+
+options(knitr.kable.NA = '', digits = 3) # For table formating
+
+flog.threshold(ERROR) # To not have *.log files created when plotting venn diagrams
+```
+
+```{r}
+#| include: false
+# customizations
+theme_set(theme_light())
+
+default_col <-  hue_pal()(4)[4]
+```
+
+```{r}
+# Custom functions
+# Function to process reactome pathway names
+process_strings <- function(x) {
+  x <- gsub("_", " ", x)          # Replace underscores with spaces
+  #x <- tolower(x)                 # Convert to lower case
+  x <- sub("^\\S+\\s+", "", x)    # Remove the first word
+  return(x)
+}
+
+# Customized volcano plot
+volcano_plot <- function(data, title){
+  alpha <- 0.05
+  
+  data <- data |> 
+    as.data.frame() |> 
+    rownames_to_column("gene_id")
+    
+  
+  data <- data |> filter(!is.na(pvalue))
+  
+  data <- data |> 
+    arrange(padj) |>
+    mutate(rank = row_number()) 
+  
+  # all genes are set to non-significant by default
+  data$category <- "NS"
+  
+  # Significant genes + up/down-regulated
+  data$category[data$padj < alpha & data$log2FoldChange < 0] <- "Down"
+  data$category[data$padj < alpha & data$log2FoldChange > 0] <- "Up"
+  
+  data$category <- factor(data$category)
+  
+  counts <- c(
+    "Down" = sum(data$category == "Down"),
+    "NS" = sum(data$category == "NS"),
+    "Up" = sum(data$category == "Up")) |> 
+    as.character()
+  
+  # Plot colors
+  plot_cols <- c("Down" =  hue_pal()(2)[1],
+                 "NS" = "grey",
+                 "Up" =  hue_pal()(2)[2])
+  
+  # Creating the volcano plot
+  plot <- data |> ggplot(aes(x = log2FoldChange, y = -log10(pvalue), color = category)) +
+    geom_point(alpha = 0.7) +
+    geom_vline(xintercept = c(-1, 0, 1), col = "gray", linetype = "dashed") +
+    # Name added to the plot for the 20 genes with lowest adjusted p-values
+    ggrepel::geom_text_repel(
+      data = data |> filter(rank <= 20, padj < rank),
+      aes(label = gene_id),
+      size = 3,
+      show.legend = FALSE,
+      max.overlaps = getOption("ggrepel.max.overlaps", default = 30)) + 
+    scale_color_manual(values = plot_cols, labels = counts, name = "") +
+    labs(title = title,
+         x = expression("log"[2]*"Fold Change"),  
+         y = expression("-log"[10]*"(p-value)")) +
+    
+    geom_hline(yintercept = -log10(alpha), linetype = "dashed", col = "grey") +
+    theme_light() +
+    theme(legend.position = "bottom")
+    
+    
+    return(plot)
+}
+
+
+# Plot of the GSEA results (Significantly up- or down-regulated pathways)
+gsea_res_plots <- function(fgsea_results, alpha = 0.05){
+  topPathwaysUp <- fgsea_results |> filter(ES > 0 & padj < alpha)
+  topPathwaysDown <- fgsea_results |> filter(ES < 0 & padj < alpha)
+
+# Plots of the results
+  plot_up <- topPathwaysUp |> 
+    mutate(pathway = pathway |> process_strings() |>  str_wrap(width = 40) ) |> 
+    ggplot(aes(reorder(pathway, NES), NES)) +
+      geom_col(fill = hue_pal()(2)[2]) +
+      coord_flip() +
+      labs(x="Pathway", y="Normalized Enrichment Score",
+           title="Top upregulated Reactome pathways") 
+  
+  plot_down <- topPathwaysDown |> 
+    mutate(pathway = pathway |> process_strings() |>  str_wrap(width = 40) ) |> 
+    ggplot(aes(reorder(pathway, NES), NES)) +
+      geom_col(fill = hue_pal()(2)[1]) +
+      coord_flip() +
+      labs(x="Pathway", y="Normalized Enrichment Score",
+           title="Top upregulated Reactome pathways") 
+
+  return (plot_up + plot_down)
+
+}
+```
+
+
+
+```{r}
+# Importing and pre-processing the data
+
+RNA_counts_adjusted <- read.csv("data/RNA_counts_adjusted.csv", 
+                                header = TRUE, row.names = 1)
+
+covariates_original <- read.csv("data/covariates.csv", header = TRUE)
+
+# Copy of the covariates data that we can modify
+covariates <- covariates_original
+
+# Replace the "." in column of so `RNA_counts_adjusted` so that they match the `SUBJID`from `covariates`.
+colnames(RNA_counts_adjusted) <- gsub(".", "-", colnames(RNA_counts_adjusted), fixed = TRUE)
+
+# Replace SEX column by "M" for male, and "F" for female
+covariates$SEX[covariates$SEX == "1"] <- "M"
+covariates$SEX[covariates$SEX == "2"] <- "F"
+
+# Replace the blank PATHOLOGY_CATEGORIES by something more explicit
+covariates$PATHOLOGY_CATEGORIES[covariates$PATHOLOGY_CATEGORIES == ""] <- "unspecified"
+
+# AGE_DECADE: replace by a number instead? --> ex: 60-69 -> we should probably replace by 65 (if we assume that the age in that range is normally distributed)
+age_continuous <- substr(covariates$AGE_DECADE, start = 1, stop = 1) |> 
+  paste0("5") |> 
+  as.numeric()
+
+covariates <- covariates |> 
+  mutate(AGE_CONTINUOUS = age_continuous)
+
+
+# Replace the correct variables by factors:
+covariates <- covariates |> 
+  mutate(SEX = factor(SEX),
+         HARDY_SCALE = factor(HARDY_SCALE),
+         PATHOLOGY_CATEGORIES = factor(PATHOLOGY_CATEGORIES)
+         )
+```
+
+
+# Abstract {#sec-abstract}
+
+# Introduction {#sec-introduction}
+
+# Methods {#sec-methods}
+
+# Results {#sec-results}
+## Descriptive Analysis
+
+```{r}
+#| label: fig-covariates_distribution
+#| fig-cap: Distribution of the clinical and technical variables, and the dimorphism indices of the samples separated by sex (F = Female, M = Male). **(a)** Number of Female and Male subcutaneous adipose tissue sample donors. **(b)** Distribution of ages (in decades) of the donors. **(c)** Death classification of the samples' donors with the Hardy scale. **(d)** Distribution of the samples' RNA integrity numbers.  **(e)** Distribution of the samples' ischemic time. **(f)** Medical conditions diagnosed post-mortem from histology slides. **(g)** Distribution of the transcriptional dimorphism indices computed from whole RNA-seq transcriptomes. **(h)** Distribution of the dimorphism indices computed from AI-based histology profiles.
+#| fig-asp: 1.1
+
+
+plot_sex <- ggplot(covariates, aes(x = SEX,fill = SEX)) +
+  geom_bar() +
+  xlab("Sex")
+
+plot_age_decade <- ggplot(covariates, aes(x = AGE_DECADE, fill = SEX)) +
+  geom_bar(position = "dodge") +
+  xlab("Age [years]") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 10))
+
+plot_hardy_scale <- ggplot(covariates, aes(x = HARDY_SCALE, fill = SEX)) +
+  geom_bar(position = "dodge") +
+  xlab("Hardy scale")
+
+plot_rni <- ggplot(covariates, aes(x = RNA_INTEGRITY_NUMBER, fill = SEX)) +
+  geom_histogram(bins = 20, position = "dodge") +
+  xlab("RNA Integrity Number")
+
+plot_ischemic_time <- ggplot(covariates, aes(x = ISCHEMIC_TIME, fill = SEX)) +
+  geom_histogram(bins = 30, position = "dodge") +
+  xlab("Ischemic time [minutes]")
+
+plot_pathology_categories <- ggplot(covariates, aes(x = PATHOLOGY_CATEGORIES, fill = SEX)) +
+  geom_bar(position = "dodge") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 10)) +
+  xlab("Pathology categories")
+
+plot_histo_di <- ggplot(covariates, aes(x = HISTO_DI, fill = SEX)) +
+  geom_histogram(position = "dodge", bins = 30) +
+  xlab("Dimorphism indices from histology profiles")
+
+plot_rna_di <- ggplot(covariates, aes(x = RNA_DI, fill = SEX)) +
+  geom_histogram(bins = 30, position = "dodge") +
+  xlab("Dimorphism indices from RNA-seq transcriptomes")
+
+
+(plot_sex + plot_age_decade + plot_hardy_scale) / 
+  (plot_rni + plot_ischemic_time) +
+  (free(plot_pathology_categories) + (plot_histo_di / plot_rna_di)) +
+  plot_annotation(tag_levels = "a") +
+  plot_layout(guides = "collect")
+```
+
+Correlation between the continuous variables:
+
+```{r}
+#| label: fig-correlation
+#| fig-cap: Pairs plot of the continuous clinical and technical covariates for the samples separated by sex. The lower diagonal shows the scatter plots of each pair of variables. The upper diagonal indicates the Pearson correlation coefficients of the variabes considering all the samples (grey), or for the samples separated by sex (F = Female, M = Male). Statistical significance of the correlation is indicated by an asterisk (*** for p-value p < 0.001, ** for p < 0.01, * for p < 0.05, and . for p < 0.10).
+#| fig-asp: 0.8
+
+
+covariates |>
+  select(AGE_CONTINUOUS, RNA_INTEGRITY_NUMBER, ISCHEMIC_TIME, HISTO_DI, RNA_DI) |> 
+  ggpairs(aes(col = covariates$SEX, alpha = 0.5), 
+          progress = FALSE,
+          diag = NULL)
+```
+
+
+
+
+
+
+## Differential Gene Expression Analysis
+## Interpretation of the DI-associated transcriptome
+### Hormone Receptors Associated with the Dimorphism Indices and with Sex
+
+### Gene Set Enrichment Analysis
+
+# Discussion and Conclusion {#sec-discussion_and_conclusion}
+
+# Annexes {.unnumbered}
+## Session Information {.appendix .unnumbered}
