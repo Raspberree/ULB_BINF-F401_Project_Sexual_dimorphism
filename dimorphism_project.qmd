@@ -525,7 +525,7 @@ print(p_combined)
 ```
 
 **Conclusion**: technical variables that will be taken into account: `SEX, RNA_DI, AGE_CONTINUOUS, HARDY_SCALE`.
-Contrasts that were are most interested in: "SEX_M_vs_"F (differentially expressed genes in males vs. females), "SEXF.RNA_DI" (to identify the genes associated with the female dimorphism index), and "SEXM.RNA_DI" (to find the genes associated with the male dimorphism index). In `DESeq2`, this corresponds to the design: `~ HARDY_SCALE + AGE_CONTINUOUS + SEX + SEX:RNA_DI ` (see next section). 
+Contrasts that were are most interested in: "SEX_M_vs_"F (differentially expressed genes in males vs. females), "SEXF.RNA_DI" (to identify the genes associated with the female dimorphism index), and "SEXM.RNA_DI" (to find the genes associated with the male dimorphism index). In `DESeq2`, this corresponds to the design: `~ HARDY_SCALE + AGE_CONTINUOUS + SEX + SEX:RNA_DI` (see next section). 
 
 # Q2: the scale of DI-associated gene expression
 

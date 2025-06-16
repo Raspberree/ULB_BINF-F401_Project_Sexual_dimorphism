@@ -141,7 +141,7 @@ gsea_res_plots <- function(fgsea_results, alpha = 0.05){
   topPathwaysUp <- fgsea_results |> filter(ES > 0 & padj < alpha)
   topPathwaysDown <- fgsea_results |> filter(ES < 0 & padj < alpha)
 
-# Plots of the results
+  # Plots of the results
   plot_up <- topPathwaysUp |> 
     mutate(pathway = pathway |> process_strings() |>  str_wrap(width = 40) ) |> 
     ggplot(aes(reorder(pathway, NES), NES)) +
@@ -209,9 +209,35 @@ covariates <- covariates |>
 # Introduction {#sec-introduction}
 
 # Methods {#sec-methods}
+## Available Data
+The data at the basis of the analysis in this report is an RNA read count matrix containing RNA counts of `r nrow(RNA_counts_adjusted)` genes measured in postmortem subcutaneous adipose tissue of `r ncol(RNA_counts_adjusted)` donors. The raw data comes from the [GTEx project](https://www.gtexportal.org/home/) and the effect of technical covariates was "removed / normalized out" from the expression data. Those adjusted counts can be found in the `RNA_counts_adjusted.csv` file.
+
+Additionally, clinical and technical data related to the samples are also available with pre-computed dimorphism indices in the `covariates.csv` file.
+
+All the analyses were performed with R (version 4.4.1 (2024-06-14)). For more details about the R version information, the OS and attached or loaded packages, see @sec-session_info.
+
+## Differential Gene Expression Analysis 
+
+The differential gene expression (DGE) analysis was performed using `DESeq2` package. First, half of the genes with the lowest variability were filtered out. The variability was determined by computing the median absolute deviation (MAD), defined as the median of the absolute deviations from the data's median $\tilde{X} = \text{median}(X)$:
+
+$$\text{MAD} = \text{median}(|X_i - \tilde{X}|)$$
+with $X = {X_1, X_2, ..., X_n}$.
+
+The Hardy scale and age were included as covariates in the model by using the following design: `~ HARDY_SCALE + AGE_CONTINUOUS + SEX + SEX:RNA_DI`. For a justification of this design, see @sec-descriptive_analysis.
+
+Samples with missing values for the Hardy scale covariate were removed because variables in the design formula cannot contain missing values (NAs). Even though this decrease in sample size could lead to lower statistical power, this method was chosen since the number of samples with missing values is relatively small compared to the total number of samples (`r nrow(covariates)`) and because of its simplicity. The missing values represent `r (sum(is.na(covariates$HARDY_SCALE)) / nrow(covariates) |> round(2)) * 100`% of the total samples. Other, more sophisticated methods could have been used, such as replacing the missing values by the most common one (`HARDY_SCALE` = 0 with this data set), or creating a classifier model to predict the missing values using the other covariates (source?). We could also have replaced the "NA" value by a new category called "unknown". However, since there are only 12 samples in that category, and there quite a lot of variables in the design, we would risk having a low statistical power (very few degrees of freedom).
+
+Afterwards, the continuous variables (`AGE_CONTINUOUS`, and `RNA_DI`) were centered and scaled to improve convergence of the generalized linear model (GLM), as recommended by `DESeq2`.
+
+To identify genes associated with either the dimorphism indices, with sex or with age, the Wald significance test was used. To identify genes associated with the Hardy scale covariate, the likelihood ratio test was used instead (JUSTIFICATION).
+
+Finally, Benjamini-Hochberg correction was applied to all the p-values to control the false discovery rate at a level of 0.05.
+
+## Gene Set Enrichment Analysis (GSEA)
+Gene Set Enrichment Analysis was performed to identify pathways associated with the dimorphism indices and with sex. To this end, the REACTOME gene sets were used (in the `c2.cp.reactome.v2024.1.Hs.symbols.gmt` file) with the `fgsea` R package. The genes tested for differential expression in @sec-dge_analysis were ranked by decreasing order of the log2 Fold Change (for male and female dimorphism indices, and sex). Gene sets with less than 15 genes were not tested (`minSize` argument of the `fgsea` function).
 
 # Results {#sec-results}
-## Descriptive Analysis
+## Descriptive Analysis {#sec-descriptive_analysis}
 
 ```{r}
 #| label: fig-covariates_distribution
@@ -281,7 +307,7 @@ covariates |>
 
 
 
-## Differential Gene Expression Analysis
+## Differential Gene Expression Analysis {#sec-dge_analysis}
 ## Interpretation of the DI-associated transcriptome
 ### Hormone Receptors Associated with the Dimorphism Indices and with Sex
 
@@ -289,5 +315,10 @@ covariates |>
 
 # Discussion and Conclusion {#sec-discussion_and_conclusion}
 
-# Annexes {.unnumbered}
-## Session Information {.appendix .unnumbered}
+# Annexes {#sec-annexes}
+## Session Information {#sec-session_info}
+
+```{r}
+sessionInfo()
+```
+
