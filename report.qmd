@@ -209,14 +209,24 @@ covariates <- covariates |>
 # Introduction {#sec-introduction}
 
 # Methods {#sec-methods}
-## Available Data
+## Available Data and Preprocessing
 The data at the basis of the analysis in this report is an RNA read count matrix containing RNA counts of `r nrow(RNA_counts_adjusted)` genes measured in postmortem subcutaneous adipose tissue of `r ncol(RNA_counts_adjusted)` donors. The raw data comes from the [GTEx project](https://www.gtexportal.org/home/) and the effect of technical covariates was "removed / normalized out" from the expression data. Those adjusted counts can be found in the `RNA_counts_adjusted.csv` file.
 
 Additionally, clinical and technical data related to the samples are also available with pre-computed dimorphism indices in the `covariates.csv` file.
 
+The sample donor's ages were discretized by decade. However, for the differential gene expression analysis (see @sec-methods_dge_analysis and @sec-dge_analysis) we considered this covariate to be a continuous variable and thus added an `AGE_CONTINUOUS` covariate which is 35 for the 30-39 decade, 45 for the 40-49 decade, etc.
+
 All the analyses were performed with R (version 4.4.1 (2024-06-14)). For more details about the R version information, the OS and attached or loaded packages, see @sec-session_info.
 
-## Differential Gene Expression Analysis 
+CODE AVAILABILITY?
+
+## PCA
+
+To estimate the size factors and the vst (variance stabilizing transformation) with DESeq2: every gene contains at least one zero, cannot compute log geometric means. Solution: added a pseudo-count of 1 to every entry.
+
+The we perform a variance stabilizing transformation using the `DESeq2 vst` function.
+
+## Differential Gene Expression Analysis {#sec-methods_dge_analysis}
 
 The differential gene expression (DGE) analysis was performed using `DESeq2` package. First, half of the genes with the lowest variability were filtered out. The variability was determined by computing the median absolute deviation (MAD), defined as the median of the absolute deviations from the data's median $\tilde{X} = \text{median}(X)$:
 
@@ -239,10 +249,32 @@ Gene Set Enrichment Analysis was performed to identify pathways associated with 
 # Results {#sec-results}
 ## Descriptive Analysis {#sec-descriptive_analysis}
 
+The distribution of all the covariates is shown in @fig-covariates_distribution. We first notice that the number of male sample donor's is twice that of female sample donor's. The two classes are therefore unbalanced (which could cause problems if we wanted to perform classification with the data?). The death classification, based on the Hardy scale, is "0" for the majority of donors, which corresponds to cases on a ventilator immediately before death. The second most common death classification is a Hardy scale of "2": the sudden unexpected deaths of people who had been reasonably healthy. Additionally, the vast majority of samples had unspecified pathology categories (missing values). The second most common pathology category was fibrosis.
+
+Moreover, the majority of donors, regardless of sex, are in the 50-69 age range. The average RNA integrity number is `r mean(covariates$RNA_INTEGRITY_NUMBER)`, with a minimum at `r min(covariates$RNA_INTEGRITY_NUMBER)`, and seems to be similarly distributed regardless of the sex. (GOOD? REASONABLE?)
+
+The ischemic time (i.e., "time from death or withdrawal of life-support until the time the sample is placed in a fixative solution or frozen") varies between `r min(covariates$ISCHEMIC_TIME)` minutes and `r max(covariates$ISCHEMIC_TIME)` minutes (`r min(covariates$ISCHEMIC_TIME) / 60` hours), with a mean of `r mean(covariates$ISCHEMIC_TIME)`. This variable also seems to be similarly distributed across the two sexes.
+
+```{r}
+f_mean_rna_di <- covariates |> filter(SEX == "F") |> select(RNA_DI) |> unlist() |> mean()
+f_mean_histo_di <- covariates |> filter(SEX == "F") |> select(HISTO_DI) |> unlist() |> mean()
+
+m_mean_rna_di <- covariates |> filter(SEX == "M") |> select(RNA_DI) |> unlist() |> mean()
+m_mean_histo_di <- covariates |> filter(SEX == "M") |> select(HISTO_DI) |> unlist() |> mean()
+
+f_var_rna_di <- covariates |> filter(SEX == "F") |> select(RNA_DI) |> unlist() |> var()
+f_var_histo_di <- covariates |> filter(SEX == "F") |> select(HISTO_DI) |> unlist() |> var()
+
+m_var_rna_di <- covariates |> filter(SEX == "M") |> select(RNA_DI) |> unlist() |> var()
+m_var_histo_di <- covariates |> filter(SEX == "M") |> select(HISTO_DI) |> unlist() |> var()
+```
+Concerning the male and female dimorphism indices, we observe that the ones based the RNA-seq transcriptomes are similarly distributed between male and females. The female dimorphism index has a mean of `r f_mean_rna_di` and a variance of `r f_var_rna_di`, while the male dimorphism index has a mean of `r m_mean_rna_di` and a variance of `r m_var_rna_di`. Interestingly, the dimorphism indices calculated from histology profiles have a very different distribution. The male histology profile-based dimorphism index seems to have a bimodal distribution, with a mean of `r m_mean_histo_di` and a variance of `r m_var_histo_di`. The female histology profile-based dimorphism index has a mean of `r f_mean_histo_di` and a variance of `r f_var_histo_di`.
+
 ```{r}
 #| label: fig-covariates_distribution
 #| fig-cap: Distribution of the clinical and technical variables, and the dimorphism indices of the samples separated by sex (F = Female, M = Male). **(a)** Number of Female and Male subcutaneous adipose tissue sample donors. **(b)** Distribution of ages (in decades) of the donors. **(c)** Death classification of the samples' donors with the Hardy scale. **(d)** Distribution of the samples' RNA integrity numbers.  **(e)** Distribution of the samples' ischemic time. **(f)** Medical conditions diagnosed post-mortem from histology slides. **(g)** Distribution of the transcriptional dimorphism indices computed from whole RNA-seq transcriptomes. **(h)** Distribution of the dimorphism indices computed from AI-based histology profiles.
-#| fig-asp: 1.1
+#| fig-asp: 1
+#| fig-pos: "H"
 
 
 plot_sex <- ggplot(covariates, aes(x = SEX,fill = SEX)) +
@@ -287,12 +319,15 @@ plot_rna_di <- ggplot(covariates, aes(x = RNA_DI, fill = SEX)) +
   plot_layout(guides = "collect")
 ```
 
-Correlation between the continuous variables:
+@fig-correlation shows the Pearson correlation coefficients between each continuous clinical and technical covariates. It also shows the pairwise scatter plots of those variables. We observe that the RNA- and histology-based dimorphism indices are significantly correlated with one another, even though the correlation is quite low. Since the two indices measure the same "phenomenon", it is expected to observe a positive correlation between those variables. However, the low value of this correlation could indicate that there is a high error in one or both measurements of the dimorphism indices, that the two variables do not measure exactly the same "information", or something else. From the pairwise scatter plot, however, it does not appear that the low correlation is due to a nonlinear relationship between the two indices.
+
+We also notice that the age is negatively correlated with the RNA integrity number (RIN) and positively correlated with the ischemic time. The latter variable is negatively correlated with the RNA integrity number. This result is easily interpretable: the RIN is a measure of RNA quality in the sample. If the ischemic time is large, the sample has more time to "degrade", thus decreasing the RNA integrity.
 
 ```{r}
 #| label: fig-correlation
 #| fig-cap: Pairs plot of the continuous clinical and technical covariates for the samples separated by sex. The lower diagonal shows the scatter plots of each pair of variables. The upper diagonal indicates the Pearson correlation coefficients of the variabes considering all the samples (grey), or for the samples separated by sex (F = Female, M = Male). Statistical significance of the correlation is indicated by an asterisk (*** for p-value p < 0.001, ** for p < 0.01, * for p < 0.05, and . for p < 0.10).
 #| fig-asp: 0.8
+#| fig-pos: "H"
 
 
 covariates |>
@@ -303,7 +338,63 @@ covariates |>
 ```
 
 
+Are some technical variables possibly confounding dimorphism indices and
+clinical variables ?
 
+```{r}
+#| label: fig-pca_sex
+#| fig-cap: PCA representing 500 most variable genes
+#| out-width: "50%"
+#| message: false
+#| fig-pos: "H"
+
+mt <- match(colnames(RNA_counts_adjusted), covariates$SUBJID)
+
+RNA_counts_ds <- DESeqDataSetFromMatrix(
+  countData = RNA_counts_adjusted + 1,
+  colData = covariates[mt, ],
+  design = ~ 1 # no design yet, as we have to determine the confounding factors
+)
+
+vst_counts <- vst(RNA_counts_ds)
+
+pca_sex <- plotPCA(vst_counts, intgroup = c("SEX"), ntop = 500) +
+  coord_fixed() +
+  aes(alpha = 0.8) +
+  scale_color_discrete(name = "Sex")
+
+pca_sex
+```
+
+
+```{r}
+#| label: fig-pca_rna_di
+#| fig-cap: PCA representing 500 most variable genes
+#| out-width: "80%"
+#| message: false
+#| fig-pos: "H"
+
+
+PCA_rnadi_M <- vst_counts[,colData(vst_counts)$SEX == "M"] |> 
+  plotPCA(intgroup = c("RNA_DI"), ntop = 500) +
+  scale_color_continuous(type = "viridis", name = "RNA DI") +
+  coord_fixed() +
+  ggtitle("Males")
+
+PCA_rnadi_F <- vst_counts[,colData(vst_counts)$SEX == "F"] |> 
+  plotPCA(intgroup = c("RNA_DI"), ntop = 500) +
+  scale_color_continuous(type = "viridis", name = "RNA DI") +
+  coord_fixed() +
+  ggtitle("Females")
+
+PCA_rnadi_M + PCA_rnadi_F + plot_annotation(tag_levels = "a") + 
+  plot_layout(guides = "collect")  & theme(legend.position = 'bottom')
+
+```
+
+```{r}
+
+```
 
 
 

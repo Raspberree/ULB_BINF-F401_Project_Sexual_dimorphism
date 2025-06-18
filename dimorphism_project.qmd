@@ -381,6 +381,7 @@ PCA_histodi_M <- vst_counts[,colData(vst_counts)$SEX == "M"] |>
   coord_fixed() +
   ggtitle("Males")
 
+
 PCA_histodi_F <- vst_counts[,colData(vst_counts)$SEX == "F"] |> 
   plotPCA(intgroup = c("HISTO_DI"), ntop = 500) +
   scale_color_continuous(type = "viridis", name = "HISTO DI") +
@@ -405,7 +406,7 @@ PCA_age_M <- plotPCA(vst_counts[,colData(vst_counts)$SEX == "M"], intgroup = c("
   ggtitle("Males")
 
 PCA_age_F <- plotPCA(vst_counts[,colData(vst_counts)$SEX == "F"], intgroup = c("AGE_CONTINUOUS"), ntop = 500, pcsToUse = 1:2) +
-  scale_color_continuous(type = "viridis", name = "Age (continuous)") +
+  scale_color_continuous(type = "viridis", name = "Age (continuous)", alpha = 0.8) +
   coord_fixed() +
   ggtitle("Females")
 
