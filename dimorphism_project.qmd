@@ -401,7 +401,7 @@ plotPCA(vst_counts, intgroup = c("AGE_CONTINUOUS"), ntop = 500) +
   coord_fixed()
 
 PCA_age_M <- plotPCA(vst_counts[,colData(vst_counts)$SEX == "M"], intgroup = c("AGE_CONTINUOUS"), ntop = 500, pcsToUse = 1:2) +
-  scale_color_continuous(type = "viridis", name = "Age (continuous)") +
+  scale_color_continuous(type = "viridis", name = "Age (continuous)", alpha = 0.8) +
   coord_fixed() +
   ggtitle("Males")
 
@@ -497,7 +497,7 @@ print(p_combined)
 #| label: fig-pca_plot_with_hisograms_females_age
 #| fig-cap: Individual's plot of the PCA performed on the female samples only. The samples are colored by their age at death (in decades).
 
-pcaData <- plotPCA(vst_counts[,colData(vst_counts)$SEX == "F"], intgroup = c("AGE_DECADE"), ntop = 500, returnData = TRUE)
+pcaData <- plotPCA(vst_counts, intgroup = c("AGE_DECADE"), ntop = 500, returnData = TRUE)
 
 percentVar <- round(100 * attr(pcaData, "percentVar"))
 
