@@ -37,7 +37,7 @@ library(GGally) # install.packages("GGally")
 library(viridis)
 library(VennDiagram)
 library(corrplot)
-library(fgsea)
+library(fgsea)  # BiocManager::install("fgsea")
 
 #library(clusterProfiler) #BiocManager::install("clusterProfiler")
 
