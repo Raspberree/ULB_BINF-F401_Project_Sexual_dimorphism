@@ -592,7 +592,7 @@ mt <- match(colnames(filtered_counts), non_na_covariates$SUBJID)
 filtered_counts_ds <- DESeqDataSetFromMatrix(
   countData = filtered_counts,
   colData = non_na_covariates[mt, ],
-  design = ~ HARDY_SCALE + AGE_CONTINUOUS + SEX + SEX:RNA_DI # Design decided in Q1
+  design = ~ HARDY_SCALE + AGE_CONTINUOUS + SEX # Design decided in Q1
 )
 
 ```

@@ -141,26 +141,31 @@ volcano_plot <- function(data, title){
 
 
 # Plot of the GSEA results (Significantly up- or down-regulated pathways)
-gsea_res_plots <- function(fgsea_results, alpha = 0.05){
+gsea_res_plots <- function(fgsea_results, alpha = 0.05, n = 10){
   topPathwaysUp <- fgsea_results |> filter(ES > 0 & padj < alpha)
   topPathwaysDown <- fgsea_results |> filter(ES < 0 & padj < alpha)
 
   # Plots of the results
   plot_up <- topPathwaysUp |> 
-    mutate(pathway = pathway |> process_strings() |>  str_wrap(width = 40) ) |> 
+    slice_max(order_by = NES, n = n) |> 
+    mutate(pathway = pathway |> process_strings() |>  str_wrap(width = 20) ) |> 
     ggplot(aes(reorder(pathway, NES), NES)) +
+      scale_fill_viridis(option = "viridis", begin = 0, end = alpha) +
       geom_col(fill = hue_pal()(2)[2]) +
       coord_flip() +
-      labs(x="Pathway", y="Normalized Enrichment Score",
-           title="Top upregulated Reactome pathways") 
+      labs(x="Pathway", y="Normalized Enrichment Score") +
+      theme(legend.position = "bottom", 
+            axis.text = element_text(size = 8))
   
   plot_down <- topPathwaysDown |> 
-    mutate(pathway = pathway |> process_strings() |>  str_wrap(width = 40) ) |> 
+    slice_min(order_by = NES, n = n) |>
+    mutate(pathway = pathway |> process_strings() |>  str_wrap(width = 20) ) |> 
     ggplot(aes(reorder(pathway, NES), NES)) +
       geom_col(fill = hue_pal()(2)[1]) +
       coord_flip() +
-      labs(x="Pathway", y="Normalized Enrichment Score",
-           title="Top upregulated Reactome pathways") 
+      labs(x="Pathway", y="Normalized Enrichment Score") +
+      theme(legend.position = "bottom",
+            axis.text = element_text(size = 8))
 
   return (plot_up + plot_down)
 
@@ -255,9 +260,9 @@ with $X = {X_1, X_2, ..., X_n}$.
 
 The Hardy scale and age were included as covariates in the model by using the following design: `~ HARDY_SCALE + AGE_CONTINUOUS + SEX + SEX:RNA_DI`. For a justification of this design, see @sec-descriptive_analysis.
 
-Afterwards, the continuous variables (`AGE_CONTINUOUS`, and `RNA_DI`) were centered and scaled to improve convergence of the generalized linear model (GLM), as recommended by `DESeq2`.
+Afterwards, the continuous variable `AGE_CONTINUOUS` was centered and scaled to improve convergence of the generalized linear model (GLM), as recommended by `DESeq2`. The `RNA_DI` variable was not centered nor scaled as the value `RNA_DI` = 0 has a biological meaning, and centering that variable would erase the meaning, especially since there are many more males than females in our data set.(Is the RNA_DI in log scale? If so, then 0 in log corresponds to 1 in not-log --> keeps biological meaning. Otherwise, having negative index doesn't make sense).
 
-To identify genes associated with either the dimorphism indices, with sex or with age, the Wald significance test was used. To identify genes associated with the Hardy scale covariate, the likelihood ratio test was used instead (JUSTIFICATION).
+To identify genes associated with either the dimorphism indices, with sex or with age, the Wald significance test was used. To identify genes associated with the Hardy scale covariate, the likelihood ratio test was used instead (JUSTIFICATION + reduced = ~ AGE_CONTINUOUS + SEX + SEX:RNA_DI).
 
 Finally, Benjamini-Hochberg correction was applied to all the p-values to control the false discovery rate at a level of 0.05.
 
@@ -286,7 +291,7 @@ f_var_histo_di <- covariates |> filter(SEX == "F") |> select(HISTO_DI) |> unlist
 m_var_rna_di <- covariates |> filter(SEX == "M") |> select(RNA_DI) |> unlist() |> var()
 m_var_histo_di <- covariates |> filter(SEX == "M") |> select(HISTO_DI) |> unlist() |> var()
 ```
-Concerning the male and female dimorphism indices, we observe that the ones based the RNA-seq transcriptomes are similarly distributed between male and females. The female dimorphism index had a mean of `r f_mean_rna_di` and a variance of `r f_var_rna_di`, while the male dimorphism index had a mean of `r m_mean_rna_di` and a variance of `r m_var_rna_di`. Interestingly, the dimorphism indices calculated from histology profiles show a very different distribution. The male histology profile-based dimorphism index seems to have a bimodal distribution, with a mean of `r m_mean_histo_di` and a variance of `r m_var_histo_di`. The female histology profile-based dimorphism index had a mean of `r f_mean_histo_di` and a variance of `r f_var_histo_di`.
+Concerning the male and female dimorphism indices (in log scale???), we observe that the ones based the RNA-seq transcriptomes are similarly distributed between male and females. The female dimorphism index had a mean of `r f_mean_rna_di` and a variance of `r f_var_rna_di`, while the male dimorphism index had a mean of `r m_mean_rna_di` and a variance of `r m_var_rna_di`. Interestingly, the dimorphism indices calculated from histology profiles show a very different distribution. The male histology profile-based dimorphism index seems to have a bimodal distribution, with a mean of `r m_mean_histo_di` and a variance of `r m_var_histo_di`. The female histology profile-based dimorphism index had a mean of `r f_mean_histo_di` and a variance of `r f_var_histo_di`.
 
 ```{r}
 #| label: fig-covariates_distribution
@@ -486,7 +491,7 @@ non_na_covariates <- covariates
 
 non_na_covariates$AGE_CONTINUOUS <- scale(non_na_covariates$AGE_CONTINUOUS, center = TRUE, scale = TRUE)
 
-non_na_covariates$RNA_DI <- scale(non_na_covariates$RNA_DI, center = TRUE, scale = TRUE)
+#non_na_covariates$RNA_DI <- scale(non_na_covariates$RNA_DI, center = TRUE, scale = TRUE)
 
 
 mt <- match(colnames(filtered_counts), non_na_covariates$SUBJID)
@@ -529,7 +534,7 @@ Up_M <- sum(rna_di_M_res$padj <= alpha & rna_di_M_res$log2FoldChange >= 0, na.rm
 ```
 
 
-@fig-volcano_plot_di shows the genes .... For both men and women, the majority of genes tested were statistically significantly differently expressed (`r (Down_M + Up_M) / (Down_M + Up_M + NotSig_M) * 100`% of genes for men, and `r (Down_F + Up_F) / (Down_F + Up_F + NotSig_F) * 100`% for women). We also noticed that, for women, the majority of differently expressed genes were down-regulated, while the majority of differently expressed genes were up-regulated in men. Among the down-regulated genes with the lowest adjusted p-values in women, some were also found to be among the up-regulated genes with the lowest adjusted p-values in men. This included genes such as GARNL3, ARHGEF25 or DBNDD2. To find whether this observation was also true for the other significant genes, we plotted a Venn diagram (see @fig-venn) showing the overlap between the up- and down-regulated genes in both males and females. 
+All the genes tested for differential expression are shown as dots on the volcano plots in @fig-volcano_plot_di. For both male and female dimorphism indices (DI), the majority of genes tested were statistically significantly associated with the indices (`r (Down_M + Up_M) / (Down_M + Up_M + NotSig_M) * 100 |> round(2)`% of genes for the male DI, and `r (Down_F + Up_F) / (Down_F + Up_F + NotSig_F) * 100 |> round(2)`% for the female DI). We also noticed that, for the female DI, the majority of differently expressed genes had expression levels that were negatively associated with the female DI, while the majority of differently expressed genes were positively associated with the male DI. Among the down-regulated genes with the lowest adjusted p-values for the female DI, some were also found to be among the up-regulated genes with the lowest adjusted p-values for the male ID. This included genes such as GARNL3, ARHGEF25 or DBNDD2. 
 
 ```{r}
 #| label: fig-volcano_plot_di
@@ -544,11 +549,14 @@ volcano_di <- volcano_plot(rna_di_F_res, "Female RNA Dimorphism Index") +
 volcano_di
 ```
 
+To find whether this overlap between genes that are negatively associated with the female DI and positively associated with the male DI was also true for the other significant genes, we plotted a Venn diagram (see @fig-venn) showing the overlap between the up- and down-regulated genes for both male and female DIs. And indeed, there is a substantial overlap of 4676 genes that were positively associated with the male DI but negatively associated with the female DI. Conversely, 1112 genes were negatively associated with the male DI but positively with the female DI. The number of genes that were regulated the same way according to the two DIs was much lower, with just 12 genes positively associated with both male and female DIs, and 99 genes down-regulated according to both DIs.
+
+INTERPRETATION
 
 
 ```{r}
 #| label: fig-venn
-#| fig-cap: Venn diagram
+#| fig-cap: Venn diagram showing the overlap in genes that were up- and down-regulated in men and women according to the male and female dimoprhism indices.
 #| out-width: "60%"
 #| fig-pos: "H"
 
@@ -606,6 +614,10 @@ grid.draw(venn.plot)
 
 ### Genes associated with sex, and other technical and clinical covariates
 
+[@fig-volcano_plot_age]a shows the baseline difference between males and females, i.e., the genes that were differently expressed when the dimorphism index is null. It can be interpreted as the differentially expressed genes for individuals that are equally similar to other same-sex and opposite-sex individuals in terms of their overall transcriptomes (?). In order to determine the main effect of sex, i.e., determine which genes are differentially expressed in males and females regardless of the value of the dimorphism indices, another design, `~ HARDY_SCALE + AGE_CONTINUOUS + SEX` would have to be used. However, the results for the Hardy scale and the age would also change, making the results more difficult to interpret. The results using this alternative design are shown in the annex in @sec-annex_alt.
+
+
+
 ```{r}
 sex_res <- results(filtered_counts_ds, contrast = c("SEX", "M", "F")) # log2 Fold-Change = Male / Female
 
@@ -626,25 +638,30 @@ volcano_plot_sex <- volcano_plot(sex_res, "Sex")
 age_res <- results(filtered_counts_ds, name = "AGE_CONTINUOUS", alpha = alpha)
 
 NotSig_AGE <- sum(age_res$padj >= alpha, na.rm = TRUE)
-Dow_AGE <- sum(age_res$padj <= alpha & age_res$log2FoldChange < 0, na.rm = TRUE)
+Down_AGE <- sum(age_res$padj <= alpha & age_res$log2FoldChange < 0, na.rm = TRUE)
 Up_AGE <- sum(age_res$padj <= alpha & age_res$log2FoldChange > 0, na.rm = TRUE)
 
 # Showing the results
-age_res_df <- data.frame("AGE_CONTINUOUS" = c(Dow_AGE, NotSig_AGE, Up_AGE))
+age_res_df <- data.frame("AGE_CONTINUOUS" = c(Down_AGE, NotSig_AGE, Up_AGE))
 rownames(age_res_df) <- c("Down", "NotSig", "Up")
 #age_res_df |> gt(rownames_to_stub = TRUE)
 ```
+
+When the dimorphism indices was equal to 0, many genes were still considered to be differently expressed: `r Up_SEX` genes were up-regulated in males compared to males, while `r Dow_SEX` genes were more strongly expressed in females compared to males. However, the amplitude of the log2 fold change is below 1 (in absolute value) for most of the significant genes, meaning that, while the difference in gene expression may be statistically significant, it may not be biologically relevant.
+
+Conversely, a relatively small number of genes (`r (Up_AGE + Down_AGE) / (Up_AGE + Down_AGE + NotSig_AGE) * 100 |> round(2)`% of tested genes) were associated with age ([@fig-volcano_plot_age]b).
+
 
 ```{r}
 #| label: fig-volcano_plot_age
 #| out-width: "80%"
 #| fig-pos: "H"
-#| fig-cap: "Volcano plots showing differential gene expression analysis results for the age (continuous) **(a)** and sex **(b)** covariates. Differential expression was assessed using Wald tests with multiple testing correction (Benjamini-Hochberg method). Genes meeting the significance threshold (FDR < 0.05) are color-coded according to the direction of change: up-regulated genes with a positive log2 fold change (FC) are colored in blue, while down-regulated genes with a negative log2 FC are colored in red. For both plots, the 20 genes with the lowest adjusted p-values are labelled."
+#| fig-cap: "Volcano plots showing differential gene expression analysis results for the age (continuous) **(a)** and sex **(b)** covariates. Differential expression was assessed using Wald tests with multiple testing correction (Benjamini-Hochberg method). Genes meeting the significance threshold (FDR < 0.05) are color-coded according to the direction of change: up-regulated genes with a positive log2 fold change (FC) are colored in blue, while down-regulated genes with a negative log2 FC are colored in red. For both plots, the 20 genes with the lowest adjusted p-values are labelled.  A positive log2 Fold Change for the sex covariate indicates that genes are more expressed in males than females, and a negative log2 Fold Change indicates the opposite."
 
 
 volcano_plot_sex + volcano_plot(age_res, "Age (continuous)") + plot_annotation(tag_levels = "a")
 ```
-
+Finally, @fig-boxplot_hardy shows the results of the DGE analysis for the Hardy scale covariate.
 
 ```{r}
 #| label: fig-boxplot_hardy
@@ -689,11 +706,303 @@ volcano_plot_hardy + boxplot_hardy + plot_annotation(tag_levels = "a")
 ## Interpretation of the DI-associated transcriptome
 ### Hormone Receptors Associated with the Dimorphism Indices and with Sex
 
+```{r}
+# Importing the csv file
+horm_receptors <- read.csv("data/results_hgnc_hormone_rcpt_strict.csv", sep = "\t")
+
+# Significant genes
+all_genes <- rownames(rna_di_F_res)
+
+sig_di_f_genes <- rna_di_F_res |>  as.data.frame() |> 
+  filter(padj <= alpha) |> 
+  rownames()
+
+sig_di_m_genes <- rna_di_M_res |>  as.data.frame() |> 
+  filter(padj <= alpha) |> 
+  rownames()
+
+sig_sex_genes <- sex_res |>  as.data.frame() |> 
+  filter(padj <= alpha) |> 
+  rownames()
+
+
+# Receptors found among the differentially expressed genes for the DIs and sex
+# Indices in the recpetors data frame
+f_di_index <- horm_receptors$Approved.symbol %in% sig_di_f_genes
+m_di_index <- horm_receptors$Approved.symbol %in% sig_di_m_genes
+sex_index <- horm_receptors$Approved.symbol %in% sig_sex_genes
+
+# Significant receptor names
+f_di_rcpt <- horm_receptors[f_di_index, "Approved.name"] |> unique()
+m_di_rcpt <- horm_receptors[m_di_index, "Approved.name"] |> unique()
+sex_rcpt <- horm_receptors[sex_index, "Approved.name"] |> unique()
+
+# All significant receptor names
+sig_rcpt <- unique(c(f_di_rcpt, m_di_rcpt, sex_rcpt))
+
+# gene names of the significant receptors
+f_di_rcpt_genes <- horm_receptors[f_di_index, "Approved.symbol"] |> unique()
+m_di_rcpt_genes <- horm_receptors[m_di_index, "Approved.symbol"] |> unique()
+sex_rcpt_genes <- horm_receptors[sex_index, "Approved.symbol"] |> unique()
+
+rcpt_genes <- unique(c(f_di_rcpt_genes, m_di_rcpt_genes, sex_rcpt_genes))
+
+# Fold changes of the significant receptors
+f_di_rcpt_FC <- rna_di_F_res[rcpt_genes, "log2FoldChange"]
+m_di_rcpt_FC <- rna_di_M_res[rcpt_genes, "log2FoldChange"]
+sex_rcpt_FC <- sex_res[rcpt_genes, "log2FoldChange"]
+
+# Creating the data frame to plot
+rcpt_df <- data.frame(
+  # Fold change of that receptor according to the Wald tests
+  "receptor_name" = sig_rcpt,
+  "Female_DI" = f_di_rcpt_FC,
+  "Male_DI" = m_di_rcpt_FC,
+  "SEX" = sex_rcpt_FC,
+  # Is the gene significant or not?
+  "F_DI_sig" = rcpt_genes %in% f_di_rcpt_genes,
+  "M_DI_sig" = rcpt_genes %in% m_di_rcpt_genes,
+  "SEX_sig" = rcpt_genes %in% sex_rcpt_genes
+)
+```
+
+```{r}
+#| label: fig-receptors
+#| fig-cap: Hormonal receptors associated with the female and male dimorphism indices and the sex. Color corresponds to the fold change (determined in previous section). Grey color given to receptors that were not significantly associated with the variable.
+#| out-width: "90%"
+#| fig-pos: "H"
+#| message: false
+
+rcpt_long <- rcpt_df |>
+  pivot_longer(
+    cols = c(Female_DI, Male_DI, SEX),
+    names_to = "covariate",
+    values_to = "fold_change"
+  ) |>
+  mutate(sig = case_when(
+    covariate == "Female_DI" ~ F_DI_sig,
+    covariate == "Male_DI" ~ M_DI_sig,
+    covariate == "SEX" ~ SEX_sig
+  ))
+
+ggplot(rcpt_long, aes(x = covariate, y = receptor_name)) +
+  geom_tile(aes(fill = ifelse(sig, fold_change, NA))) +
+  scale_fill_gradientn(
+    name = "Fold change",
+    colors = c("blue", "white", "red"),
+    values = scales::rescale(c(min(rcpt_long$fold_change), 0, max(rcpt_long$fold_change))),
+    na.value = "grey50"
+  ) +
+  theme_minimal() +
+  labs(fill = "Fold change", x = "Variable", y = "Receptor Name") +
+  scale_y_discrete(limits=rev)
+```
+
+
+
+
 ### Gene Set Enrichment Analysis
+```{r}
+# Importing the REACTOME GMT file
+
+gmt.file <- "resources/c2.cp.reactome.v2024.1.Hs.symbols.gmt"
+reactome <- gmtPathways(gmt.file)
+
+# Female dimorphism index - genes ranked by log2 FC
+ranked_genes_di_F <- rna_di_F_res$log2FoldChange
+names(ranked_genes_di_F) <- rownames(rna_di_F_res)
+ranked_genes_di_F <- sort(ranked_genes_di_F, decreasing = TRUE)
+
+# Male dimorphism index
+ranked_genes_di_M <- rna_di_M_res$log2FoldChange
+names(ranked_genes_di_M) <- rownames(rna_di_M_res)
+ranked_genes_di_M <- sort(ranked_genes_di_M, decreasing = TRUE)
+
+# Sex
+ranked_genes_sex <- sex_res$log2FoldChange
+names(ranked_genes_sex) <- rownames(sex_res)
+ranked_genes_sex <- sort(ranked_genes_sex, decreasing = TRUE)
+```
+
+
+### Female and Male Dimorphism indices
+
+```{r}
+#| label: fig-gsea_di_f
+#| out-width: "80%"
+#| fig-cap: Results of fgsea for the female dimorphism index
+#| fig-pos: "H"
+
+set.seed(1)
+
+fgsea_results_di_F <- fgsea(
+    pathways = reactome,
+    stats = ranked_genes_di_F,
+    minSize = 15,
+    maxSize = Inf,
+    nPermSimple = 100000
+)
+
+gsea_res_plots(fgsea_results_di_F)
+
+```
+
+```{r}
+#| label: fig-gsea_di_m
+#| out-width: "80%"
+#| fig-cap: Results of fgsea for the male dimorphism index
+#| fig-pos: "H"
+
+set.seed(1)
+
+fgsea_results_di_M <- fgsea(
+    pathways = reactome,
+    stats = ranked_genes_di_M,
+    minSize = 15,
+    maxSize = Inf
+)
+
+topPathwaysUp_M <- fgsea_results_di_M |> filter(ES > 0 & padj < alpha)
+topPathwaysDown_M <- fgsea_results_di_M |> filter(ES < 0 & padj < alpha)
+
+# Plots of the results
+gsea_res_plots(fgsea_results_di_M)
+```
+
+
+
+```{r}
+#| label: fig-gsea_sex
+#| out-width: "80%"
+#| fig-cap: Results of fgsea for sex
+#| fig-pos: "H"
+
+set.seed(1)
+
+fgsea_results_sex <- fgsea(
+    pathways = reactome,
+    stats = ranked_genes_sex,
+    minSize = 15,
+    maxSize = Inf,
+    nPermSimple = 10000
+)
+
+topPathwaysUp_sex <- fgsea_results_sex |> filter(ES > 0 & padj < alpha)
+topPathwaysDown_sex <- fgsea_results_sex |> filter(ES < 0 & padj < alpha)
+
+# Plots of the results
+gsea_res_plots(fgsea_results_sex)
+```
+
+
+
 
 # Discussion and Conclusion {#sec-discussion_and_conclusion}
 
+- The fact that the sexual dimorphism index has a different meaning for men and women makes its use in statistical "tests" more difficult, such as the choice of the design for DESeq2 DGE analysis.
+
+- GSEA: the ranking of the genes passed to the fgsea algorithm can be based on different statistics (log2FC, test statistic, adjusted p-value, log2FC * (log10(padj))), and the choice of this ranking changes the results of GSEA, making interpretation of results difficult.
+
+
 # Annexes {#sec-annexes}
+## Alternative design for DGE analysis {#sec-annex_alt}
+
+Alternative design to determine the overall effect of sex, without controlling for the dimorphism indices: `~ HARDY_SCALE + AGE_CONTINUOUS + SEX`
+
+```{r}
+# Alternative design
+filtered_counts_ds_alt <- DESeqDataSetFromMatrix(
+  countData = filtered_counts,
+  colData = non_na_covariates[mt, ],
+  design = ~ HARDY_SCALE + AGE_CONTINUOUS + SEX
+)
+```
+
+```{r running DESeq function alternative}
+#| message: false
+filtered_counts_ds_alt <- DESeq(filtered_counts_ds_alt)
+
+#resultsNames(filtered_counts_ds_alt)
+```
+
+New volcano plots for sex and age:
+
+```{r}
+sex_res <- results(filtered_counts_ds_alt, contrast = c("SEX", "M", "F")) # log2 Fold-Change = Male / Female
+
+NotSig_SEX <- sum(sex_res$padj >= alpha, na.rm = TRUE)
+Dow_SEX <- sum(sex_res$padj <= alpha & sex_res$log2FoldChange < 0, na.rm = TRUE)
+Up_SEX <- sum(sex_res$padj <= alpha & sex_res$log2FoldChange > 0, na.rm = TRUE)
+
+# Showing the results
+sex_res_df <- data.frame("SEX_M_vs_F" = c(Dow_SEX, NotSig_SEX, Up_SEX))
+rownames(sex_res_df) <- c("Down", "NotSig", "Up")
+#sex_res_df |> gt(rownames_to_stub = TRUE)
+
+volcano_plot_sex <- volcano_plot(sex_res, "Sex")
+```
+
+```{r}
+age_res <- results(filtered_counts_ds_alt, name = "AGE_CONTINUOUS", alpha = alpha)
+
+NotSig_AGE <- sum(age_res$padj >= alpha, na.rm = TRUE)
+Dow_AGE <- sum(age_res$padj <= alpha & age_res$log2FoldChange < 0, na.rm = TRUE)
+Up_AGE <- sum(age_res$padj <= alpha & age_res$log2FoldChange > 0, na.rm = TRUE)
+
+# Showing the results
+age_res_df <- data.frame("AGE_CONTINUOUS" = c(Dow_AGE, NotSig_AGE, Up_AGE))
+rownames(age_res_df) <- c("Down", "NotSig", "Up")
+#age_res_df |> gt(rownames_to_stub = TRUE)
+```
+
+```{r}
+#| label: fig-volcano_plot_alt
+#| out-width: "80%"
+#| fig-pos: "H"
+#| fig-cap: "Volcano plots showing differential gene expression analysis results for the age (continuous) **(a)** and sex **(b)** covariates. Differential expression was assessed using Wald tests with multiple testing correction (Benjamini-Hochberg method). Genes meeting the significance threshold (FDR < 0.05) are color-coded according to the direction of change: up-regulated genes with a positive log2 fold change (FC) are colored in blue, while down-regulated genes with a negative log2 FC are colored in red. For both plots, the 20 genes with the lowest adjusted p-values are labelled."
+
+
+volcano_plot_sex + volcano_plot(age_res, "Age (continuous)") + plot_annotation(tag_levels = "a")
+```
+
+
+```{r}
+#| label: fig-boxplot_hardy_alt
+#| fig-cap: (a) Vocano plot Hardy scale (b) Top 9 genes with lowest adjusted p-value for the likelihood ratio test on Hardy scale covariate
+#| out-width: "90%"
+#| fig-pos: "H"
+#| message: false
+
+
+dds_lrt_alt <- DESeq(filtered_counts_ds_alt, test = "LRT", reduced = ~ AGE_CONTINUOUS + SEX)
+res_lrt <- results(dds_lrt_alt)
+
+volcano_plot_hardy <- volcano_plot(res_lrt, "")
+
+sig_hardy_genes <- res_lrt |> 
+  as.data.frame() |> 
+  slice_min(order_by = padj, n = 9) |> 
+  rownames()
+
+fcounts_long <- filtered_counts |> rownames_to_column("gene_id") |> 
+  pivot_longer(cols = - gene_id, names_to = "SUBJID", values_to = "counts")
+
+fcounts_long <- left_join(fcounts_long, covariates |> select(SUBJID, HARDY_SCALE), by = "SUBJID")
+
+boxplot_hardy <- fcounts_long |> 
+  filter(gene_id %in% sig_hardy_genes) |> 
+  ggplot(aes(x = HARDY_SCALE, y = counts, fill = HARDY_SCALE)) +
+  geom_boxplot(outlier.size = 0.8, outlier.alpha = 0.6) +
+  facet_wrap(~ gene_id, scales = "free_y", ncol = 3) +
+  labs(x = "Hardy Scale",
+       y = "Raw Counts") +
+  theme(legend.position = "bottom")
+
+
+volcano_plot_hardy + boxplot_hardy + plot_annotation(tag_levels = "a")
+```
+
+
 ## Session Information {#sec-session_info}
 
 ```{r}
