@@ -34,7 +34,7 @@ toc-depth: 3
 number-sections: true
 
 execute:
-  cache: false
+  cache: true
   warning: false
             
 editor: source 
@@ -221,6 +221,12 @@ covariates <- covariates[non_na_samples,]
 RNA_counts_adjusted <- RNA_counts_adjusted[, non_na_samples]
 ```
 
+```{r}
+# Importing the hormone receptors csv file
+horm_receptors <- read.csv("data/results_hgnc_hormone_rcpt_strict.csv", sep = "\t")
+```
+
+
 
 # Introduction {#sec-introduction}
 
@@ -230,53 +236,58 @@ RNA_counts_adjusted <- RNA_counts_adjusted[, non_na_samples]
 
 # Methods {#sec-methods}
 ## Available Data and Preprocessing
-The data at the basis of the analysis in this report is an RNA read count matrix containing RNA counts of `r nrow(RNA_counts_adjusted)` genes measured in postmortem subcutaneous adipose tissue of `r ncol(RNA_counts_adjusted)` donors. The raw data comes from the [GTEx project](https://www.gtexportal.org/home/) and the effect of technical covariates was "removed / normalized out" from the expression data. Those adjusted counts can be found in the `RNA_counts_adjusted.csv` file.
+The data at the basis of the analysis in this report is an RNA read count matrix containing RNA counts of `r nrow(RNA_counts_adjusted)` genes measured in postmortem subcutaneous adipose tissue of `r ncol(RNA_counts_adjusted)` donors. The raw data comes from the [GTEx project](https://www.gtexportal.org/home/) and the effect of technical covariates was removed from the expression data. Those adjusted counts can be found in the `RNA_counts_adjusted.csv` file.
 
 Additionally, clinical and technical data related to the samples are also available with pre-computed dimorphism indices in the `covariates.csv` file.
 
 The sample donor's ages were discretized by decade. However, for the differential gene expression analysis (see @sec-methods_dge_analysis and @sec-dge_analysis) we considered this covariate to be a continuous variable and thus added an `AGE_CONTINUOUS` covariate which is 35 for the 30-39 decade, 45 for the 40-49 decade, etc.
 
-Finally, `r n_na_samples` samples had missing values for the Hardy scale. For simplicity, we decided to remove to samples because there cannot be missing values in a variable used in the design of the `DESeq` function, used for differential gene expression analysis. Even though this decrease in sample size could lead to lower statistical power, this method was chosen since the number of samples with missing values is relatively small compared to the total number of samples (`r nrow(covariates_original)`) and because of its simplicity. Other, more sophisticated methods could have been used, such as replacing the missing values by the most common one (`HARDY_SCALE` = 0 with this data set), or creating a classifier model to predict the missing values using the other covariates (source?). We could also have replaced the "NA" value by a new category called "unknown". However, since there are only 12 samples in that category, and there quite a lot of variables in the design, we would risk having a low statistical power (very few degrees of freedom).
-
-
-However, since there are only `r n_na_samples` samples in that category, and there quite a lot of variables in the design (see @sec-dge_analysis), we would risk having a low statistical power (few degrees of freedom).
+Finally, `r n_na_samples` samples had missing values for the Hardy scale. For simplicity, we decided to remove those samples because there cannot be missing values in a variable used in the design of the `DESeq` function, used for differential gene expression analysis. Even though this decrease in sample size could lead to lower statistical power, this method was chosen since the number of samples with missing values is relatively small compared to the total number of samples (`r nrow(covariates_original)`). Other, more sophisticated methods could have been used, such as replacing the missing values by the most common one (`HARDY_SCALE` = 0 with this data set), or creating a classifier model to predict the missing values using the other covariates. We could also have replaced the "NA" value by a new category called "unknown". However, since there are only 12 samples in that category, and there are quite a lot of variables in the design (see @sec-dge_analysis), we would risk having a low statistical power (very few degrees of freedom).
 
 All the analyses were performed with R (version 4.4.1 (2024-06-14)). For more details about the R version information, the OS and attached or loaded packages, see @sec-session_info.
 
-CODE AVAILABILITY?
+CODE and DATA AVAILABILITY?
 
-## PCA
+## Principal Component Analysis
 
-To estimate the size factors and the vst (variance stabilizing transformation) with DESeq2: every gene contains at least one zero, cannot compute log geometric means. Solution: added a pseudo-count of 1 to every entry.
+The PCAs in @sec-descriptive_analysis were performed on the counts after a variance stabilizing transformation (using the `vst` function from `DESeq2` with its default arguments). Since the log geometric means could not be computed because every gene contained at least one zero, a pseudo-count of 1 was added to every entry of the count matrix. 
 
-The we perform a variance stabilizing transformation using the `DESeq2 vst` function.
+The PCAs were performed by using the `DESeq2` `plotPCA` function and setting the `ntop` parameter to 500.
+
 
 ## Differential Gene Expression Analysis {#sec-methods_dge_analysis}
 
-The differential gene expression (DGE) analysis was performed using `DESeq2` package. First, half of the genes with the lowest variability were filtered out. The variability was determined by computing the median absolute deviation (MAD), defined as the median of the absolute deviations from the data's median $\tilde{X} = \text{median}(X)$:
+The differential gene expression (DGE) analysis was performed using the `DESeq2` package. First, half of the genes with the lowest variability were filtered out. The variability was determined by computing the median absolute deviation (MAD), defined as the median of the absolute deviations from the data's median $\tilde{X} = \text{median}(X)$:
 
 $$\text{MAD} = \text{median}(|X_i - \tilde{X}|)$$
-with $X = {X_1, X_2, ..., X_n}$.
+with $X = {X_1, X_2, ..., X_n}$, and $n$ being the number of samples.
 
-The Hardy scale and age were included as covariates in the model by using the following design: `~ HARDY_SCALE + AGE_CONTINUOUS + SEX + SEX:RNA_DI`. For a justification of this design, see @sec-descriptive_analysis.
+The Hardy scale and age were included as covariates in the generalized linear model (GLM) for the count data by using the following design: `~ HARDY_SCALE + AGE_CONTINUOUS + SEX + SEX:RNA_DI`. For a justification of this design, see @sec-descriptive_analysis.
 
-Afterwards, the continuous variable `AGE_CONTINUOUS` was centered and scaled to improve convergence of the generalized linear model (GLM), as recommended by `DESeq2`. The `RNA_DI` variable was not centered nor scaled as the value `RNA_DI` = 0 has a biological meaning, and centering that variable would erase the meaning, especially since there are many more males than females in our data set.(Is the RNA_DI in log scale? If so, then 0 in log corresponds to 1 in not-log --> keeps biological meaning. Otherwise, having negative index doesn't make sense).
+Afterwards, the continuous variable `AGE_CONTINUOUS` was centered and scaled to improve convergence of the GLM, as recommended by `DESeq2`. The `RNA_DI` variable was not centered nor scaled as the value `RNA_DI` = 0 has a biological meaning, and centering that variable would erase this meaning, especially since there are many more males than females in our data set.
 
-To identify genes associated with either the dimorphism indices, with sex or with age, the Wald significance test was used. To identify genes associated with the Hardy scale covariate, the likelihood ratio test was used instead (JUSTIFICATION + reduced = ~ AGE_CONTINUOUS + SEX + SEX:RNA_DI).
+To identify genes associated with the dimorphism indices, with sex or with age, the Wald significance test was used. To identify genes associated with the Hardy scale covariate, the likelihood ratio test (LRT) was used instead. The LRT can be used when evaluating expression change across more than two levels (the Hardy scale has 5 levels). For this test, a full model, containing the covariate of interest (i.e., `HARDY_SCALE`), is compared to a reduced model, with the covariate of interest removed. If a significant amount of variation is explained by the covariate of interest, this suggests that the gene is differentially expressed across the different levels. The reduced model used in our analysis is: `~ AGE_CONTINUOUS + SEX + SEX:RNA_DI` [(source)](https://hbctraining.github.io/DGE_workshop_salmon/lessons/08_DGE_LRT.html).
 
-Finally, Benjamini-Hochberg correction was applied to all the p-values to control the false discovery rate at a level of 0.05.
+Finally, a Benjamini-Hochberg correction was applied to all the p-values to control the false discovery rate at a level of 0.05.
+
+## Identification of Hormone Receptors Associated with the Male and Female Dimorphism Indices and with Sex
+
+In order to identify hormone receptors that are associated with the female and male dimorphism indices and sex, a list of `r horm_receptors$Approved.symbol |> unique() |> length()` hormonal receptors was created. This list contains the protein names, the corresponding gene names, the HGNC gene IDs, the family names and alias.
+
+Based on the significant (FDR < 0.05) genes found by the Wald tests for the dimorphism indices and sex in the DGE analysis, we determined which ones were in the list of hormonal receptors.
+
 
 ## Gene Set Enrichment Analysis (GSEA)
-Gene Set Enrichment Analysis was performed to identify pathways associated with the dimorphism indices and with sex. To this end, the REACTOME gene sets were used (in the `c2.cp.reactome.v2024.1.Hs.symbols.gmt` file) with the `fgsea` R package. The genes tested for differential expression in @sec-dge_analysis were ranked by decreasing order of the log2 Fold Change (for male and female dimorphism indices, and sex). Gene sets with less than 15 genes were not tested (`minSize` argument of the `fgsea` function).
+Gene Set Enrichment Analysis was performed to identify pathways associated with the dimorphism indices and with sex. To this end, the REACTOME gene sets were used (in the `c2.cp.reactome.v2024.1.Hs.symbols.gmt` file) with the `fgsea` R package. The genes tested for differential expression in @sec-dge_analysis were ranked by decreasing order of the log2 Fold Change (for male and female dimorphism indices, and sex). Gene sets with less than 15 genes were not tested (`minSize` argument of the `fgsea` function). The number of permutations to do was set to 10000 (`nperm` argument of the `fgsea` function).
 
 # Results {#sec-results}
 ## Descriptive Analysis {#sec-descriptive_analysis}
 
-The distribution of all the covariates is shown in @fig-covariates_distribution. The number of male sample donor's was twice that of female sample donor's. The two classes were therefore unbalanced (which could cause problems if we wanted to perform classification with the data?). The death classification, based on the Hardy scale, was "0" for the majority of donors, which corresponds to cases on a ventilator immediately before death. The second most common death classification was a Hardy scale of "2": the sudden unexpected deaths of people who had been reasonably healthy. Additionally, the vast majority of samples had unspecified pathology categories (missing values). The second most common pathology category was fibrosis.
+The distribution of all the covariates is shown in @fig-covariates_distribution. The number of male sample donor's was twice that of female sample donor's. The two classes were therefore unbalanced. The death classification, based on the Hardy scale, was "0" for the majority of donors, which corresponds to cases on a ventilator immediately before death. The second most common death classification was a Hardy scale of "2": the sudden unexpected deaths of people who had been reasonably healthy. Additionally, the vast majority of samples had unspecified pathology categories (missing values). The second most common pathology category was fibrosis.
 
-Moreover, the majority of donors, regardless of sex, were in the 50-69 age range. The average RNA integrity number was `r mean(covariates$RNA_INTEGRITY_NUMBER)`, with a minimum at `r min(covariates$RNA_INTEGRITY_NUMBER)`, and seemed to be similarly distributed regardless of the sex. (GOOD? REASONABLE?)
+Moreover, the majority of donors, regardless of sex, were in the 50-69 age range. The average RNA integrity number was `r mean(covariates$RNA_INTEGRITY_NUMBER) |> round(2)`, with a minimum at `r min(covariates$RNA_INTEGRITY_NUMBER) |> round(2)`, and seemed to be similarly distributed regardless of the sex.
 
-The ischemic time (i.e., "time from death or withdrawal of life-support until the time the sample is placed in a fixative solution or frozen") varied between `r min(covariates$ISCHEMIC_TIME)` minutes and `r max(covariates$ISCHEMIC_TIME)` minutes (`r min(covariates$ISCHEMIC_TIME) / 60` hours), with a mean of `r mean(covariates$ISCHEMIC_TIME)`. This variable also seemed to be similarly distributed across the two sexes.
+The ischemic time (i.e., the time interval between death of withdrawal from life-suport and the preservation of the sample by fixation or freezing) varied between `r min(covariates$ISCHEMIC_TIME)` minutes and `r max(covariates$ISCHEMIC_TIME)` minutes (`r (min(covariates$ISCHEMIC_TIME) / 60) |> round(2)` hours), with a mean of `r mean(covariates$ISCHEMIC_TIME) |> round(2)`. This variable also seemed to be similarly distributed across the two sexes.
 
 ```{r}
 f_mean_rna_di <- covariates |> filter(SEX == "F") |> select(RNA_DI) |> unlist() |> mean()
@@ -291,11 +302,12 @@ f_var_histo_di <- covariates |> filter(SEX == "F") |> select(HISTO_DI) |> unlist
 m_var_rna_di <- covariates |> filter(SEX == "M") |> select(RNA_DI) |> unlist() |> var()
 m_var_histo_di <- covariates |> filter(SEX == "M") |> select(HISTO_DI) |> unlist() |> var()
 ```
-Concerning the male and female dimorphism indices (in log scale???), we observe that the ones based the RNA-seq transcriptomes are similarly distributed between male and females. The female dimorphism index had a mean of `r f_mean_rna_di` and a variance of `r f_var_rna_di`, while the male dimorphism index had a mean of `r m_mean_rna_di` and a variance of `r m_var_rna_di`. Interestingly, the dimorphism indices calculated from histology profiles show a very different distribution. The male histology profile-based dimorphism index seems to have a bimodal distribution, with a mean of `r m_mean_histo_di` and a variance of `r m_var_histo_di`. The female histology profile-based dimorphism index had a mean of `r f_mean_histo_di` and a variance of `r f_var_histo_di`.
+
+The male and female dimorphism indices in log scale were similarly distributed between male and females. The female dimorphism index had a mean of `r f_mean_rna_di |> round(2)` and a variance of `r f_var_rna_di |>  round(2)`, while the male dimorphism index had a mean of `r m_mean_rna_di |> round(2)` and a variance of `r m_var_rna_di |> round(2)`. Interestingly, the dimorphism indices calculated from histology profiles showed a very different distribution. The male histology profile-based dimorphism index seemed to have a bimodal distribution, with a mean of `r m_mean_histo_di |> round(2)` and a variance of `r m_var_histo_di|> round(2)`. The female histology profile-based dimorphism index had a mean of `r f_mean_histo_di|> round(2)` and a variance of `r f_var_histo_di|> round(2)`.
 
 ```{r}
 #| label: fig-covariates_distribution
-#| fig-cap: Distribution of the clinical and technical variables, and the dimorphism indices of the samples separated by sex (F = Female, M = Male). **(a)** Number of Female and Male subcutaneous adipose tissue sample donors. **(b)** Distribution of ages (in decades) of the donors. **(c)** Death classification of the samples' donors with the Hardy scale. **(d)** Distribution of the samples' RNA integrity numbers.  **(e)** Distribution of the samples' ischemic time. **(f)** Medical conditions diagnosed post-mortem from histology slides. **(g)** Distribution of the transcriptional dimorphism indices computed from whole RNA-seq transcriptomes. **(h)** Distribution of the dimorphism indices computed from AI-based histology profiles.
+#| fig-cap: Distribution of the clinical and technical variables, and the dimorphism indices of the samples separated by sex (F = Female, M = Male). **(a)** Number of Female and Male subcutaneous adipose tissue sample donors. **(b)** Distribution of ages (in decades) of the donors. **(c)** Death classification of the sample donors with the Hardy scale. **(d)** Distribution of the sample RNA integrity numbers.  **(e)** Distribution of the sample ischemic time. **(f)** Medical conditions diagnosed post-mortem from histology slides. **(g)** Distribution of the transcriptional dimorphism indices computed from whole RNA-seq transcriptomes. **(h)** Distribution of the dimorphism indices computed from AI-based histology profiles.
 #| fig-asp: 1
 #| fig-pos: "H"
 
@@ -342,9 +354,9 @@ plot_rna_di <- ggplot(covariates, aes(x = RNA_DI, fill = SEX)) +
   plot_layout(guides = "collect")
 ```
 
-@fig-correlation shows the Pearson correlation coefficients between each continuous clinical and technical covariates. It also shows the pairwise scatter plots of those variables. We observed that the RNA- and histology-based dimorphism indices were significantly correlated with one another, even though the correlation was quite low. Since the two indices measure the same "phenomenon", it was expected to observe a positive correlation between those variables. However, the low value of this correlation could indicate that there was a high error in one or both measurements of the dimorphism indices, that the two variables did not measure exactly the same "information", or something else. From the pairwise scatter plot, however, it does not appear that the low correlation was due to a nonlinear relationship between the two indices.
+@fig-correlation shows the Pearson correlation coefficients between each continuous clinical and technical covariate. It also shows the pairwise scatter plots of those variables. We observed that the RNA- and histology-based dimorphism indices were significantly correlated with one another, even though the correlation was quite low. Since the two indices measure the same phenomenon, it was expected to observe a positive correlation between those variables. However, the low value of this correlation could indicate that there was a high error in one or both measurements of the dimorphism indices or that the two variables did not capture exactly the same information. From the pairwise scatter plot, however, it does not appear that the low correlation was due to a nonlinear relationship between the two indices.
 
-We also noticed that the age was negatively correlated with the RNA integrity number (RIN) and positively correlated with the ischemic time. The latter variable was negatively correlated with the RNA integrity number. This last result is easily interpreted: the RIN is a measure of RNA quality in the sample. If the ischemic time is large, the sample has more time to "degrade", thus decreasing the RNA integrity.
+We also noticed that the age was negatively correlated with the RNA integrity number (RIN) and positively correlated with the ischemic time. The latter variable was negatively correlated with the RNA integrity number. This last result is easily interpreted: the RIN is a measure of RNA quality in the sample. If the ischemic time is large, the sample has more time to degrade, thus decreasing the RNA integrity.
 
 ```{r}
 #| label: fig-correlation
@@ -362,9 +374,10 @@ covariates |>
 
 
 To check whether some technical variables were possibly confounding the dimorphism indices and
-clinical variables, a PCA was performed on the 500 genes with the highest variance. Moreover, a variance stabilizing transformation was applied to the counts after adding a pseudo-count of 1 to every entry of the count matrix (to avoid calculating $\log(0)$). Afterwards, the first two principal components were plotted, and the points, representing the individuals / samples / donors, were colored according to the variable of interest. If a clustering (for categorical variables) or a clear gradient (for continuous variables) appears along the first and/or second principal component(s), this indicates that the variable of interest is probably a significant source of variation that affects counts.
+clinical variables, a PCA was performed on the 500 genes with the highest variance. Moreover, a variance stabilizing transformation was applied to the counts after adding a pseudo-count of 1 to every entry of the count matrix (to avoid calculating $\log(0)$). Afterwards, the first two principal components were plotted, and the points, representing the samples, were colored according to the variable of interest. If a clustering (for categorical variables) or a clear gradient (for continuous variables) appears along the first and/or second principal component(s), this indicates that the variable of interest is probably a significant source of variation that affects the counts.
 
-First, in [@fig-pca_sex]a, we see a separation of the samples according to their sex along the first principal component. In [@fig-pca_sex]b and [@fig-pca_sex]c, the samples were first separated by their sex before performing the PCA and coloring the samples based on their dimorphism index (calculated from whole RNA-seq transcriptomes). For both plots at the bottom, a clear gradient can be seen along the first principal component. We also noticed that the male dimorphism index decreases along PC1, while the female dimorphism increases along PC1. (EXPLANATION?)
+First, in [@fig-pca_sex]a, we see a separation of the samples according to their sex along the first principal component. In [@fig-pca_sex]b, the samples were colored based on their dimorphism index (calculated from whole RNA-seq transcriptomes). For each sex, a clear gradient can be seen along the first principal component. We also observe that, for the males, the dimorphism decreases along PC1, while the opposite occurs for females. This aligns with the definition of the dimorphism indices: males that are more similar to other males have a larger dimorphism index. Females that are more similar to other females also have a larger dimorphism index. But, females/males that are more similar to the opposite sex have low dimorphism indices, so they are found in the center of the PCA plot, in the region where male and female samples overlap the most.
+
 ```{r}
 #| message: false
 
@@ -378,6 +391,7 @@ RNA_counts_ds <- DESeqDataSetFromMatrix(
 
 vst_counts <- vst(RNA_counts_ds)
 
+set.seed(1)
 pca_sex <- plotPCA(vst_counts, intgroup = c("SEX"), ntop = 500) +
   coord_fixed() +
   aes(alpha = 0.8) +
@@ -387,42 +401,51 @@ pca_sex <- plotPCA(vst_counts, intgroup = c("SEX"), ntop = 500) +
 
 ```{r}
 #| label: fig-pca_sex
-#| fig-cap: First two principal components of the PCA performed on the 500 most variant genes in the entire data set **(a)** or in male and feamle subsets (**b** and **c**). The samples are colored either by sex **(a)**, by the male RNA-derived dimorphism index **(b)** or female RNA-derived dimorphism index **(c)**.
-#| out-width: "60%"
+#| fig-cap: First two principal components of the PCA performed on the 500 most variant genes. The samples are colored either by sex **(a)** or by the RNA-derived dimorphism index **(b)**. For subplot **(b)**, the samples are colored by sex.
+#| out-width: "75%"
 #| message: false
 #| fig-pos: "H"
 
 
-PCA_rnadi_M <- vst_counts[,colData(vst_counts)$SEX == "M"] |> 
-  plotPCA(intgroup = c("RNA_DI"), ntop = 500) +
-  scale_color_continuous(type = "viridis", name = "RNA DI") +
+#PCA_rnadi_M <- vst_counts[,colData(vst_counts)$SEX == "M"] |> 
+#  plotPCA(intgroup = c("RNA_DI"), ntop = 500) +
+#  scale_color_continuous(type = "viridis", name = "RNA DI") +
+#  coord_fixed() +
+#  ggtitle("Males")
+
+#PCA_rnadi_F <- vst_counts[,colData(vst_counts)$SEX == "F"] |> 
+#  plotPCA(intgroup = c("RNA_DI"), ntop = 500) +
+#  scale_color_continuous(type = "viridis", name = "RNA DI") +
+#  coord_fixed() +
+#  ggtitle("Females")
+
+
+p1 <- pca_sex
+#p2 <- PCA_rnadi_M
+#p3 <- PCA_rnadi_F
+
+#bottom_row <- (p2 + p3 + plot_layout(guides = "collect")) & 
+#  theme(legend.position = 'bottom')
+
+p4 <- plotPCA(vst_counts, intgroup = c("RNA_DI"), ntop = 500) +
   coord_fixed() +
-  ggtitle("Males")
-
-PCA_rnadi_F <- vst_counts[,colData(vst_counts)$SEX == "F"] |> 
-  plotPCA(intgroup = c("RNA_DI"), ntop = 500) +
   scale_color_continuous(type = "viridis", name = "RNA DI") +
-  coord_fixed() +
-  ggtitle("Females")
+  guides(alpha = "none") + 
+  aes(shape = covariates$SEX) +
+  scale_shape_discrete(name = "Sex")
 
 
-p1 <- pca_sex + plot_layout(guides = "collect") + theme(legend.position = "right")
-p2 <- PCA_rnadi_M
-p3 <- PCA_rnadi_F
+#p1 / bottom_row + 
+#  plot_layout(heights = c(1, 1)) +
+#  plot_annotation(tag_levels = "a")
 
-bottom_row <- (p2 + p3 + plot_layout(guides = "collect")) & 
-  theme(legend.position = 'bottom')
-
-
-p1 / bottom_row + 
-  plot_layout(heights = c(1, 1)) +
-  plot_annotation(tag_levels = "a")
+p1 + p4 + plot_annotation(tag_levels = "a")
 
 ```
 
-In [@fig-pca_hardy_scale]a and [@fig-pca_hardy_scale]b, the same PCA was performed as in [@fig-pca_sex]b and [@fig-pca_sex]c but the samples were colored by the corresponding donor's age. For the males subset, no gradient was visible along PC1 and PC2 according to age. On the other hand, women of age below 40 seemed to cluster more to the right of the plot on [@fig-pca_hardy_scale]b. Therefore, age could be a confounding factor for the female dimorphism index. 
+In [@fig-pca_hardy_scale]a and [@fig-pca_hardy_scale]b, the samples were first separated by their sex before performing the PCA. The samples were then colored by the corresponding donor's age. For the males subset, no gradient was visible along PC1 and PC2 according to age. On the other hand, women of age below 40 seemed to cluster more to the right of the plot on [@fig-pca_hardy_scale]b. Therefore, age could be a confounding factor for the female dimorphism index. 
 
-On [@fig-pca_hardy_scale]c, the dots were colored by the Hardy scale, which is related to the cause of death. A separation between samples with a Hardy scale of 0 and 2 can be seen. Since this separation occured along the first principal component like the male and female dimorphism indices, the Hardy scale could be a confounding factor as differences in the data due to the Hardy scale value could be attributed to the sex, and vice versa.
+On [@fig-pca_hardy_scale]c, the dots were colored by the Hardy scale, which is related to the cause of death. A separation between samples with a Hardy scale of 0 and 2 can be seen. Since this separation occured along the first principal component like the male and female dimorphism indices and the sex, the Hardy scale could be a confounding factor as differences in the data due to the Hardy scale value could be attributed to the sex, and vice versa.
 
 ```{r}
 #| label: fig-pca_hardy_scale
@@ -534,13 +557,13 @@ Up_M <- sum(rna_di_M_res$padj <= alpha & rna_di_M_res$log2FoldChange >= 0, na.rm
 ```
 
 
-All the genes tested for differential expression are shown as dots on the volcano plots in @fig-volcano_plot_di. For both male and female dimorphism indices (DI), the majority of genes tested were statistically significantly associated with the indices (`r (Down_M + Up_M) / (Down_M + Up_M + NotSig_M) * 100 |> round(2)`% of genes for the male DI, and `r (Down_F + Up_F) / (Down_F + Up_F + NotSig_F) * 100 |> round(2)`% for the female DI). We also noticed that, for the female DI, the majority of differently expressed genes had expression levels that were negatively associated with the female DI, while the majority of differently expressed genes were positively associated with the male DI. Among the down-regulated genes with the lowest adjusted p-values for the female DI, some were also found to be among the up-regulated genes with the lowest adjusted p-values for the male ID. This included genes such as GARNL3, ARHGEF25 or DBNDD2. 
+All the genes tested for differential expression are shown as dots on the volcano plots in @fig-volcano_plot_di. For both male and female dimorphism indices (DIs), the majority of genes tested were statistically significantly associated with the DIs (`r ((Down_M + Up_M) / (Down_M + Up_M + NotSig_M) * 100 )|> round(2)`% of genes for the male DI, and `r ((Down_F + Up_F) / (Down_F + Up_F + NotSig_F) * 100) |> round(2)`% for the female DI). We also noticed that, for the female DI, the majority of differently expressed genes had expression levels that were negatively associated with the female DI, while the majority of differently expressed genes were positively associated with the male DI. Among the down-regulated genes with the lowest adjusted p-values for the female DI, some were also found to be among the up-regulated genes with the lowest adjusted p-values for the male DI. This included genes such as GARNL3, ARHGEF25 or DBNDD2. 
 
 ```{r}
 #| label: fig-volcano_plot_di
 #| out-width: "80%"
 #| fig-pos: "H"
-#| fig-cap: "Volcano plots showing differential gene expression analysis results for the female **(a)** and male **(b)** dimorphism indices. Differential expression was assessed using Wald tests with multiple testing correction (Benjamini-Hochberg method). Genes meeting the significance threshold (FDR < 0.05) are color-coded according to the direction of change: up-regulated genes with a positive log2 fold change (FC) are colored in blue, while down-regulated genes with a negative log2 FC are colored in red. For both plots, the 20 genes with the lowest adjusted p-values are labelled."
+#| fig-cap: "Volcano plots showing differential gene expression analysis results for the female **(a)** and male **(b)** dimorphism indices. Differential expression was assessed using Wald tests with multiple testing correction (Benjamini-Hochberg method). Genes meeting the significance threshold (FDR < 0.05) are color-coded according to the direction of change: up-regulated genes with a positive log2 fold change (FC) are colored in blue, while down-regulated genes with a negative log2 FC are colored in red. For both plots, the 20 genes with the lowest adjusted p-values are labelled with their IDs."
 
 volcano_di <- volcano_plot(rna_di_F_res, "Female RNA Dimorphism Index") +
   volcano_plot(rna_di_M_res, "Male RNA Dimorphism Index") +
@@ -550,8 +573,6 @@ volcano_di
 ```
 
 To find whether this overlap between genes that are negatively associated with the female DI and positively associated with the male DI was also true for the other significant genes, we plotted a Venn diagram (see @fig-venn) showing the overlap between the up- and down-regulated genes for both male and female DIs. And indeed, there is a substantial overlap of 4676 genes that were positively associated with the male DI but negatively associated with the female DI. Conversely, 1112 genes were negatively associated with the male DI but positively with the female DI. The number of genes that were regulated the same way according to the two DIs was much lower, with just 12 genes positively associated with both male and female DIs, and 99 genes down-regulated according to both DIs.
-
-INTERPRETATION
 
 
 ```{r}
@@ -614,7 +635,7 @@ grid.draw(venn.plot)
 
 ### Genes associated with sex, and other technical and clinical covariates
 
-[@fig-volcano_plot_age]a shows the baseline difference between males and females, i.e., the genes that were differently expressed when the dimorphism index is null. It can be interpreted as the differentially expressed genes for individuals that are equally similar to other same-sex and opposite-sex individuals in terms of their overall transcriptomes (?). In order to determine the main effect of sex, i.e., determine which genes are differentially expressed in males and females regardless of the value of the dimorphism indices, another design, `~ HARDY_SCALE + AGE_CONTINUOUS + SEX` would have to be used. However, the results for the Hardy scale and the age would also change, making the results more difficult to interpret. The results using this alternative design are shown in the annex in @sec-annex_alt.
+[@fig-volcano_plot_age]a shows the baseline difference between males and females, i.e., the genes that were differently expressed when the dimorphism index is null. It can be interpreted as the differentially expressed genes for individuals that are equally similar to other same-sex and opposite-sex individuals in terms of their overall transcriptomes. In order to determine the main effect of sex, i.e., determine which genes were differentially expressed in males and females regardless of the value of the dimorphism indices, another design, `~ HARDY_SCALE + AGE_CONTINUOUS + SEX` would have to be used. However, the results for the Hardy scale and the age would also change, making the results more difficult to interpret. The results using this alternative design are shown in the annex in @sec-annex_alt.
 
 
 
@@ -647,26 +668,27 @@ rownames(age_res_df) <- c("Down", "NotSig", "Up")
 #age_res_df |> gt(rownames_to_stub = TRUE)
 ```
 
-When the dimorphism indices was equal to 0, many genes were still considered to be differently expressed: `r Up_SEX` genes were up-regulated in males compared to males, while `r Dow_SEX` genes were more strongly expressed in females compared to males. However, the amplitude of the log2 fold change is below 1 (in absolute value) for most of the significant genes, meaning that, while the difference in gene expression may be statistically significant, it may not be biologically relevant.
+When the dimorphism indices were equal to 0, many genes were still considered to be differentially expressed: `r Up_SEX` genes were up-regulated in males compared to females, while `r Dow_SEX` genes were more strongly expressed in females compared to males. However, the amplitude of the log2 fold change is below 1 (in absolute value) for most of the significant genes, meaning that, while the difference in gene expression may be statistically significant, it may not be biologically relevant.
 
-Conversely, a relatively small number of genes (`r (Up_AGE + Down_AGE) / (Up_AGE + Down_AGE + NotSig_AGE) * 100 |> round(2)`% of tested genes) were associated with age ([@fig-volcano_plot_age]b).
+Conversely, a relatively small number of genes (`r ((Up_AGE + Down_AGE) / (Up_AGE + Down_AGE + NotSig_AGE) * 100) |> round(2)`% of tested genes) were associated with age ([@fig-volcano_plot_age]b).
 
 
 ```{r}
 #| label: fig-volcano_plot_age
 #| out-width: "80%"
 #| fig-pos: "H"
-#| fig-cap: "Volcano plots showing differential gene expression analysis results for the age (continuous) **(a)** and sex **(b)** covariates. Differential expression was assessed using Wald tests with multiple testing correction (Benjamini-Hochberg method). Genes meeting the significance threshold (FDR < 0.05) are color-coded according to the direction of change: up-regulated genes with a positive log2 fold change (FC) are colored in blue, while down-regulated genes with a negative log2 FC are colored in red. For both plots, the 20 genes with the lowest adjusted p-values are labelled.  A positive log2 Fold Change for the sex covariate indicates that genes are more expressed in males than females, and a negative log2 Fold Change indicates the opposite."
+#| fig-cap: "Volcano plots showing differential gene expression analysis results for the sex **(a)** and age (continuous) **(b)** covariates. Differential expression was assessed using Wald tests with multiple testing correction (Benjamini-Hochberg method). Genes meeting the significance threshold (FDR < 0.05) are color-coded according to the direction of change: up-regulated genes with a positive log2 fold change (FC) are colored in blue, while down-regulated genes with a negative log2 FC are colored in red. For both plots, the 20 genes with the lowest adjusted p-values are labelled with their IDs.  A positive log2 Fold Change for the sex covariate indicates that genes are more expressed in males than females, and a negative log2 Fold Change indicates the opposite."
 
 
 volcano_plot_sex + volcano_plot(age_res, "Age (continuous)") + plot_annotation(tag_levels = "a")
 ```
-Finally, @fig-boxplot_hardy shows the results of the DGE analysis for the Hardy scale covariate.
+
+Finally, with the likelihood ratio test (LRT), `r 2015 + 3875` genes were considered significantly associated with the Hardy scale, and 3900 genes were not.  @fig-boxplot_hardy shows boxplots of the counts of the 9 genes with the lowest adjusted p-values for the LRT. We see that for all those genes, except for GPX3, the median counts decrease as the Hardy scale increases, except for the level "0" which tends to have median counts more similar to the level "3".
 
 ```{r}
 #| label: fig-boxplot_hardy
-#| fig-cap: (a) Vocano plot Hardy scale (b) Top 9 genes with lowest adjusted p-value for the likelihood ratio test on Hardy scale covariate
-#| out-width: "90%"
+#| fig-cap: Boxplots of the counts of the 9 genes with the lowest adjusted p-value (by Benjamini-Hochberg method) for the likelihood ratio test on the Hardy scale covariate.
+#| out-width: "50%"
 #| fig-pos: "H"
 #| message: false
 
@@ -674,7 +696,7 @@ Finally, @fig-boxplot_hardy shows the results of the DGE analysis for the Hardy 
 dds_lrt <- DESeq(filtered_counts_ds, test = "LRT", reduced = ~ AGE_CONTINUOUS + SEX + SEX:RNA_DI)
 res_lrt <- results(dds_lrt)
 
-volcano_plot_hardy <- volcano_plot(res_lrt, "")
+#volcano_plot_hardy <- volcano_plot(res_lrt, "")
 
 sig_hardy_genes <- res_lrt |> 
   as.data.frame() |> 
@@ -696,10 +718,9 @@ boxplot_hardy <- fcounts_long |>
   theme(legend.position = "bottom")
 
 
-volcano_plot_hardy + boxplot_hardy + plot_annotation(tag_levels = "a")
+boxplot_hardy
+#volcano_plot_hardy + boxplot_hardy + plot_annotation(tag_levels = "a")
 ```
-
-
 
 
 
@@ -707,9 +728,6 @@ volcano_plot_hardy + boxplot_hardy + plot_annotation(tag_levels = "a")
 ### Hormone Receptors Associated with the Dimorphism Indices and with Sex
 
 ```{r}
-# Importing the csv file
-horm_receptors <- read.csv("data/results_hgnc_hormone_rcpt_strict.csv", sep = "\t")
-
 # Significant genes
 all_genes <- rownames(rna_di_F_res)
 
@@ -766,9 +784,18 @@ rcpt_df <- data.frame(
 )
 ```
 
+Among the `r horm_receptors$Approved.symbol |> unique() |> length()` hormone receptors in our curated list, `r f_di_rcpt_genes |> length()` were significantly associated with the female DI, `r m_di_rcpt_genes |> length()` with the male DI, and `r sex_rcpt_genes |> length()` with the sex (@fig-receptors). The majority of those hormone receptors were associated with all three variables as `r sig_rcpt |> length()` hormone receptors in total were associated with either of the three variables, and `r intersect(f_di_rcpt, m_di_rcpt) |> length()` of them were shared between the male and female dimorphism indices.
+
+We noticed that most of those receptors had positive associations with the male DI but negative associations with the female DI. The log2 fold changes of the hormone receptors associated with the sex (when RNA_DI = 0) were much closer to zero compared to the dimorphism indices.
+
+Among this list of significant receptors, we found some related to sex hormones, such as the androgen receptor (androgens refer to testosterone and dihydrotestosterone (DHT), the male sex hormones), the estrogen receptors 1 and 2, the progesterone receptor, and the luteinizing hormone/choriogonadotropin receptor, which is a protein associated with disorders of male secondary sexual character development when mutations are present in the gene [(source)](https://www.ncbi.nlm.nih.gov/gene/3973). Interestingly, the androgen receptor was positively associated with the female DI and sex, but not with the male DI.
+
+Some of those significant receptors do not have a direct sexual function, such as the nuclear receptor subfamily 1 group D members 1 and 2, which play roles in circadian rhythms and carbohydrate and lipid metabolism [(source)](https://www.ncbi.nlm.nih.gov/gene/9975). The  RAR related orphan receptors A and B also regulate the expression of genes involved in the circadian rhythm [(source)](https://www.ncbi.nlm.nih.gov/gene/6096). 
+
+
 ```{r}
 #| label: fig-receptors
-#| fig-cap: Hormonal receptors associated with the female and male dimorphism indices and the sex. Color corresponds to the fold change (determined in previous section). Grey color given to receptors that were not significantly associated with the variable.
+#| fig-cap: Hormonal receptors associated with the female and male dimorphism indices and the sex (when the RNA_DI variable is null). The colors correspond to the log2 fold changes, determined in the DGE analysis. A grey color is given to the receptors that were not significantly ($\text{FDR} \geqslant 0.05$) associated with the variable.
 #| out-width: "90%"
 #| fig-pos: "H"
 #| message: false
@@ -788,13 +815,13 @@ rcpt_long <- rcpt_df |>
 ggplot(rcpt_long, aes(x = covariate, y = receptor_name)) +
   geom_tile(aes(fill = ifelse(sig, fold_change, NA))) +
   scale_fill_gradientn(
-    name = "Fold change",
+    name = "log2 fold change",
     colors = c("blue", "white", "red"),
     values = scales::rescale(c(min(rcpt_long$fold_change), 0, max(rcpt_long$fold_change))),
     na.value = "grey50"
   ) +
   theme_minimal() +
-  labs(fill = "Fold change", x = "Variable", y = "Receptor Name") +
+  labs(fill = "log2 Fold change", x = "Variable", y = "Receptor Name") +
   scale_y_discrete(limits=rev)
 ```
 
@@ -825,8 +852,6 @@ ranked_genes_sex <- sort(ranked_genes_sex, decreasing = TRUE)
 ```
 
 
-### Female and Male Dimorphism indices
-
 ```{r}
 #| label: fig-gsea_di_f
 #| out-width: "80%"
@@ -840,7 +865,7 @@ fgsea_results_di_F <- fgsea(
     stats = ranked_genes_di_F,
     minSize = 15,
     maxSize = Inf,
-    nPermSimple = 100000
+    nPermSimple = 10000
 )
 
 gsea_res_plots(fgsea_results_di_F)
@@ -859,7 +884,8 @@ fgsea_results_di_M <- fgsea(
     pathways = reactome,
     stats = ranked_genes_di_M,
     minSize = 15,
-    maxSize = Inf
+    maxSize = Inf,
+    nPermSimple = 10000
 )
 
 topPathwaysUp_M <- fgsea_results_di_M |> filter(ES > 0 & padj < alpha)
