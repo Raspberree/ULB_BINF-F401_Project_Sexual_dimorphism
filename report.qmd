@@ -253,6 +253,8 @@ Finally, `r n_na_samples` samples had missing values for the Hardy scale. For si
 
 All the analyses were performed with R (version 4.4.1 (2024-06-14)). For more details about the R version information, the OS and attached or loaded packages, see @sec-session_info.
 
+The data (in the "data" and "resources" folders) and the code ("report.qmd" file) are available in this [GitHub repository](https://github.com/Raspberree/ULB_BINF-F401_Project_Sexual_dimorphism.git).
+
 ## Principal Component Analysis
 
 The PCAs in @sec-descriptive_analysis were performed on the counts after a variance stabilizing transformation (using the `vst` function from `DESeq2` with its default arguments). Since the log geometric means could not be computed because every gene contained at least one zero, a pseudo-count of 1 was added to every entry of the count matrix. 
