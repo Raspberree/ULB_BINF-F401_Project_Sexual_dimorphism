@@ -1,0 +1,661 @@
+"SUBJID","SEX","AGE_DECADE","HARDY_SCALE","RNA_INTEGRITY_NUMBER","ISCHEMIC_TIME","PATHOLOGY_CATEGORIES","PATHOLOGY_NOTES","HISTO_DI","RNA_DI"
+"GTEX-1117F",2,"60-69",4,6.8,1214,"","2 pieces, ~15% vessel stroma, rep delineated",-0.41025769614824,0.0746995456390771
+"GTEX-111CU",1,"50-59",0,7.5,138,"","2 pieces, small portion of nerve (<10% of one piece)",-0.509604597230153,0.0858655613093971
+"GTEX-111FC",1,"60-69",1,7.3,1040,"","2 pieces, larger piece is 30% fibrovascular tissue and nerve, smaller piece ~10%",0.787224318957951,0.834326794313433
+"GTEX-111VG",1,"60-69",3,7.7,1083,"","2 pieces",-0.29559334599467,-0.206881508166019
+"GTEX-111YS",1,"60-69",0,6.6,296,"","3 small irregular pieces",-0.489043274747836,-0.17368783378396
+"GTEX-1122O",2,"60-69",0,6.3,126,"","2 pieces",1.02961165611054,0.725995439500118
+"GTEX-1128S",2,"60-69",2,6.5,882,"","2 pieces",0.997668763607785,0.949441307426556
+"GTEX-113IC",1,"60-69",NA,6.7,96,"","2 pieces, 40-50% adipose tissue (delineated), rest is fibroconnective tissue",0.510956725252164,0.424106311332365
+"GTEX-117YX",1,"50-59",0,7.4,144,"","2 pieces, 1 with 20% fibrous tissue",0.612684019676569,0.0228557637835966
+"GTEX-11DXW",1,"40-49",2,7.3,1092,"","2 pieces, ~20 and 30% fibrous with few larger vessels",0.802511171096007,0.321203400213978
+"GTEX-11DXX",2,"60-69",0,8.1,159,"","2 pieces, few large vessels and nerve, central holes",-0.451515033626077,0.746304855250484
+"GTEX-11DZ1",1,"50-59",4,6.4,1195,"","2 pieces; 10% fibrovascular content",0.605624051091841,-0.050985306903106
+"GTEX-11EI6",1,"60-69",4,6.8,971,"","2 pieces, ~10-15% fascia/fibrous tissue, rep. delineated",0.555350844610617,0.292316438776823
+"GTEX-11EM3",2,"20-29",0,7.1,238,"sweat_glands","2 pieces, one is ~10% fibrous with few sweat glands",-0.397809567624137,0.0765327034980316
+"GTEX-11EMC",2,"60-69",2,8.1,808,"fibrosis","2 pieces, ~20% fascia/fibrous tissue, rep delineated",-0.0266957847914151,0.710333139637126
+"GTEX-11EQ8",1,"60-69",4,6,463,"","2 pieces",-0.412516534448574,0.166308553864718
+"GTEX-11EQ9",1,"30-39",2,6.9,321,"","2 pieces~10% fibrous tissue/fascia",-0.294508805961523,-0.0255419918014921
+"GTEX-11GS4",1,"60-69",2,7,913,"","2 pieces, includes small portion of nerve, detached fragment of skeletal muscle abuts one piece of fat",0.657865755236551,0.114778253224636
+"GTEX-11GSO",1,"60-69",2,7.9,968,"","2 pieces",-0.627513212539193,-0.369687097708161
+"GTEX-11H98",1,"50-59",2,6.7,736,"","3 pieces; 20% fibrous component",0.581113940675699,-0.214036227247966
+"GTEX-11I78",2,"50-59",0,6.3,163,"","2 pieces, ~5% fascia/vascular tissue, delineated",0.626546798497771,0.31458861482501
+"GTEX-11LCK",1,"30-39",0,7,265,"","2 pieces ~5% fibrous/fascial tissue, delineated",-0.469849709514525,0.233422749723255
+"GTEX-11NUK",1,"50-59",2,5.9,895,"","2 pieces, includes portion of nerve and small fragment of skeletal muscle",-0.343470321022015,0.703104465054309
+"GTEX-11O72",1,"40-49",2,6.4,925,"sweat_glands","2 pieces; 1 piece is 60% fibrous, also  contains a sweat gland (annotated); other has 10% fibrous tissue",0.44955618058802,-0.0603084533334553
+"GTEX-11OF3",1,"60-69",2,6.3,885,"","2 pieces",0.956449152931587,0.375483039920726
+"GTEX-11ONC",1,"60-69",2,7.5,735,"","2 pieces; 20% fibrous tissue in 1 piece",0.893220483367001,0.332958423274169
+"GTEX-11P7K",1,"30-39",0,7.7,350,"","2 pieces; 20% fibrous content",0.292316438776823,0.483201058854782
+"GTEX-11P81",2,"30-39",0,7.4,345,"","2 pieces",0.962497460252002,-0.113346297731504
+"GTEX-11P82",1,"20-29",1,7.6,195,"","2 pieces, ~30% fibrous/fascial tissue, delineated",0.555350844610617,0.274722378762085
+"GTEX-11PRG",1,"50-59",2,6.8,846,"","2 pieces, ~40% fibrous/fascial tissue, delineated",-0.029611656110539,0.0657362204769419
+"GTEX-11TT1",1,"20-29",0,8.3,133,"","2 pieces, small component of fibrous tissue/vessels",-0.570180037473242,-0.0737342093428469
+"GTEX-11TTK",2,"60-69",4,5.7,1125,"","2 pieces",0.0967258519690761,-0.14239365577282
+"GTEX-11TUW",1,"60-69",2,6.8,822,"","2 pieces, one piece is ~20% tendon/fibrous tissue",0.783456917141459,-0.428812607338674
+"GTEX-11UD1",2,"40-49",3,6.5,1354,"necrosis","2 pieces, one is ~5-10% fibrovascular tissue, atypical cells ? fat necrosis",0.0680858039251745,-0.0394299883191125
+"GTEX-11UD2",1,"50-59",2,7.2,842,"","2 pieces, ~10% fibrovacular tissue, rep. dlineated",-0.0545292883148684,0.0035552078246602
+"GTEX-11WQC",1,"60-69",2,5.8,817,"","2 pieces",-0.0367010808968585,-0.0196275675379168
+"GTEX-11XUK",2,"40-49",0,7.3,335,"","2 pieces",-0.439157827106095,-0.148480666203172
+"GTEX-11ZTS",2,"60-69",2,6.7,600,"","2 pieces, ~10% fibrovascular tissue, delineated",0.760150981117312,0.0369164567337724
+"GTEX-11ZTT",2,"60-69",0,7.1,249,"","2 pieces, <10% is fibrous/vascular",0.759159778714262,0.295201766848089
+"GTEX-11ZU8",1,"60-69",4,5.8,1017,"","2 pieces, ~5% fibrovascular tissue, rep delineated",-0.00122985474071655,-0.0836514958234281
+"GTEX-11ZUS",1,"30-39",1,6,1361,"","2 pieces, one is ~20% nerve and vessels",0.798501826113863,0.573052846344076
+"GTEX-11ZVC",2,"50-59",2,6.3,642,"","2 pieces",0.425540332441678,-0.0384067673181121
+"GTEX-1211K",2,"60-69",0,8.6,148,"","2 pieces, ~40% intermingled fascia/fibrous tissue, delineated",-0.425128267202036,-0.314342745106822
+"GTEX-12126",1,"20-29",1,6.6,930,"","2 pieces; scattered tissue holes",-0.392181735495247,-0.153791067331269
+"GTEX-1212Z",1,"60-69",2,6.9,757,"","2 pieces, several large central defects (poor fixation), ~10% fibrous",-0.499096939411759,0.472888684418644
+"GTEX-12584",1,"40-49",3,6.4,926,"","2 pieces: 1 50% fibrous content, other 20% fibrous",0.836370995917773,-0.233483989476189
+"GTEX-12696",1,"60-69",3,7.3,601,"","2 pieces; 10-20% fibro/fascial tissue, rep. delineated",0.842231992398779,0.00699848702367228
+"GTEX-1269C",2,"60-69",2,7,987,"","2 pieces, 30-40% fibrovascular tissue",0.0445619975765107,0.261785098239572
+"GTEX-12C56",1,"20-29",0,7.9,239,"hemorrhage, sweat_glands","2 pieces, one includes ~20% stroma and sweat glands, second has region of hemorrhage",0.864519708782638,0.270897455141918
+"GTEX-12KS4",1,"30-39",0,7.4,466,"","2 pieces, ~15% fibrovascular/fascial tissue, rep delineated",-0.0130604798466909,-0.0627785200457384
+"GTEX-12WSA",1,"60-69",4,6,938,"","2 pieces, ~10-15% fibro-fascial elements, rep. delineated",-0.519416923791355,0.264835702354716
+"GTEX-12WSC",1,"50-59",2,6.7,790,"","2 pieces, one includes several large vessels",0.596827480586776,0.0436373259200997
+"GTEX-12WSD",2,"60-69",2,7.1,486,"","3 pieces; ~1--15% fibrofascial tissue or vascular elements, rep. delineated",0.432158211206186,-0.14803125849261
+"GTEX-12WSL",1,"50-59",0,7.8,347,"","2 pieces; 1 piece has 40% fibrous component; other has a large central defect (40%)",-0.0569190021062744,0.0992183242344135
+"GTEX-12WSM",1,"60-69",2,6.1,842,"","2 pieces fascia/fibrous tissue is ~10-15% total",0.57949693194232,0.281386878618564
+"GTEX-12ZZX",2,"40-49",1,6.8,587,"","2 pieces, ~10% fascial/vasuclar tissue; rep delineated",0.694744505515679,0.0680858039251748
+"GTEX-12ZZY",1,"60-69",2,6.6,513,"","2 pieces,j ~10% fibrofascial tissue, delineated",-0.475810086875844,0.118984835891262
+"GTEX-12ZZZ",1,"60-69",2,6.2,819,"","2 pieces; several central empty spaces",0.730437551168709,0.385425843168305
+"GTEX-13111",1,"50-59",0,7,325,"sweat_glands","2 pieces, adipose and fibrovascular tissue with small focus of sweat glands",0.87727893949798,0.599550648521152
+"GTEX-13112",1,"50-59",2,5.8,1353,"","2 pieces",-0.00148805519615105,0.627011829738064
+"GTEX-13113",2,"60-69",0,7.5,292,"","2 pieces, ~5-10% fascial tissue, rep delinated",0.827977794940889,0.485989950770282
+"GTEX-1313W",2,"50-59",2,7.2,622,"","2 pieces, <10% is fibrous",0.614574156831695,0.0569880950418442
+"GTEX-1314G",1,"30-39",0,7.4,492,"","2 pieces; neural & vascular elements make up 5% of 1 piece",0.818385250444411,0.5051650874424
+"GTEX-131XE",1,"50-59",0,8,243,"","2 pieces",0.404041521335652,0.169697152112868
+"GTEX-131XF",1,"60-69",0,5.8,368,"","2 pieces",-0.431710099681885,0.628414306800341
+"GTEX-131XW",2,"50-59",4,7.2,659,"","2 pieces, 20-30% fibrous",-0.00842770490863471,-0.122391437334511
+"GTEX-131YS",2,"60-69",2,6.1,945,"","2 pieces; one contains 50% fibrous tissue",-0.563837310498446,-0.0727500615191387
+"GTEX-132AR",2,"50-59",0,7.8,83,"","2 pieces; 1 pure fat, 1 has 20% fibrous tissue",0.0479434788827965,0.0914911036972174
+"GTEX-132QS",1,"60-69",0,7.3,1683,"clean_specimens","2 pieces, minimal fascia/fibrous tissue, good specimens",-0.52981653865206,-0.00565175716635759
+"GTEX-133LE",2,"20-29",0,5.7,303,"","2 pieces; 20% fibrous content in 1, 5% in other",-0.237492414032302,0.0937419935302545
+"GTEX-1399R",1,"30-39",0,6.3,331,"","2 pieces",0.575528726548247,0.105903314545942
+"GTEX-1399T",1,"60-69",2,7,945,"","2 pieces",-0.593136986169404,0.163033421831857
+"GTEX-1399U",2,"50-59",0,6.9,358,"","2 pieces ~10% fibrofascial tissue",0.248621438052335,-0.124716490280755
+"GTEX-139D8",2,"30-39",0,7.3,420,"","2 pieces",0.807219234774091,-0.319192144768218
+"GTEX-139T4",2,"50-59",3,7,1350,"fibrosis","2 pieces; 1 piece has 10% fibrous tissue",0.148758921403544,-0.160083727406462
+"GTEX-139T6",1,"50-59",0,6.3,335,"","2 pieces, minimal fascia",-0.343992941944553,-0.21018390175236
+"GTEX-139T8",1,"60-69",4,6.4,576,"","2 pieces, ~10% fibro-fascial tissue",-0.499096939411759,0.355413274101865
+"GTEX-139TT",1,"60-69",2,6.4,1180,"","2 pieces; 50% of 1 is fibrous tissue; 1mm nerve in other",0.731507799764444,0.657798113581435
+"GTEX-139TU",1,"60-69",3,7.7,530,"","2 pieces",-0.592747794378517,0.0381329505252952
+"GTEX-139YR",1,"50-59",0,7,324,"","2 pieces; ~10% is stroma, nerve, and vessels",0.561748615808768,0.53459228444382
+"GTEX-13CF2",1,"60-69",2,7.3,1425,"","2 pieces, ~10-20% fibrovascular tissue intermingled, rep delineated",0.919762270819493,0.121067256387129
+"GTEX-13CF3",2,"60-69",0,7.4,210,"","2 pieces; small squamous carry-over artifact [annotated]",0.833887185236171,0.370266959066807
+"GTEX-13D11",2,"50-59",0,8,164,"","2 pieces~5% fibrofascial tissue, delineated,",0.822379041945097,0.169014712775955
+"GTEX-13FH7",2,"50-59",0,8.2,264,"","2 pieces; ~10% is fibrous, few foci of skeletal muscle",0.654102521018333,0.150201796924127
+"GTEX-13FHO",1,"60-69",0,7.6,634,"sweat_glands","2 pieces; 20% of one and 50% of second is fibrous and vascular tissue with some sweat glands",0.354303325672524,-0.0846530196685011
+"GTEX-13FHP",1,"50-59",4,6.1,830,"","2 pieces; 5 and 20% fibrous stroma",-0.197556293424611,0.0532147750190815
+"GTEX-13FTW",1,"40-49",0,6.9,370,"","2 pieces; incomplete sections (?poor fixation), tissue present is oversized at 20mm",0.292316438776823,0.21431392677555
+"GTEX-13FTY",2,"40-49",2,6.3,727,"","2 pieces",0.735880453053829,-0.0192979443704076
+"GTEX-13G51",1,"60-69",2,5.9,925,"","2 pieces; ~15% fibrovascular tissue",0.280728464501612,0.324737916469201
+"GTEX-13IVO",1,"70-79",4,6.9,558,"","2 pieces; fat with 10% to 20% of fibrovascular tissue",-0.029611656110539,-0.0582618608672844
+"GTEX-13JUV",2,"40-49",0,7.5,594,"","2 pieces; some central defects in tissue (? poor fixation)",0.469311209623652,-0.277569853407637
+"GTEX-13JVG",1,"60-69",2,5.8,824,"","2 pieces",-0.546747343008119,-0.198797761228946
+"GTEX-13N11",2,"50-59",0,7.5,230,"","2 pieces; 30-40% is fibrovascular tissue and nerve",-0.0955157313431162,-0.222367561214259
+"GTEX-13N1W",1,"70-79",0,5.8,615,"","2 pieces; 10% fibrovascular component",0.187745175328611,0.100676373094429
+"GTEX-13N2G",1,"60-69",2,5.8,589,"","2 pieces; 5% and 15% fibrovascular component",-0.0512416720820815,0.174562907284683
+"GTEX-13NYB",1,"40-49",2,6.9,1154,"","2 pieces, ~20% fascia/fibrous tissue, delineated",-0.0804359151882214,0.802511171096007
+"GTEX-13NYS",1,"60-69",4,6.6,850,"","2 pieces;  <10% fibrous component",-0.249518814057393,-0.331438544941392
+"GTEX-13NZ8",2,"60-69",4,6,1348,"","2 pieces; 2% fibrous content",0.720980383836635,0.210637650786101
+"GTEX-13NZ9",1,"50-59",0,5.8,390,"","2 pieces, ~5-10% fascia/vascular elements, rep delineated",-0.375787297244579,0.30919025734122
+"GTEX-13NZA",1,"60-69",2,7.2,1327,"","2 pieces; 1 includes portion of nerve",-0.186581002448938,-0.305942884557791
+"GTEX-13NZB",1,"30-39",0,7.1,390,"","2 pieces; includes small portion of fibrovascular tissue and nerve",0.632312826425501,0.170686994375292
+"GTEX-13O1R",1,"60-69",2,8,805,"","2 pieces; large blood vessel along one edge",0.605103879807717,-0.398256249904931
+"GTEX-13O21",1,"50-59",0,7.2,214,"","2 pieces, 10-15% fascia, delineated (rep)",-0.303062677889671,0.222451631902251
+"GTEX-13O3P",1,"50-59",4,6,441,"","2 pieces;",-0.474396498783435,-0.230144643483248
+"GTEX-13O3Q",1,"50-59",2,6.8,1153,"","2 pieces; several internal holes",-0.360436151486298,-0.029611656110539
+"GTEX-13O61",1,"60-69",0,7.2,337,"","2 pieces; 1 mm focus of skeletal muscle on 1 piece",-0.337733951472871,-0.0668926721899984
+"GTEX-13OVI",2,"60-69",0,7.7,183,"fibrosis","2 pieces prominent fibrosis surrounds islets of uninvovled adipose tissue (delineated), ~50% of specimen",-0.542750807830983,-0.318311647309768
+"GTEX-13OVJ",2,"50-59",2,6.3,1119,"","2 pieces; fat with ~10% fibrous/vessels",0.202313742223425,0.199536657552851
+"GTEX-13OVK",1,"40-49",0,7.2,275,"","2 pieces; virtually pure adipose tissue",-0.61015548556469,-0.0538592023572165
+"GTEX-13OVL",1,"50-59",2,7.2,864,"","2 pieces; 10 & 20% fibrovascular content",0.278510639251793,0.627011829738064
+"GTEX-13OW6",1,"50-59",2,6.4,561,"necrosis","2 pieces; 1 piece includes 30% fibrovascular tissue, 2nd includes 20% connective tissue, vessels, and nerves; focus of fibrinoid necrosis of vessel walls surrounded by lymphohistiocytic infiltrate",0.853031393251302,0.484961516719219
+"GTEX-13OW7",1,"50-59",2,6.7,805,"","2 pieces, fibro-fascial tissue is ~15-20% total, rep delineated",0.672390265800836,0.223603688692809
+"GTEX-13OW8",1,"60-69",2,7.4,1088,"","2 pieces; fat with some vessels/fibrous tissue (~10%)",-0.317051374612611,0.283175784920354
+"GTEX-13PDP",1,"60-69",4,6,844,"","2 pieces; fat with minimal fibrous/vascular tissue (<10%)",-0.383248610725239,-0.130894991947721
+"GTEX-13PLJ",2,"60-69",2,5.8,982,"","3 pieces; large blood vessels and fibrous stroma comprise 30% of overall area",-0.572732922838853,0.0111389960390602
+"GTEX-13PVQ",1,"50-59",2,7.1,848,"","2 pieces; 10% fibrovascular content",0.123862824551179,-0.0430321718728606
+"GTEX-13PVR",2,"60-69",0,7.1,245,"","2 pieces, minimal fibrous/fascial tissue",0.782301602569762,-0.00239873879208196
+"GTEX-13QBU",2,"40-49",0,7.1,277,"","2 pieces, minimal fibrous tissue (~10%); rep delineated",0.384042390685231,0.457945978002841
+"GTEX-13QJ3",1,"50-59",0,6.8,621,"","2 pieces, ~25% fibrous/fascial tissue, rep. delineated",-0.192747491890212,0.755375452918611
+"GTEX-13RTJ",1,"60-69",4,6.6,931,"","2 pieces, ~10% prominent vessel/fascia, delineated",0.730437551168709,-0.00460764998064467
+"GTEX-13S7M",2,"60-69",2,6,579,"","2 pieces",0.614574156831695,0.207007906983987
+"GTEX-13SLW",1,"70-79",2,6.2,1187,"","2 pieces, <10% fascia",-0.498381139327172,-0.234593393898168
+"GTEX-13SLX",2,"50-59",2,6.5,1062,"","2 pieces; small amounts of interstitial fibrovascular tissue",0.7746822999138,0.1479316232993
+"GTEX-13U4I",2,"40-49",0,7,398,"","2 pieces, fascia/vascular elements are 5-10% of tissue; rep delineated",0.47018424749652,-0.30459476855526
+"GTEX-13VXT",2,"20-29",0,5.7,443,"","2 fragmented pieces",0.496737666537837,0.467116495515313
+"GTEX-13VXU",1,"50-59",2,7.1,921,"","2 pieces; 5% fibrous content",-0.0459134684396396,0.398381498272218
+"GTEX-13W3W",2,"60-69",0,6.3,497,"","2 pieces, minimal fascial tissue",0.0564354441862489,0.064045153174413
+"GTEX-13X6J",1,"50-59",2,6.7,1254,"","2 pieces; 5-10% fibrovascular tissue",-0.352530953400951,-0.172055921130744
+"GTEX-13X6K",2,"60-69",4,6.7,965,"","2 pieces, minimal fascia",0.757699098930292,0.183021570769834
+"GTEX-13YAN",1,"60-69",0,7.3,603,"","2 pieces. Fascia is ~10 %, rep delineated",0.2253177000862,-0.268123742810264
+"GTEX-144FL",1,"50-59",2,7.5,991,"","2 pieces, fascia is 10-15% total, rep delineated",0.120630979470074,-0.266650853411388
+"GTEX-144GL",1,"50-59",2,7.6,651,"","2 pieces; 5% fibrous content",-0.516877482944562,0.424106311332365
+"GTEX-144GM",1,"20-29",0,6.3,351,"","2 pieces, ~10% vascular/connective tissue, delineated",0.806889611606582,-0.0616728653428376
+"GTEX-144GO",1,"60-69",4,7.1,1311,"","2 pieces; ~10-20% fibrovascular tissue and nerve",-0.106232937713452,0.0528505040814341
+"GTEX-145LS",2,"60-69",4,6.1,851,"","2 pieces; 5% fibrous content",0.0892004524003391,-0.265844227415632
+"GTEX-145LT",1,"40-49",0,7.2,432,"","2 pieces, ~5% fascia/vascular tissue, rep delineated",-0.552032690762982,-0.136526860027051
+"GTEX-145ME",2,"40-49",0,6.5,326,"","2 pieces; ~5-10%  interstitial fascia/fibrous tissue; rep delineated",0.570180037473242,0.534846964360961
+"GTEX-145MF",1,"50-59",2,6.1,937,"","2 pieces, ~10% interstitial fascial/fibrous tissue",0.848887338841755,0.797921147884695
+"GTEX-145MG",1,"50-59",2,6.4,1141,"","2 pieces; 1 piece has 20% fibrous content",0.431171433389887,0.383398161821322
+"GTEX-145MI",2,"60-69",2,7.8,699,"","2 pieces; 50 & 40% fibrous tissue content",0.0151120864154239,-0.100346938014129
+"GTEX-145MN",1,"30-39",0,7.9,262,"","2 pieces; 1mm smooth muscle carry-over [annotated]",-0.58392394399151,0.0111579496917591
+"GTEX-145MO",1,"60-69",3,6.1,661,"","2 pieces, ~5-10% fascia/vascular tissue, rep. delineated",0.267005350247636,0.037502539747998
+"GTEX-146FH",2,"50-59",0,7.3,399,"","2 pieces; 5% fibrous content",0.227057720316756,0.187491315892258
+"GTEX-146FQ",1,"30-39",0,6.9,478,"","2 fragmented pieces; ~10% fibrovascular component",-0.560126372809319,0.0951433748974077
+"GTEX-146FR",2,"60-69",0,7.1,1644,"","2 pieces, no fascia/vascular tissue",0.877608562665489,-0.140313345331773
+"GTEX-14753",1,"60-69",4,6.6,806,"","2 pieces",-0.474811125899635,0.468639211417286
+"GTEX-147F3",2,"50-59",0,7.3,486,"","2 pieces, fragmented; less than 10% fibrovascular component",0.726684523153232,0.760150981117312
+"GTEX-147GR",1,"60-69",2,5.8,994,"","2 pieces; <5% fibrous content",0.503120885838059,0.43789326306244
+"GTEX-147JS",1,"60-69",2,5.7,507,"","2 pieces fascia is ~10-15% , rep delineated",-0.155829372313959,0.203878474109239
+"GTEX-148VI",2,"60-69",0,5.9,420,"","2 pieces; large central defects (?poor fixation), portion of large vessel in 1 piece",-0.0312705860364833,-0.196269751305789
+"GTEX-1497J",1,"60-69",0,6.3,319,"","2 pieces, ~10-15% interstital fascia/fibrous tissue, rep delineated",0.429819962526758,0.042399588804849
+"GTEX-14A5H",1,"60-69",2,7.2,527,"","2 pieces, ~15% interstitial fascia/vascular elements",-0.45491749084321,-0.0411996303857508
+"GTEX-14ABY",1,"50-59",2,6.5,1292,"","2 pieces; ~10% of fibrovascular component",-0.544184828940297,0.637451924825511
+"GTEX-14AS3",2,"40-49",0,7.1,266,"","2 pieces; includes significant portion of nerve, larger vessels and tendon",-0.399556172003193,-0.0937707593947433
+"GTEX-14BIL",1,"50-59",2,8.1,760,"","2 pieces; overly large specimen with compression artifacts",-0.190365011654601,-0.0726803780024249
+"GTEX-14BIN",2,"50-59",2,7.3,982,"","2 pieces",0.958645134756395,0.405120791202745
+"GTEX-14BMU",2,"20-29",0,7.1,1639,"","2 pieces, ~5-10% fascia, rep delineated",-0.380543621788559,0.466086326051674
+"GTEX-14BMV",1,"50-59",2,6.9,593,"","2 pieces; 1 with 20% stromal vascular content",0.561503071592212,0.129586938738715
+"GTEX-14C39",1,"40-49",2,5.7,741,"clean_specimens","2 pieces, minimal vascular elements/fascia, good specimen",-0.123733833475089,-0.381084026611917
+"GTEX-14C5O",1,"60-69",4,7.2,656,"","2 pieces",-0.150917952332672,0.459323956836841
+"GTEX-14DAQ",2,"60-69",4,7.4,450,"","2 pieces, ~20% fascia/vascular elements, delineated",0.309719575303274,-0.0189685243345226
+"GTEX-14DAR",1,"50-59",0,6.7,250,"","2 pieces, ~10% fascia/vascular tissue",0.870083438093776,0.16386807331067
+"GTEX-14E1K",1,"50-59",0,6.4,241,"","2 pieces, ~60% fascia, rep delineated",0.868508729870247,0.356042036387211
+"GTEX-14E6C",1,"40-49",4,7.3,983,"","2 pieces; 5% fibrous content",-0.0779746776719382,-0.251126792506066
+"GTEX-14E6D",1,"50-59",2,5.8,791,"","2 pieces; no more than 10% fibrovasular component",-0.39839356442851,0.396653098591559
+"GTEX-14E6E",1,"30-39",0,6.9,396,"","2 pieces",-0.559665815729306,0.0493962183292514
+"GTEX-14H4A",2,"40-49",0,5.9,497,"","2 pieces; small attachment of nerve",0.696368247995343,-0.292316438776823
+"GTEX-14ICK",1,"40-49",0,5.7,665,"","2 pieces; 20 & 10% fibrous content",0.81709193342289,-0.0353027681883946
+"GTEX-14ICL",1,"30-39",0,8.9,860,"clean_specimens","2 pieces, minimal fascia/vascular elements, good specimen",0.389217422330679,0.0981438910878337
+"GTEX-14JG1",1,"40-49",2,6.6,941,"","4 fragmented pieces; 10% fibrous content",0.669307033907703,0.0498228113838661
+"GTEX-14JG6",2,"30-39",0,6.2,284,"","2 pieces; fat with small portion of nerve and vessel wall",0.591490543718654,0.299969402750192
+"GTEX-14JIY",1,"60-69",2,7.4,1040,"","2 pieces, trace fascia/vascular elements, rep delineated",-0.337733951472871,0.233422749723255
+"GTEX-14LLW",2,"70-79",4,5.7,1396,"","2 pieces; minimal fibrous content",0.642588533001292,0.434453388283494
+"GTEX-14PHX",1,"50-59",0,7.3,261,"","2 pieces",-0.147667417632251,-0.0595648782121666
+"GTEX-14PII",1,"60-69",4,7.2,615,"","2 pieces, fascia/vascular tissue is ~20%, rep delineated",0.0637848803429688,0.350236414706005
+"GTEX-14PJ2",1,"50-59",0,7.6,420,"","2 pieces; one piece fragmented and contains ~10% of fibrovascular component and a few adnexal ducts (outlined)",-0.46326483355673,0.332958423274169
+"GTEX-14PJ3",1,"50-59",0,6.2,232,"","2 pieces; predominantly fat with small portion of fibrous and vascular tissue",-0.0486197708776233,0.208079901608792
+"GTEX-14PJ4",1,"60-69",0,7.3,254,"","2 pieces; ~10% fibrovascular component, over-sized specimens with central defects (?poor fixation)",-0.503784279476715,0.515667143138135
+"GTEX-14PJ6",2,"60-69",0,6.6,136,"","2 pieces, minimal fascia/vascular elements",0.898907964465945,0.832919745105441
+"GTEX-14PJM",2,"50-59",2,7.8,525,"","2 pieces;",0.807219234774091,0.2700446330072
+"GTEX-14PK6",2,"70-79",0,7,246,"","2 pieces, ~10-15% fascia/vascular elements, rep delineated",-0.0690726187488678,-0.181892449083173
+"GTEX-14PN3",2,"60-69",0,7.2,292,"","3 pieces; <10% fibrous content",0.452302727932818,0.219089454974252
+"GTEX-15CHQ",1,"60-69",4,7,852,"","2 pieces; 1 mm sq nerve in 1 piece [circled]; 20% fibrous tissue in other piece",-0.116026407928012,0.481641158427608
+"GTEX-15DCD",2,"70-79",2,6.2,694,"","2 pieces; ~10% fascia and vascular component (outlined)",0.727955956249438,-0.0844046041811171
+"GTEX-15DDE",2,"50-59",3,7.1,630,"","2 pieces, minimal fascia/vascular elements",0.869146983917293,0.0100361177737783
+"GTEX-15ER7",2,"20-29",1,6.8,1368,"","2 pieces",0.740105038915554,0.283928844843224
+"GTEX-15ETS",2,"40-49",0,5.7,439,"","2 pieces, ~10% fascia, rep delineated",-0.39997415173746,0.852215405237091
+"GTEX-15G19",1,"60-69",2,6.5,592,"","2 pieces; ~10%fascia/vascular elements and nerves (outlined)",-0.495498296885136,0.196664199713137
+"GTEX-15RIE",1,"60-69",0,5.8,384,"","2 pieces, ~5-10% fascia/vascular elements, rep delineated",0.670828062030553,0.354174909183865
+"GTEX-15SDE",2,"50-59",0,6.7,346,"","2 pieces: both contain small foci of nerves at edge (labeled); central  holes",0.00875305121287477,0.184681052603372
+"GTEX-15UKP",1,"20-29",0,6.6,483,"","2 pieces; mature fat with minimal fibrovascular component, 1 has multiple central defects (?poor fixation)",-0.416992812486517,-0.238198277921956
+"GTEX-169BO",1,"50-59",0,6.4,157,"","2 pieces, ~10% fascia, rep delineated",-0.0411686875329385,0.272178793205747
+"GTEX-16AAH",1,"50-59",0,6.3,259,"","2 pieces, ~incidental peripheral nerve embedded, delineated",-0.324232405002166,0.576109404777414
+"GTEX-16BQI",2,"30-39",0,6.8,715,"","2 pieces; prominent artery and nerves at edge of one piece; internal holes",0.95623846978032,0.815486850757692
+"GTEX-16GPK",1,"60-69",2,7.3,656,"fibrosis","2 pieces; one piece contains ~5% fibrous tissue and vessels",-0.547959872631679,-0.0587580017700554
+"GTEX-16MT8",2,"60-69",4,6.4,448,"","2 pieces, <10% fascia/vascular elements, rep delineated",0.53513968933729,0.191200798384787
+"GTEX-16MTA",1,"50-59",0,7.7,254,"","2 pieces, central defects in both (?poor fixation)",0.945297362926631,0.0433677892465665
+"GTEX-16NGA",2,"40-49",0,7.4,228,"","2 pieces; lobulated mature adipose tissue with thin fibrovascular septa",0.707683561223177,-0.107891867639396
+"GTEX-16NPX",1,"50-59",0,6.4,566,"","2 pieces, !0-15% fascia, rep delineated",0.163925902553724,0.30404573135893
+"GTEX-16XZY",1,"70-79",0,8.4,761,"","2 pieces; 30% and 15% facia/vessels/glands",0.905997756619506,-0.187152933097019
+"GTEX-16XZZ",1,"60-69",0,5.6,442,"fibrosis","2 pieces; 5% fibrous content",0.0161920335025859,-0.00494960187627007
+"GTEX-16YQH",1,"30-39",1,6.9,906,"","2 pieces, trace fascia, ~10%, rep. delineated",-0.538976537937536,-0.0931767848880051
+"GTEX-17EUY",1,"20-29",0,6.3,386,"fibrosis","2 pieces;  mature fat with ~30% (1st) and up to 10% (2nd) is fibrous/vascular/nerve tissue",0.295629172817659,0.330058532768375
+"GTEX-17EVP",1,"40-49",2,7.2,963,"","2 pieces; adipose tissue and one 0.9 mm squamous epithelium floater (outlined)",-0.504053442586978,-0.0680858039251746
+"GTEX-17F96",1,"70-79",0,6.2,565,"","2 pieces; low stromal content",-0.603942605101808,-0.110230116318824
+"GTEX-17F97",1,"50-59",4,7.9,918,"calcification, fibrosis","2 pieces; focus of dystrophic calcification [labeled]; 10% fibrous content",-0.0861951844769063,0.440708278669494
+"GTEX-17F98",2,"40-49",0,7.2,300,"fibrosis","2 pieces; 30% fibrous & neural content in 1 piece, other has 5% same",-0.393383364947224,0.0499794538045006
+"GTEX-17F9Y",2,"70-79",0,6,524,"","2 pieces, trace fascia",0.859686654668227,-0.0488149908462772
+"GTEX-17HG3",2,"30-39",2,7.2,1194,"fibrosis","2 pieces; one includes small amount of fibrous tissue and portion of large vessel",0.623851970419706,0.17434674909155
+"GTEX-17HGU",1,"50-59",0,7.4,366,"fibrosis","2 pieces; 5 & 10% fibrous content",-0.377534959530846,0.179841709518411
+"GTEX-17HHE",1,"50-59",0,6.8,386,"","2 pieces, fascia/vascular elements are ~15% tissue",0.97820784834876,0.0571931714267337
+"GTEX-17HHY",1,"50-59",2,7.7,690,"fibrosis","2 pieces; minimal fibrous content",-0.567825897640216,-0.0115098497352284
+"GTEX-17HII",1,"50-59",2,6,601,"","2 pieces, ~15% fascia/vascular elements, rep. delineated",-0.258088839907964,-0.110748418835945
+"GTEX-17KNJ",1,"50-59",0,6.9,272,"","2 pieces, ~10% fascia/vascular elements",-0.275022694049717,0.629007886335926
+"GTEX-17MF6",1,"40-49",2,7.2,1317,"","2 pieces; one contains ~50% dense connective tissue and other ~10% fibrovascular component (outlined)",0.786425509046866,0.257269491677623
+"GTEX-17MFQ",1,"20-29",0,8.1,376,"","2 pieces, ~10% fascia, delineated",-0.555334953457019,0.0459859627836203
+"GTEX-183FY",1,"20-29",0,7.8,259,"","2 pieces; fascia/vascular elements are ~10% rep delineated",-0.36664664338811,0.000289829603323069
+"GTEX-183WM",2,"70-79",4,6.7,873,"","2 pieces, ~10% fascia",0.0526216341570392,0.0205665165075319
+"GTEX-18465",1,"50-59",2,6.8,782,"fibrosis","2 pieces; 20% fibrous content; deep cassette indentations on 1 piece",0.944393135356517,0.675645078328329
+"GTEX-18A66",1,"60-69",4,7.5,283,"","2 pieces, fascia/skeletal muscle is ~30 % of specimen, delineated (rep)",0.771668751537381,-0.275132098256558
+"GTEX-18A67",1,"50-59",0,8,279,"","2 pieces; mature adipose tissue with scant fibrovascular component and nerves",-0.535414619312565,-0.029611656110539
+"GTEX-18A6Q",1,"60-69",2,7.8,530,"","2 pieces, ~5% fascia/vascular elements, rep. delineated",-0.516877482944562,0.0440980300724705
+"GTEX-18A7A",2,"50-59",2,5.7,572,"fibrosis","2 pieces; <2% fibrous content",0.703110831433353,0.0842469126873848
+"GTEX-18D9A",2,"30-39",0,7.2,613,"fibrosis","2 pieces; 10% fibrous content",0.135221844071138,0.419114063282245
+"GTEX-18D9U",1,"40-49",0,6.4,310,"","1 piece + small fragment; ~10% fascia, rep delineated",-0.481091151357443,0.81965690768046
+"GTEX-18QFQ",1,"30-39",0,5.6,462,"fibrosis","2 pieces; mature fat with small contribution of fibrous/nerve/vascular tissue",-0.0915985430062399,0.110318605033936
+"GTEX-1A32A",2,"50-59",2,7.2,671,"","2 pieces; 5% fibrovascular content",0.766577250276745,-0.0749189273607679
+"GTEX-1A3MV",1,"30-39",0,7.1,379,"fibrosis","2 pieces; mature fat with ~5-10% fibrous tissue",-0.485291139886729,-0.0196275675379168
+"GTEX-1A3MW",2,"60-69",4,7.6,707,"","2 pieces; 5% fibrovascular content",0.736829906882693,0.196508964855283
+"GTEX-1A3MX",1,"60-69",4,7.5,1126,"","2 pieces, fascia/vascular elements are ~15% tissue, rep delineated",0.247616631306009,0.00244955312175937
+"GTEX-1A8FM",2,"50-59",2,6.7,1201,"","2 pieces; large central defects",0.00104250391376816,0.00696291716533867
+"GTEX-1A8G6",1,"60-69",2,6.8,1164,"","2 pieces, ~5-10% fascia; rep. delineated",0.335569636730707,0.33962215355518
+"GTEX-1A8G7",1,"60-69",2,6,700,"fibrosis","2 pieces; some defects in section (oversized), up to 10% fibrous/vascular tissue",0.576109404777414,0.72527584605293
+"GTEX-1AMEY",2,"30-39",0,6.9,261,"","2 pieces; <5% fibrovascular content",0.836966578168143,0.641046368192886
+"GTEX-1AMFI",2,"50-59",0,7.5,287,"","2 pieces, ~5-10 % fascia; rep delineated",0.632276158565154,-0.273666381669158
+"GTEX-1AX9I",1,"60-69",2,6.7,618,"","2 pieces: 1 is 98% fat, other contains 15% fibrovascular & neural tissue",0.767135166381084,0.234803980121616
+"GTEX-1AX9J",1,"60-69",0,7.4,489,"","2 pieces, ~15-20% fascia/vascular elements, rep. delineated",-0.19174785559179,0.169952835771647
+"GTEX-1AX9K",1,"50-59",0,8.1,375,"sweat_glands","2 pieces; 1 piece contains  hair and sweat glands (labeled)",-0.435825305002377,0.124716490280755
+"GTEX-1AYCT",1,"50-59",0,6.5,592,"","2 pieces; adipose tissue with 30-50% vessels/nerve/connective tissue",0.838284807882116,0.372076289509285
+"GTEX-1AYD5",1,"50-59",0,6.7,379,"","2 pieces;  mature adipose tissue and ~5 and 20% fibrovascular component and nerves (arrow); small fragment of skeletal muscle (outlined)",0.404791168035236,0.123862824551179
+"GTEX-1B8KE",1,"50-59",0,6.6,211,"","2 pieces, trace fascia <5% tissue.",-0.482617005588403,0.0310842755770149
+"GTEX-1B8KZ",1,"50-59",0,7.3,389,"","2 pieces; mature adipose tissue with ~20and 30% dense fibroconnective tissue, nerve, and vessels",0.988310251886724,0.311425261724528
+"GTEX-1B8L1",1,"60-69",2,7.1,859,"","2 pieces, ~20% fascia/ vascular elements; rep delineated",0.514708860113271,0.581463684929749
+"GTEX-1B8SF",1,"60-69",2,6.6,1044,"","2 pieces; mature adipose tissue with large vessel at one edge",-0.0162326263093392,0.233422749723255
+"GTEX-1B8SG",1,"50-59",2,6.4,1218,"","2 pieces; mature adipose tissue, 5--10% fascia, few tissue defects (?poor fixation)",-0.593512541303865,-0.252004077446987
+"GTEX-1B932",2,"40-49",0,6.9,230,"","2 pieces; ~15 to 20% fibrovascular component with small nerves, central defects (?poor fixation)",-0.468990559807436,-0.144525596618688
+"GTEX-1B933",2,"50-59",2,6.9,668,"","2 pieces, ~25% fascia/vascular elements, rep delineated",0.0125381427515976,-0.224144936135244
+"GTEX-1B97I",1,"40-49",0,7.2,944,"","2 pieces, < 5% fascia",-0.53513968933729,0.0627523620381206
+"GTEX-1B996",1,"60-69",2,7.6,1032,"","2 pieces; ~10% fibrovascular component",0.958110014111024,0.000135687283513161
+"GTEX-1BAJH",1,"70-79",2,7.6,1239,"","2 pieces; ~10 to 15% fibrovascular component",0.127929620875941,0.662763787031596
+"GTEX-1C2JI",1,"50-59",0,5.9,567,"","2 pieces; mature adipose tissue with small portion of fibroconnective tissue and vessels",0.624891777863694,-0.139399801648651
+"GTEX-1C475",2,"40-49",0,7.2,218,"","2 pieces; mature adipose tissue, few holes (? poor fixation)",0.949441307426556,-0.083598954337452
+"GTEX-1C4CL",1,"30-39",0,6.6,346,"","2 pieces, ~!5% fascia/vascular elements",1.12013546339414,0.468218252884643
+"GTEX-1C64O",1,"60-69",0,6.8,440,"","2 pieces, fascia/vascular elements are ~10-15% of tissue",0.763557359703754,0.0204735753257703
+"GTEX-1C6VQ",1,"50-59",2,7.6,898,"fibrosis","2 pieces; mature fat with up to 20% loose fibrous tissue",-0.0409269693383731,-0.104899783414776
+"GTEX-1C6VR",1,"60-69",2,5.6,1102,"","2 pieces, ~10% fascia/tendon, rep delineated",0.544858470792975,0.463927816847023
+"GTEX-1C6VS",1,"60-69",2,7,743,"","2 pieces; 5% and 10% fibrovascular component and nerves (arrows)",-0.348520506699108,0.0253548031073896
+"GTEX-1C6WA",1,"60-69",2,5.7,1142,"fibrosis","2 pieces; 10 & 40% fibrous content",0.921478743408514,0.586646975100156
+"GTEX-1CAMQ",1,"40-49",2,7.7,586,"","2 pieces; 10% and 25% fibrovascular component; one sample with numerous empty spaces (arrows)",0.674649772982961,-0.0131611353299449
+"GTEX-1CAMR",1,"20-29",0,6.9,344,"","2 pieces, ~10% fascia/vascular elements; rep delineated",-0.0370674610295863,-0.156245094641556
+"GTEX-1CAMS",2,"40-49",0,7.7,357,"","2 fragmented pieces; mature adipose tissue and 5% and 10% fibrovascular component",0.338939714218268,0.507658952915183
+"GTEX-1CB4E",1,"60-69",0,6.5,586,"fibrosis","2 pieces; minimal fibrous content",0.00310391903283898,0.243406838295877
+"GTEX-1CB4F",1,"60-69",0,7.3,477,"fibrosis, sweat_glands","2 pieces; from 10-30% is fibrous tissue/tendon, hair follicles/sweat glands, vessels",0.902216841247882,0.519726934879896
+"GTEX-1CB4G",1,"60-69",2,6.2,472,"","2 pieces, ~10% fascia, rep delineated",-0.495275228459351,0.126628430220982
+"GTEX-1CB4H",2,"60-69",4,6.2,951,"fibrosis","2 pieces; 10% fibrous content in 1 piece",0.784499158274008,0.444649155389383
+"GTEX-1CB4I",1,"50-59",0,5.9,523,"","2 pieces; <5% fibrovascular content",-0.518498185276648,0.901526485744657
+"GTEX-1CB4J",1,"60-69",3,7.9,945,"","2 pieces, vascular elements/fascia are ~5% tissue, rep delineated",-0.412516534448574,-0.362548075174489
+"GTEX-1E1VI",1,"50-59",2,7.7,971,"fibrosis","2 pieces; mature adipose tissue, 1 piece includes ~10% fibrous tissue",-0.550639851077597,0.292316438776823
+"GTEX-1E2YA",1,"50-59",2,5.8,562,"","2 pieces, ~10% fascia/vascular elements; rep delineated",-0.0841967938761416,-0.252004077446987
+"GTEX-1EH9U",1,"60-69",4,6.9,757,"","2 pieces; 5 & 10% fibrovascular content",0.106807542116056,0.249542415086532
+"GTEX-1EKGG",1,"60-69",2,6.1,849,"fibrosis","1 piece; not skin, adipose tissue with small portion of fibrous tissue",-0.0858557667501583,0.0066085318022144
+"GTEX-1EMGI",1,"60-69",2,6.9,500,"","2 pieces, ~10% fascia/peripheral nerve elements, rep delineated",-0.503290823297951,0.439873627190681
+"GTEX-1EU9M",1,"60-69",2,6.3,838,"","2 pieces, ~40%  fascia/peripheral nerve, rep delineated",0.629351426054394,0.549250645074199
+"GTEX-1EWIQ",2,"70-79",2,7.6,620,"fibrosis","2 pieces; 1 piece is ~20% fibrous/vascular",0.830707587696461,0.0680858039251745
+"GTEX-1EX96",1,"50-59",2,6.2,785,"","2 pieces, ~20% fascia; rep delineated",0.641187014089921,-0.0797351355363754
+"GTEX-1F48J",2,"50-59",4,5.9,894,"fibrosis","2 pieces; minimal fibrous content",0.600443827996807,0.377534959530846
+"GTEX-1F52S",2,"60-69",4,6.3,988,"fibrosis","2 pieces; <5% fibrous content",0.84359967050059,0.0153274301042914
+"GTEX-1F5PK",1,"50-59",0,7.4,238,"","2 pieces; 10% vascular content",0.812648880895267,-0.0453789719688556
+"GTEX-1F6I4",1,"60-69",2,6.5,753,"","2 pieces; one has large central defect (?fixation)",-0.519611213070605,0.192780765225909
+"GTEX-1F6RS",2,"60-69",4,7.3,1177,"fibrosis","2 pieces; <5% fibrous content",0.977144236216403,0.389607791831421
+"GTEX-1F75A",1,"50-59",2,6.6,1259,"","2 pieces, ~5-10% fascia, rep delineated",-0.0867555632141477,0.420191261328982
+"GTEX-1F75I",1,"40-49",0,7.2,450,"","5 pieces; two larger pieces consist of fibrovascular component and 5% and 60% mature adipose tissue; 2 of 3 smaller pieces represent  fibrovascular tissue; the remaining one consists of adipose tissue with small fibrovascular component and adnexal ducts (outlined)",0.68659537788887,0.738380833676292
+"GTEX-1F75W",1,"60-69",2,6,898,"fibrosis","2 pieces; 10 & 30% fibrous content",-0.307713510033275,-0.0696890954858742
+"GTEX-1F88E",2,"60-69",4,6.1,1106,"","2 pieces, ~5-10% fascia/vascular elements; rep. delineated",0.618823629833053,0.222256734052935
+"GTEX-1F88F",2,"60-69",2,7.4,906,"fibrosis","2 pieces; minimal fibrous content",0.777548368097748,0.319118273305524
+"GTEX-1FIGZ",1,"40-49",0,7,347,"fibrosis","2 pieces; 1 piece is ~90% fat/10% fibrous, 2nd is ~50% fat/50% fibrous and vessels",-0.450525721726052,-0.409105038531716
+"GTEX-1GF9V",1,"60-69",2,6.8,675,"","pieces, ~5-10% fascia/vascular elements, rep delineated",-0.540349571809968,-0.0229785637780919
+"GTEX-1GF9X",2,"40-49",0,7.2,482,"fibrosis","2 pieces; <5% fibrous content",0.681688352690232,-0.140313345331773
+"GTEX-1GMR2",1,"50-59",0,6.9,308,"fibrosis","2 pieces; 20% internal fibrous content in 1 piece; 5% in other",0.942907607467354,0.376894209547188
+"GTEX-1GMR3",1,"40-49",0,6.5,292,"","2 pieces, fascia/vascular elements are ~10-20% of tissue (rep delineated)",-0.217357934640096,0.396152249761363
+"GTEX-1GMR8",2,"50-59",3,6.8,727,"fibrosis","2 pieces; 5% fibrous content",0.884561323307256,0.198669913735319
+"GTEX-1GMRU",1,"50-59",2,7.4,553,"","2 pieces, ~10% fascia, rep. delineated",-0.570984888284012,-0.117838839122274
+"GTEX-1GN1U",2,"50-59",4,5.7,511,"","2 pieces, vascular/fascia elements are <5% of tissue; rep delineated",0.878932743612871,0.0777059443115841
+"GTEX-1GN1V",1,"60-69",2,6.9,1121,"fibrosis","2 pieces; mature adipose tissue, up to ~10% fibrous tissue/vessels",-0.529538052975896,0.348899967143191
+"GTEX-1GN1W",2,"50-59",0,7.9,288,"fibrosis","2 pieces; 5 & 10% fibrous content",0.599927380867294,0.207149841662726
+"GTEX-1GN2E",1,"60-69",2,6.6,876,"","2 pieces, ~10-20% fascia/vascular elements, rep delineated",0.622465040469154,0.0560184154151571
+"GTEX-1GN73",1,"60-69",2,7.1,892,"","2 pieces; 20% & 60% fibrovascular & neural content",0.82911165703747,0.794137704197734
+"GTEX-1GPI7",1,"20-29",0,7.1,366,"fibrosis","2 pieces; mature fat, one piece includes about 10% fibrous tissue/vessels",0.130384228088042,-0.038328873211648
+"GTEX-1GTWX",1,"60-69",2,6.2,1038,"","2 pieces, fascia elements are ~40%, rep delineated",0.593318694809638,0.0624488968782288
+"GTEX-1GZ2Q",1,"40-49",2,6.2,1097,"","2 pieces; mature adipose tissue with fibrovascular component and one piece with vessel wall (outlined) up to ~3mm in thickness",0.945297362926631,-0.0140986567392144
+"GTEX-1GZ4H",2,"50-59",0,6.7,594,"","2 pieces; contains 30% blood vessels & nerves",-0.593824992425253,-0.437781248229441
+"GTEX-1GZ4I",1,"50-59",2,6.8,717,"fibrosis","2 pieces; 5% fibrous content",-0.164771239392175,-0.0916726242427905
+"GTEX-1H1CY",2,"60-69",2,6.9,1398,"","2 pieces: 1 with 5% neural tissue",0.823160778643113,-0.292316438776824
+"GTEX-1H1DE",1,"20-29",0,5.6,1028,"","2 pieces, barely trace fascia",-0.434868134596797,0.215754101630248
+"GTEX-1H1DF",2,"40-49",2,6.5,1385,"fibrosis","2 pieces; 1 with 10% fibrous content",0.156616932845859,0.123587804319553
+"GTEX-1H1E6",1,"30-39",0,7.1,208,"fibrosis","2 pieces; fat with 5-10% dense fibrous tissue/vessels/nerve",0.970388343889461,0.533655773511298
+"GTEX-1H1ZS",1,"70-79",4,6.9,1352,"","2 pieces, trace fascia/vascular elements, rep delineated",-0.414147066992039,-0.192341156148648
+"GTEX-1H23P",1,"60-69",4,6.3,503,"fibrosis","2 pieces: 1 with large blood vessel and fibrous tissue comprising 10%",0.73368808586913,-0.206489418194618
+"GTEX-1H2FU",2,"60-69",4,6.4,885,"calcification, fibrosis","2 pieces; dystrophic calcification within fibrous component",0.766577250276745,0.197339101848606
+"GTEX-1H3O1",1,"60-69",2,6.2,1176,"","2 pieces, ~30% fascia/vascular elements, rep delineated",0.49763534675433,0.636387416701524
+"GTEX-1H3VE",1,"40-49",4,6.7,1084,"","2 pieces; mature adipose tissue <10% fibrovascular tissue",-0.415104879775368,-0.103612237554316
+"GTEX-1H3VY",1,"50-59",0,6.8,428,"fibrosis","2 pieces; one piece is incomplete section (? fixation), up to ~30% fibrous/nerve tissue",0.380476627196572,0.121840685260294
+"GTEX-1H4P4",1,"50-59",2,6,1285,"fibrosis","2 pieces; large central defects (? poor fixation), smaller piece includes ~10-20% fibrous tissue",0.25332230716096,0.517876139191954
+"GTEX-1HB9E",1,"50-59",2,7.4,573,"","2 pieces, fascia/vascular elements are ~10-15% of tissue",-0.233752372890764,0.0472819434296129
+"GTEX-1HBPH",2,"40-49",4,7.9,992,"","2 pieces; 15% nerve and vascular content",-0.181892449083173,0.129147329661454
+"GTEX-1HBPI",1,"50-59",2,6.1,953,"fibrosis","2 pieces; <5% fibrous content; refixed at VARI",-0.444649155389383,0.0478324293148096
+"GTEX-1HBPM",2,"60-69",4,6.5,679,"","2 pieces; mature fat",0.909317422392827,0.22398970127739
+"GTEX-1HCU6",2,"60-69",2,7.1,1083,"fibrosis","2 pieces; <5% fibrous content",0.966601858584738,0.832011696225378
+"GTEX-1HCU7",1,"50-59",0,6.9,403,"fibrosis","2 pieces; 10 & 20% fibrous content",0.392621344572509,0.440608758437613
+"GTEX-1HCU8",2,"60-69",2,6.7,792,"","2 pieces, fascia is ~10%, rep delineated",0.849790618525727,0.465710770917213
+"GTEX-1HCUA",2,"50-59",0,5.8,290,"fibrosis","2 pieces; 1 piece includes central defects (?poor fixation); 2nd is ~30% fibrous",0.557543211795316,0.333288046441679
+"GTEX-1HCVE",1,"50-59",4,7.4,754,"","2 pieces; fascia/vascular elements (rep delineated) are ~5-10% tissue",-0.549445345400993,-0.278188009250642
+"GTEX-1HFI6",1,"40-49",2,7.2,917,"","2 pieces; fascia/vascular elements are ~20% of tissue, rep delineated",0.647093413238193,0.415799492211823
+"GTEX-1HFI7",2,"50-59",0,6.5,460,"fibrosis","2 pieces; up to 10% fibrous tissue",0.165266755468105,0.0820790760046745
+"GTEX-1HGF4",1,"60-69",2,6.7,831,"fibrosis","2 pieces; 10% fibrous content",0.00852347277623219,0.0824468510819327
+"GTEX-1HR98",1,"60-69",4,7,1358,"","2 pieces; 10% fibrovascular content",0.742977847786388,0.0152848818637841
+"GTEX-1HR9M",1,"60-69",4,7.1,738,"fibrosis, sweat_glands","2 pieces: 1 with 60% fibrous content & a focus of sweat glands [labeled]",0.765568552000963,0.00280982158183847
+"GTEX-1HSEH",1,"60-69",0,7.5,271,"","2 pieces, fascia/vascular elements up to ~40% of tissue, rep delineated",0.615057090734885,0.33962215355518
+"GTEX-1HSGN",2,"40-49",0,8.3,316,"","2 pieces, ~5-10% non adipose elements, peripheral nerve, vascular elements (rep delineated)",0.341555662425279,0.573666213251489
+"GTEX-1HSKV",1,"60-69",2,6.6,737,"fibrosis","2 pieces; 1 piece is ~30% vessels/some fibrous tissue",0.535172962672987,0.493950299946474
+"GTEX-1HSMO",1,"60-69",3,6.6,806,"fibrosis","2 pieces; minimal  fibrous content",-0.521464752440214,-0.109046123604944
+"GTEX-1HSMP",1,"70-79",0,7.9,341,"","2 pieces; 10% vascular/fascia elements",0.385425843168305,0.133446625843507
+"GTEX-1HSMQ",1,"50-59",0,6.6,395,"fibrosis","2 pieces; fat with 10-20% fibrous tissue",0.37092627347319,0.621541124305083
+"GTEX-1HT8W",1,"30-39",2,7.4,1232,"","2 pieces, ~30% fascia, rep delineated",0.530476175971588,0.123634604185143
+"GTEX-1HUB1",1,"60-69",0,7.4,799,"","2 pieces; 10% fibrovascular content",0.982988380669095,0.51291557829022
+"GTEX-1I19N",1,"70-79",4,6.7,745,"","3 pieces; mature adipose tissue with trace of fibrovascular component and nerves (arrows)",-0.447464170996437,0.261289543156199
+"GTEX-1I1CD",2,"60-69",4,5.8,681,"","2 pieces",0.970233109031607,0.0129329149639087
+"GTEX-1I1GP",1,"50-59",2,6.7,1345,"","2 pieces, fascia up to ~10% of specimen",-0.463121815460862,0.00906881205352062
+"GTEX-1I1GQ",1,"50-59",2,6.6,1070,"","2 pieces; mature adipose tissue and fibrovascular component (~5%)",0.145475050447552,0.18398381698875
+"GTEX-1I1GR",1,"60-69",2,6.7,772,"","2 pieces, ~10% fascia/vascular elements, rep delineated",0.0128804260035399,0.199691892410705
+"GTEX-1I1GS",1,"60-69",4,6.9,703,"","2 pieces, fascia/vascular elements are ~30% of tissue, rep. delineated",-0.00971209867283428,-0.193998474011421
+"GTEX-1I1GT",2,"60-69",0,6,473,"fibrosis","2 pieces; fat with trivial fibrous/vascular component",0.796634484132925,0.105275926042611
+"GTEX-1I1GU",1,"40-49",0,6.9,355,"","2 pieces;  10% fibrovascular content",0.574209871861933,0.163033421831857
+"GTEX-1I1GV",1,"60-69",2,7.3,1141,"","2 pieces, ~10% fascia, peripheral nerve, or vascular elements; rep. delineated",0.786188334203322,0.48135026316684
+"GTEX-1I1HK",1,"60-69",3,7,1006,"fibrosis","2 pieces; 25 and 70% fat, remainder is fibrous/vascular/nerve",0.99384731671345,0.756681650419235
+"GTEX-1I4MK",2,"50-59",0,7.5,358,"fibrosis","2 pieces; <5% fibrous content",0.753977213497112,0.568977290391585
+"GTEX-1I6K6",1,"30-39",0,7.5,400,"fibrosis","2 pieces; 80 and 60% fat, remainder is fibrous/nerve/vessel/tendon",0.472888684418644,0.162149146572246
+"GTEX-1I6K7",1,"40-49",0,7.6,159,"fibrosis","2 pieces; 10% fibrous content",-0.451075424548816,0.471865859107536
+"GTEX-1ICG6",2,"70-79",0,7.2,363,"","2 pieces; high (50%) collagen (fascia) content, especially in 1 piece",-0.594170093501145,0.100000984001937
+"GTEX-1ICLY",1,"50-59",0,7.2,483,"","2 pieces, ~15-20% vascular/fascia elements, rep. delineated",0.442257065764981,0.354780525723477
+"GTEX-1ICLZ",1,"60-69",3,7.6,1285,"","2 pieces; 5% stromal content; portion of large blood vessel occupies 20%",0.102838639913111,-0.0230089212862921
+"GTEX-1IDFM",1,"60-69",4,7.4,777,"fibrosis","2 pieces; fat with <10% fibrous component",-0.356421972377648,0.280728464501612
+"GTEX-1IDJD",1,"30-39",0,8.2,447,"","2 pieces; mature adipose tissue with fibrovascular component; one contains hair bulb, adnexa, nerves and vessels (outlined)",0.122391437334511,0.20742754119031
+"GTEX-1IDJF",1,"20-29",0,7,303,"fibrosis","2 pieces; 30% fibrous content in 1, blood vessel at center of other piece {10%)",1.01220851958409,0.0132014274284341
+"GTEX-1IDJU",2,"60-69",0,7.2,366,"","2 pieces; 5 & 10% fibrovascular content",0.0408681114536624,0.059668889966719
+"GTEX-1IE54",2,"40-49",0,6.8,390,"fibrosis","2 pieces; mature fat with 10-15% fibrous component",-0.259894961084446,-0.0556043461233086
+"GTEX-1IGQW",1,"60-69",4,6.9,1307,"","2 pieces, fascial elements are ~5-10% of tissue, rep delineated",-0.53755173660785,0.336516242687358
+"GTEX-1IKJJ",1,"60-69",2,7.3,1214,"","2 pieces, 10-15% fascia/vascular elements, rep delineated",0.906823215111995,0.729848575842754
+"GTEX-1IKK5",1,"60-69",2,7.4,655,"","2 pieces; 5% vascular content",0.937221479954262,0.278510639251793
+"GTEX-1IL2U",1,"60-69",2,6.8,495,"","2 pieces; mature adipose tissue ~50% with fibrovascular component ~50%",0.867941074918643,0.417341023245067
+"GTEX-1IL2V",1,"70-79",2,6.2,976,"","2 pieces, ~10-15% fascia, vascular, peripheral nerve elements, rep delineated",-0.466532273287833,0.324671812089208
+"GTEX-1IOXB",1,"50-59",2,6.7,772,"fibrosis","2 pieces; 5% fibrous content",0.624891777863694,0.115438676692744
+"GTEX-1IY9M",1,"60-69",1,7,1123,"","2 pieces; mature adipose tissue and ~15% fibrovascular component",0.731200680010035,0.48135026316684
+"GTEX-1J1OQ",2,"40-49",4,5.9,1239,"","2 pieces, 15-20% fascia/vascular elements, rep. delineated",-0.505984767289637,0.296550516400249
+"GTEX-1J1R8",1,"40-49",0,7.4,426,"","2 pieces, ~10% fascia/vascular elements, rep delineated",0.996383552422406,0.305674821631842
+"GTEX-1J8EW",2,"60-69",2,7.3,1084,"","2 pieces; 1 has 10% fibrovascular content",0.773597677954518,0.0934267537079824
+"GTEX-1J8JJ",2,"60-69",2,7.1,1237,"","2 pieces, ~30-40% fascia/vascular elements, rep delineated-sample with caution",-0.125457740382294,-0.194469115378679
+"GTEX-1J8Q3",1,"60-69",0,7.7,145,"fibrosis","2 pieces; <10% fibrous content",-0.296257315496712,0.348899967143191
+"GTEX-1J8QM",2,"60-69",0,6.2,254,"","2 pieces; mature adipose tissue with trace of fibrovascular component",0.788603556606744,0.440323229986593
+"GTEX-1JJ6O",1,"60-69",4,6.6,948,"fibrosis, sweat_glands","2 pieces; includes ~10% fibrous tissue/sweat glands/nerve etc, 1 piece has large defect (?poor fixation)",0.63335335661189,0.259324613166012
+"GTEX-1JJE9",1,"70-79",3,7.1,1111,"fibrosis","2 pieces; <5% fibrous content",-0.532492504367337,0.368937720379736
+"GTEX-1JJEA",1,"60-69",2,6.4,1109,"","2 pieces, ~20% fascia/vascular elements",0.428238926707278,0.758290903280893
+"GTEX-1JK1U",1,"60-69",0,7.2,287,"","2 pieces, ~30% fascia/vascular elements",-0.071675715677083,0.626053835953819
+"GTEX-1JKYN",1,"30-39",0,7.4,172,"fibrosis","2 pieces; adipose tissue with ~10% fibrous component, some tissue defects",-0.162249424688658,-0.0252727203862016
+"GTEX-1JKYR",1,"20-29",0,7.7,406,"fibrosis","2 pieces; 20% fibrous content; 5% nerve",0.60854378377621,0.455815171059703
+"GTEX-1JMLX",1,"50-59",2,6.3,1276,"fibrosis","2 pieces; 5% fibrous content; central holes in 1 piece",1.09324509167499,0.46974212910178
+"GTEX-1JMPY",1,"30-39",0,7.9,385,"fibrosis","2 pieces; fat with 10-15% fibrous tissue/vessels/nerve",0.802511171096007,0.777743265947065
+"GTEX-1JMQI",1,"50-59",0,6.3,697,"fibrosis","2 pieces; predominantly fat, 5 and 10-15% fibrous tissue/larger vessels",0.575814947170333,0.226043219357658
+"GTEX-1JMQK",1,"60-69",0,6.9,929,"","2 pieces; 5% vascular content",-0.0764058675894801,0.30480738296002
+"GTEX-1JMQL",2,"50-59",0,6.7,877,"","2 pieces, ~15% fascia/vascular elements, rep delineated",0.157367203308912,0.0698755263242663
+"GTEX-1JN1M",2,"60-69",0,6.8,561,"necrosis","2 pieces, fascia/vascular elements are ~10% of tissue, rep delineated; focal fat necrosis, encircled",0.411859220271713,0.292646061944333
+"GTEX-1JN6P",1,"60-69",0,7.2,883,"fibrosis","2 pieces; 10% & 20% fibrous content",-0.00971209867283428,0.0912427387638468
+"GTEX-1JN76",2,"20-29",0,8.4,125,"fibrosis","2 pieces; <5% fibrous content",0.631062279620264,0.340698191350474
+"GTEX-1K2DA",1,"50-59",0,7.2,213,"","2 pieces; mature fat",0.0248361279118374,-0.16391274782213
+"GTEX-1K9T9",2,"50-59",0,6.4,441,"","2 pieces, fascia/vascular elements are ~10% of tissue, rep delineated",0.31689360819101,0.575045792645058
+"GTEX-1KAFJ",1,"50-59",3,7,632,"fibrosis","2 pieces. 1 all fat, other with 50% vascular and fibrous content",0.970388343889461,0.605103879807717
+"GTEX-1KANA",1,"20-29",0,7.4,129,"","2 pieces; mature fat",-0.467116495515313,-0.0164362673628059
+"GTEX-1KD5A",1,"50-59",2,8.3,541,"","2 pieces; 20 and 50% fat, remainder is loose connective tissue, vessels, nerve",0.352635908050635,0.44743550544373
+"GTEX-1KWVE",1,"30-39",1,7.5,1355,"","2 pieces; 20 & 40% fibrovascular content; small [0.3mm] focus of glandular carry-over [labeled]",0.72456322808789,0.642436461374329
+"GTEX-1KXAM",1,"60-69",0,8.3,192,"","2 pieces, fascia is ~20% tissue, rep delineated",0.210215358561929,0.0649059426737508
+"GTEX-1L5NE",1,"50-59",0,6.2,149,"","2 pieces, fascia/vascular elements are ~20% of tissue, rep delineated",0.639563848513702,-0.0351711814524396
+"GTEX-1LB8K",1,"50-59",2,6.9,813,"fibrosis, sweat_glands","2 pieces; 1 piece has 70% fat, 30% fibrous content; other piece has 40% fat, 60% fibrous dermis with sweat glands [arrowed]",0.627996146442383,0.469959353379972
+"GTEX-1LBAC",1,"20-29",0,6.6,326,"fibrosis","2 pieces; ~10% fibrous component",-0.00943377417290882,0.0547805311798334
+"GTEX-1LG7Y",1,"50-59",2,5.7,1082,"","2 pieces, ~10% fascia/vascular elements",-0.0832496197126123,0.586047641833534
+"GTEX-1LG7Z",1,"30-39",0,7.8,241,"fibrosis","2 pieces; 1 contains 25% fibrous tissue;",-0.285450560540129,0.132355823552854
+"GTEX-1LGRB",2,"50-59",0,6.8,372,"","2 pieces; mature fat, 1 piece has large central defect",0.83831300387566,0.18364528478296
+"GTEX-1LH75",2,"50-59",4,5.9,1119,"","3 pieces (fragemented), ~10% fascia/vascular elements, rep delineated",-0.0602738474066561,0.240508438609157
+"GTEX-1LSNL",1,"50-59",2,7,1282,"","2 pieces, fascia/vascular elements up to ~20% of tissue, rep delineated",0.238423430781621,0.853031393251302
+"GTEX-1LSNM",1,"50-59",0,6.9,373,"","2 pieces; mature fat",-0.495498296885136,0.509753978170507
+"GTEX-1LSVX",1,"60-69",4,7.4,700,"fibrosis","2 pieces; multiple 'empty' defects ; 10% fibrous content",-0.0445105324898775,-0.024745900938723
+"GTEX-1LVA9",1,"50-59",2,7.3,1211,"fibrosis","2 pieces; mature fat, <10% fibrous tissue and nerve",-0.289370929911472,0.303371627285819
+"GTEX-1LVAN",2,"50-59",0,7.6,316,"fibrosis","2 pieces; <5% fibrous content",0.848281891395977,0.0403115447677477
+"GTEX-1LVAO",1,"60-69",4,7.7,974,"fibrosis","2 pieces; 5 & 10% fibrous content",0.150960589531282,0.438311423420398
+"GTEX-1M5QR",1,"40-49",0,6.1,487,"","2 pieces; fragmented, mature fat with <10% stroma/small vessels",-0.307145631639448,-0.339296155243154
+"GTEX-1MA7W",2,"20-29",0,7.2,236,"","2 pieces, ~5% fascia/vascular elements",0.710151816813926,0.520598008622681
+"GTEX-1MA7X",1,"60-69",2,7.5,975,"fibrosis","2 pieces; 5% fibrous content",0.0141834617691457,0.200057930924835
+"GTEX-1MCC2",2,"30-39",0,7.9,361,"","2 pieces; mature adipose tissue with fibrovascular septa",0.991137508295903,0.59092288876705
+"GTEX-1MCYP",2,"20-29",0,8,210,"","2 pieces; central defects, mature fat",0.846747598960729,0.581254083631669
+"GTEX-1MGNQ",1,"40-49",0,6.9,240,"","2 pieces, fascia/vascular elements ~10% of tissue, rep. delineated",0.0448131850160155,0.63815114966313
+"GTEX-1MJK2",1,"50-59",2,6.5,1168,"","3 pieces; two pieces of mature adipose tissue with ~15% fibrovascular component and nerves (arrow); the third piece represents deep dermis and fat (outlined)",-0.0401551503520085,0.484012062890355
+"GTEX-1MUQO",1,"60-69",0,6.2,380,"","2 pieces, ~5-10% fascia/vascular elements; rep delineated",-0.4948349125576,0.32019547135226
+"GTEX-1N2DW",1,"50-59",2,6.8,890,"fibrosis","4 pieces; mature adipose tissue with wide fibrous septa (dialysis related nephrogenic fibrosis); prominent vessels; one  vessel with recanalization and calcium deposits (outlined)",0.246281961037114,-0.0186682784239574
+"GTEX-1N2EF",1,"60-69",3,5.6,621,"","2 pieces; 1 has 10% stromal content",-0.393665226670578,0.00141523951008527
+"GTEX-1NHNU",1,"50-59",0,6.3,287,"","2 pieces; 5 & 10% fibrovascular & neural content",0.607251946522647,0.292316438776823
+"GTEX-1OFPY",1,"60-69",0,7.6,368,"fibrosis","2 pieces; 10% fibrous content",-0.603751187537159,-0.0744658918947993
+"GTEX-1OJC4",2,"50-59",2,9.2,1314,"","2 pieces; 20-40% fibrovascular component",0.479696102488583,-0.12346767389385
+"GTEX-1PBJI",2,"20-29",1,6.9,1258,"","2 pieces, ~10% fascia/vascular elements, rep delineated",0.0870971507712992,0.121926406094219
+"GTEX-1PDJ9",1,"20-29",0,6.9,847,"fibrosis","2 pieces; 5 & 20% fibrous content",0.942373967719864,0.209175203476577
+"GTEX-1PFEY",1,"30-39",0,7.2,562,"","2 pieces, fascia/vascular elements ~5-10% of tissue, rep delineated.",0.317553730275846,-0.0974270403381106
+"GTEX-1PIGE",1,"20-29",0,7.2,486,"fibrosis","2 pieces; 20% fibrous content in 1 piece, 5% in other",0.602000937909438,0.407252205621483
+"GTEX-1PIIG",1,"30-39",0,5.5,1445,"fibrosis","2 pieces; mature adipose tissue and  septal fibrous component (arrows)",-0.447795710706247,0.00323160057647804
+"GTEX-1POEN",2,"30-39",1,7.4,1164,"","2 pieces, trace fascia",1.00159727994094,0.277539169554124
+"GTEX-1PPGY",1,"60-69",2,5.8,830,"","2 pieces; mature adipose tissue and fibrovascular component",-0.01967341905442,0.452040127368321
+"GTEX-1PPH8",1,"20-29",0,6,473,"","2 pieces, ~15-20% fascia/vascular elements; rep delineated",0.880024316236797,0.150960589531282
+"GTEX-1PWST",1,"70-79",4,7.1,1009,"","2 pieces, trace fascia/vascular elements",-0.524991263706986,-0.362186995197409
+"GTEX-1QAET",1,"50-59",0,6.8,375,"fibrosis","2 pieces; 10% fibrous content in one",-0.249920762946498,-0.155957389975952
+"GTEX-1QCLY",1,"30-39",0,7.2,852,"","2 pieces, ~5-10% adherent fascia/peripheral nerve elements, rep delineated.",-0.160856189388792,0.473820959114019
+"GTEX-1QEPI",2,"60-69",3,7.5,663,"fibrosis","2 pieces; 1 with 25% fibrous content; other with 30% fascia, 30% fibrous stroma; calcium deposits in both",-0.233422749723255,-0.0501155363601951
+"GTEX-1QP28",2,"50-59",0,6.7,785,"","2 pieces, 10-15% fascia, rep delineated",0.525569150772951,0.249877776338599
+"GTEX-1QP29",1,"50-59",0,6.6,543,"","2 pieces; mature adipose tissue,  fibrovascular component and nerves (outlined)",-0.34395515576991,-0.143069705893823
+"GTEX-1QP2A",1,"50-59",0,7.2,400,"fibrosis","2 partly fragmented pieces; 20% fibrous content in 1",-0.538976537937536,0.648460249002099
+"GTEX-1QP66",1,"50-59",0,6.4,836,"","2 pieces; mature adipose with ~25% fibrovascular component and nerves",0.796936831180376,0.0306888541572751
+"GTEX-1QP67",2,"40-49",0,5.6,431,"","2 pieces, trace vascular elements, rep delineated",-0.209576007768887,0.14086840721228
+"GTEX-1QP6S",1,"40-49",2,5.8,1249,"","2 pieces (fragmented); mature adipose tissue and fibrovascular component",0.670828062030553,-0.117838839122274
+"GTEX-1QP9N",1,"30-39",0,6.6,280,"fibrosis, sweat_glands","2 pieces; sweat glands and ducts  embedded in fibrous stroma comprise 10%",0.218315857333046,0.372005327405983
+"GTEX-1QPFJ",2,"30-39",0,7.3,347,"fibrosis","2 pieces; 10% fibrous content",0.705339620754877,0.300465566403632
+"GTEX-1QW4Y",1,"30-39",0,6.3,735,"","2 pieces, trace fascia",-0.496179456029465,-0.0996900918466796
+"GTEX-1R46S",2,"60-69",4,5.9,872,"","2 pieces, ~10% fascia/ vascular elements; rep delineated",0.044932455394295,0.491646634926552
+"GTEX-1R7EU",1,"60-69",0,6.4,387,"","2 pieces; mature adipose tissue and fibrovascular component",0.206016592382603,0.724478115846876
+"GTEX-1R7EV",1,"40-49",0,7.1,404,"","2 piece; mature adipose tissue and fibrovascular components",0.860600198351349,-0.322252524029656
+"GTEX-1R9K5",1,"50-59",0,6.8,395,"","2 pieces, ~5-10% fascia/vascular elements; rep delineated",-0.588578948298751,0.396653098591559
+"GTEX-1R9PM",1,"20-29",0,6.1,1054,"","2 pieces, interstitial fascia is ~10%",-0.308994056031817,-0.0939620675205967
+"GTEX-1RAZA",1,"20-29",0,7.5,324,"","2 pieces; mature adipose tissue with fibrovascular component and larger vessel (arrow)",0.867941074918643,0.237174884584362
+"GTEX-1RAZQ",1,"30-39",0,6.8,478,"","2 pieces, ~15%  fascia, rep delineated",-0.464706807730636,-0.374878877085209
+"GTEX-1RAZR",1,"40-49",0,7.4,471,"fibrosis","2 pieces; 1 with 5% other with 20% fibrous content",-0.0124569350714721,-0.133447467095079
+"GTEX-1RDX4",2,"50-59",3,6.8,741,"fibrosis, sweat_glands","2 pieces; high fibrous content: 80% in 1 piece 40% in other; focus of sweat glands in 1 [arrowed]",-0.385425843168305,-0.0964418468958577
+"GTEX-1S5ZU",2,"20-29",0,6.7,485,"fibrosis","2 pieces; 10% fibrous content",0.395739554908436,-0.112682226354583
+"GTEX-1S82P",2,"60-69",0,7.8,281,"","2 pieces; mature adipose tissue with 60% and 15% dense connective tissue component",-0.035239488239429,0.338364362250168
+"GTEX-1S831",1,"20-29",0,7.6,141,"","2 fragmented pieces; mature adipose tissue",-0.579168820700496,-0.0296116561105389
+"GTEX-1S83E",1,"40-49",0,8,452,"","2 pieces; mature adipose tissue with 10% and 30% fibrovascular component; adnexa and hair bulb  present (outlined); deep subcutaneous fat likely",0.348899967143191,0.863473139972949
+"GTEX-N7MS",1,"60-69",2,6.8,1183,"","OK for analysis",-0.0296116561105392,0.0274887511199786
+"GTEX-NFK9",1,"40-49",0,8.7,296,"","OK for analysis",-0.552902046041406,0.461864215732508
+"GTEX-NPJ8",1,"40-49",4,7.2,314,"","Central 95% of specimen drop-out probably due to poor fixation.  Recommend re-fix/embed/cut (See Note below)",-0.407611776064853,0.00691421991457508
+"GTEX-O5YT",1,"20-29",0,6,244,"","(80% centrally unfixed); 12x13.6mm aliquot: too large;  Refixed: still has smaller central holes",-0.137987817155331,-0.198366113844914
+"GTEX-O5YV",2,"60-69",3,7.5,237,"","26740: 0; central 40% hollow, unfixed. See Request below. 26794: 0; 15% hollow space’",1.02961165611054,0.563948083761727
+"GTEX-OHPK",2,"50-59",0,6.8,275,"","section is ragged and has large holes. Most of the nuclei have fallen out of the section. Evaluation limited by poor technical quality of section. Aliquot is oversized (17.7x13mm). Central 90% is unfixed; REFIX",-0.0757413440356896,-0.00927735728305591
+"GTEX-OHPM",1,"50-59",0,6.9,148,"","slight underfixation centrally",0.527605854127713,0.691005943968183
+"GTEX-OHPN",2,"60-69",0,7,397,"","Poor fixation centrally.  Specimen averages 10mm x 5-7mm",0.392181735495247,0.354573811087534
+"GTEX-OIZF",1,"60-69",0,5.5,221,"","Oversized (17mm) aliquot with central portion unfixed. Thin outer rim preserved",-0.644586725898135,0.321678498408167
+"GTEX-OIZG",1,"50-59",0,5.6,732,"","7x9 mm. well fixed tissue",0.263170093117307,0.4545878676757
+"GTEX-OIZH",1,"50-59",0,6.6,224,"","Central 85% of specimen is unfixed and dropped out",-0.377534959530846,0.30121283926522
+"GTEX-OIZI",1,"40-49",0,7.8,394,"","About 25% unfixed",-0.0606385517311636,0.031191622951661
+"GTEX-OOBJ",1,"60-69",0,6.2,210,"","18x11mm.  Central 80% is unfixed",0.130853016082707,0.679798215535106
+"GTEX-OOBK",1,"40-49",0,6.4,269,"","1.  5.7x5.4mm.  Small central area (~15-20%)poorly fixed",-0.570180037473242,-0.228515724524617
+"GTEX-OXRK",2,"50-59",0,6.9,283,"","About 8% unfixed centrally. 8.5x6.5mm",0.902061606390028,-0.275242925417882
+"GTEX-OXRL",1,"50-59",0,6.5,319,"","Central 10% hollow. 12 x 9mm",-0.548340458431608,0.240840221285738
+"GTEX-OXRN",1,"50-59",0,7.4,574,"","Central 30% unfixed zone",0.787224318957951,0.0785371477450835
+"GTEX-OXRO",2,"60-69",4,6.2,838,"","Large 16x12.8 aliquot. Most appears empty with central unfixed spaces",0.928525530996225,-0.0686904175012649
+"GTEX-OXRP",2,"60-69",3,6.2,1065,"","10x7mm aliquot.  Small central area is under-fixed.",-0.382441984729483,0.775428167859011
+"GTEX-P44G",1,"30-39",0,6.5,753,"","6.7x5.4.  Well-fixed.",0.870852670338547,-0.155142538194398
+"GTEX-P44H",1,"40-49",4,7.1,461,"","Well-fixed. 8.5x7mm",-0.441549916730496,-0.133323005632647
+"GTEX-P4PP",2,"30-39",0,8,193,"","~10x10mm.  Central 60% unfixed with large hole/tear",-0.529119303037438,-0.06724988314205
+"GTEX-P4PQ",1,"60-69",0,7.8,237,"","19x5mm with 6x1mm central hole tear of under-fixation",-0.438574640979698,0.249247716884938
+"GTEX-P4QS",1,"60-69",0,6.4,202,"","2  ~9x8mm pieces.  Central ~75% of both is unfixed with large holes",0.498988401991505,0.395872630603421
+"GTEX-P4QT",2,"50-59",0,7.7,209,"","2 pieces, ~8x8mm. One with focal central under-fixation",0.0167876157529552,-0.238640458994274
+"GTEX-P78B",2,"40-49",NA,7.5,481,"","2 overly large pieces, 12x11 and 12.6x7 mm. Both with focal central under-fixation. Staining debris.",0.611468245963874,0.0162326263093391
+"GTEX-PLZ4",2,"50-59",NA,6.7,656,"","2   ~9x9mm pieces, well-fixed",-0.0349974253125373,0.127458979508684
+"GTEX-PLZ5",1,"50-59",0,6.9,203,"","2  ~13x9mm pieces.  Well fixed",0.72527584605293,0.216699392132128
+"GTEX-PLZ6",1,"30-39",0,6,224,"","2 pieces, 10.5x8 & 11.5x7 mm. No fixation artifacts. Adherent vessel, 1 x 3 mm",0.780488642685883,-0.0414857563988308
+"GTEX-POMQ",2,"20-29",0,6.8,364,"","2 large pieces, 9x11 and 10x11 mm. Both with large empty central areas of under-fixation.",0.595208831964764,0.0244314170048588
+"GTEX-POYW",1,"60-69",0,7,672,"","2 ~ 10x5.5mm pieces, well-fixed.",0.125869608568452,0.006307918144404
+"GTEX-PSDG",1,"50-59",0,5.8,415,"","2 pieces, 9x7 and 9x6 mm.",-0.172975831281716,0.140313345331773
+"GTEX-PWCY",2,"20-29",0,7,285,"","2 pieces, large aliquots 17x11 mm,15x15 mm; central, probably unfixed, defects",0.284184483196137,0.48491302560311
+"GTEX-PWN1",2,"40-49",0,7.5,209,"","2 pieces up to 11x9mm; central defects from poor fixation",0.899843781140209,0.58777409748798
+"GTEX-PX3G",2,"20-29",0,6.4,242,"","3 pieces, up to 10x7 mm; some central defects",0.897821783554998,0.201177015934107
+"GTEX-Q2AG",2,"40-49",2,7.1,700,"","2   ~9x6mm aliquots, fragmented",0.816367616988276,0.212475713260349
+"GTEX-Q2AH",1,"40-49",0,7.4,188,"","2 pieces, 14x10 & 16x8mm; largest with central hollow defect; 2 large veins in one aliquot",0.510956725252164,0.0232402261551961
+"GTEX-Q2AI",1,"40-49",0,7,177,"","2 pieces 10x8 & 13x10 with large central hollow fixation defects",-0.15986804206188,0.338120128389948
+"GTEX-Q734",2,"40-49",0,8.3,127,"","2    ~8.5x6mm aliquots.  Areas of under/poor fixation centrally",0.0948576807259771,0.000814391803103883
+"GTEX-QCQG",2,"50-59",0,7,305,"","2 pieces, ~10x10 mm; large central defects, probably fixation artifacts",0.97666277616158,0.27472415394707
+"GTEX-QDT8",2,"30-39",4,6.2,450,"","2   ~8x7mm aliquots, focal areas centrally are under-fixed",0.292646061944333,0.381084026611917
+"GTEX-QDVJ",1,"50-59",0,6.9,538,"","2 pieces 10x6 & 7x6 mm; well fixed; no hollow core",-0.38236487713504,-0.0188318173572963
+"GTEX-QDVN",1,"50-59",0,6.3,263,"","2   ~9x6mm aliquots, one with ~40% fibrous (?scar) tissue",-0.0579007005419626,0.292316438776823
+"GTEX-QEG4",1,"30-39",1,6.7,896,"","2 ~8.5x8mm aliquots",-0.573382469511586,0.440334184270695
+"GTEX-QEG5",1,"20-29",0,7.3,593,"clean_specimens","2 pieces 8x7 & 7.5x6.5 mm; good fixation",0.486638094526603,-0.104573713791761
+"GTEX-QEL4",1,"50-59",3,6.6,480,"","2   ~9x9mm aliquots",0.426617530488414,0.0427968394175112
+"GTEX-QESD",1,"20-29",0,7.8,336,"","2 pieces, 13x9 & 13x8 mm; large central defects, probably poorly fixed in these large aliquots",0.866883768135601,0.216934626934686
+"GTEX-QLQ7",1,"60-69",0,6.9,175,"","2   ~11x8m aliquots",0.145262561303507,0.426902479144464
+"GTEX-QLQW",1,"30-39",0,7.2,155,"","2 pieces ~12x7 & 9x9 mm; up to 10% centrally empty (unfixed or fractured)",-0.53513968933729,-0.165857563880019
+"GTEX-QMRM",1,"50-59",0,7.6,204,"","2 pieces 14.6x11 &9x6 mm; central (probable fixation) defects",-0.504053442586978,0.292316438776823
+"GTEX-QV31",1,"30-39",0,7.6,225,"","2  ~14x10mm aliquots,  centrally under-fixed with tears/holes",-0.119809465082117,0.102582956254331
+"GTEX-QV44",1,"50-59",0,6.4,192,"","2 pieces 14x11 & 13x13 mm; large central holes; only outer 1-2 mm rim appears fixed; should have been  labeled 1825",-0.227057720316756,0.0874277650796803
+"GTEX-R3RS",2,"40-49",4,5.6,1154,"","2 pieces, 9x7 & 11x 6mm",-0.0645707829461686,0.121640794602884
+"GTEX-R45C",2,"60-69",0,5.5,1039,"","2 pieces, 12x9 & 11x9 mm, one with large central unfixed hole",0.584373919055996,-0.212881971282418
+"GTEX-R53T",2,"50-59",0,6.7,183,"","2 aliquots,  ~9x6mm",0.681688352690232,0.12272106050202
+"GTEX-R55C",1,"40-49",0,7,246,"","2 pieces, 16.7x9 & 10.7x8.6 mm; large central holes in both (inadequate fixation); only outer ~1.5 mm preserved for molecular studies",0.320885590973594,0.260607579049485
+"GTEX-R55D",1,"50-59",0,5.9,363,"","2 aliquots",0.49534353524634,0.219208890503554
+"GTEX-R55G",2,"40-49",0,6.9,188,"","2 aliquots,  ~9x7mm",0.914134438690603,0.662554185733517
+"GTEX-REY6",1,"60-69",0,7.8,283,"","2 pieces, 9x4 & 8x5 mm",0.522183980675418,-0.0296116561105389
+"GTEX-RM2N",1,"50-59",0,6.4,223,"","2 aliquots,  ~9x7mm.",-0.511480663867592,-0.0136701122415174
+"GTEX-RNOR",2,"50-59",1,5.9,824,"","2 pieces, 8x7 & 8x7 mm; well fixed",0.451844656793587,-0.00280982158183825
+"GTEX-RTLS",2,"60-69",4,6.2,635,"","2 pieces, 8x7 mm each; well fixed",0.965481318690823,0.15812639663322
+"GTEX-RU72",2,"50-59",2,5.8,460,"","2 aliquots,   ~9x8mm",0.828564137172446,-0.0180850859207574
+"GTEX-RUSQ",1,"50-59",0,5.9,292,"","2 aliquots,  ~13x10mm",0.916167952891574,0.136266512269072
+"GTEX-RVPV",1,"60-69",3,5.5,1412,"","2 pieces, 13x10 & 11x10 mm; well fixed",-0.486296852747874,-0.0125381427515975
+"GTEX-RWSA",1,"40-49",1,7.3,1287,"","2 aliquots,  ~9x5mm",-0.489636610162693,-0.0339117935441645
+"GTEX-S32W",2,"50-59",0,6.8,395,"","2 pieces 15x14 & 13x11 mm; central holes of unfixed tissue up to 5.7 mm; aliquots too large",-0.564068061711726,0.282377726490506
+"GTEX-S33H",1,"30-39",2,6.4,236,"","2 pieces 7x5 & 7x6 mm: well fixed;",-0.495498296885136,0.192780765225909
+"GTEX-S4P3",2,"50-59",0,6.5,219,"","2 pieces 15x13 & 13x10 mm; excessively large aliquots with large central unfixed holes",0.86983121207377,0.508779492809098
+"GTEX-S7SE",1,"50-59",2,6.4,940,"","2 aliquots,  ~8x6mm.",-0.417341809393647,0.0561182179153449
+"GTEX-S95S",1,"60-69",0,6.2,277,"","2 aliquots,  ~9x6mm",-0.499096939411759,0.279019616163366
+"GTEX-SIU8",1,"50-59",2,6.3,1234,"","2 pieces,  ~8x6mm",0.87125515187021,0.531405148985585
+"GTEX-SJXC",1,"60-69",2,6.8,977,"","2 pieces  ~8x7mm",0.924584654276336,0.389927235403245
+"GTEX-SN8G",2,"50-59",2,5.7,1038,"","2 pieces, ~7x6mm",0.309134184732902,0.127792050049442
+"GTEX-SNMC",1,"20-29",0,6.2,273,"","2 pieces 9x8 & 9x7 mm; central holes (unfixed); ~10% fibrous stroma",0.929081369732548,-0.0191446570594703
+"GTEX-SNOS",1,"40-49",0,7,195,"","2 pieces 12x9 & 11x10 mm; large central unfixed empty zones 40-50% of aliquots",1.01929794437041,0.131211138224521
+"GTEX-SSA3",1,"60-69",NA,7.7,45,"","2 pieces ~10 x 10mm.  One with extreme separation but seems well preserved.",-0.0634452511864143,0.294739101043679
+"GTEX-SUCS",1,"70-79",0,7.4,203,"","pieces 10x5 & 11x9 mm; adipose tissue and an embedded 3x1 mm nerve",0.0472819434296129,-0.0371453287959465
+"GTEX-T2IS",2,"20-29",1,6.9,1079,"","2  ~8x7 mm pieces",0.6532357772008,0.5551698696341
+"GTEX-T5JC",1,"20-29",2,6.8,666,"","pieces 8x7 & 7x5 mm;",-0.516877482944562,0.310463785487083
+"GTEX-T5JW",2,"20-29",0,7.4,240,"","2 pieces, ~ 10x7mm",0.990441058829861,0.314841808058529
+"GTEX-T6MN",1,"50-59",2,6.3,692,"","2 pieces 9x6 & 9x8 mm; few central artifacts",0.658444337574721,0.493950299946474
+"GTEX-T6MO",2,"40-49",0,7,189,"","2 pieces,  ~15x9mm",0.408123279364269,0.484615562707028
+"GTEX-TKQ1",1,"30-39",0,7.3,188,"","2 pieces  ~10x5mm",-0.235195789760433,-0.188601179871696
+"GTEX-TML8",2,"40-49",0,6.9,258,"","2 pieces 16x9 & 9x8 mm; large central hollow defects in each piece, probably poorly fixed",-0.506889355653972,-0.0420898092436498
+"GTEX-TMZS",1,"60-69",NA,6.2,52,"","2 pieces 13x6 & 11x8 mm; central holes in large aliquots",-0.447924287422244,-0.214290424242878
+"GTEX-TSE9",2,"60-69",0,6.6,1027,"","2 pieces 9x5 & 7x6 mm; ~30% fibrous tissue in 1 and ~10% nerves & artery in other; no artifacts",0.00480826510996629,-0.134576975782629
+"GTEX-U3ZM",1,"40-49",0,5.7,234,"","2 pieces  ~9x8mm",-0.562681172557687,-0.0340713043012387
+"GTEX-U3ZN",2,"30-39",0,7.3,183,"","2 pieces 15x5 & 14x4mm; minimal artifacts",0.965481318690823,-0.0892657397413809
+"GTEX-U412",1,"60-69",3,6.3,1362,"","2 pieces  ~8x7mm",-0.066344207165143,0.352857980711874
+"GTEX-U4B1",1,"40-49",0,7.9,242,"","2 pieces, 9.5x16.9 & 15.2x9.7 mm; 1 piece has a ~40% fibrous component",-0.145088873530475,-0.07786682471776
+"GTEX-U8XE",1,"30-39",4,6.4,361,"","2 pieces  ~7x6mm",-0.437891789214074,-0.142086385368952
+"GTEX-UJHI",2,"50-59",0,7.6,291,"","2 pieces, 8x6 & 12x6mm; ~20% fibrous stroma separates adipose into lobules",0.0846257581150208,-0.138115789627527
+"GTEX-UTHO",1,"60-69",3,6.8,433,"","2 pieces, 7.5x5 & 10x9.5mm;",-0.473218307586154,0.680309115041438
+"GTEX-VJWN",2,"50-59",2,5.8,1048,"","2 pieces, 8x4 & 7x6.5mm; smaller piece has more fibrous stroma than larger",-0.49763534675433,-0.0578511851398003
+"GTEX-VJYA",1,"60-69",0,7.1,260,"","2 pieces  ~15x7mm",-0.607910426550685,-0.0088530959437415
+"GTEX-VUSG",1,"50-59",0,7.1,287,"","2 pieces  ~9x7mm.  Contaminant fragements of skin present, encircled",0.598419566502503,-0.0174369421644368
+"GTEX-VUSH",1,"30-39",NA,5.6,71,"","2 pieces, 11x10 & 12x9mm; ~30% central defect in one; 10% in other",-0.531360788582714,0.26294183664331
+"GTEX-W5WG",2,"50-59",0,5.7,293,"","2 pieces  ~10x9mm.",-0.0519182293860593,0.0649447292228197
+"GTEX-W5X1",2,"40-49",0,5.9,354,"","2 pieces, 16x9 & 11x9mm; 20% fibroadipose, rest is adipose",-0.42743336968988,-0.180606051279806
+"GTEX-WEY5",2,"40-49",0,6.3,283,"","2 pieces, 8x8 & 8x7.5mm; small hollow artifacts, not centrally unfixed",0.949441307426556,0.388405044749764
+"GTEX-WFG7",1,"20-29",0,5.5,247,"","2 pieces  ~13x11mm",0.924584654276336,-0.289847428591659
+"GTEX-WFG8",1,"20-29",0,8.4,329,"","2 pieces  ~13x8mm",0.761801722078044,-0.227551033722448
+"GTEX-WFJO",1,"30-39",0,7,273,"","2 pieces, 13x9 & 15x10mm; central hollow unfixed areas up to 6x4mm",0.155943997045537,0.228456496829905
+"GTEX-WFON",1,"40-49",0,6.2,215,"","2 pieces  ~11x8 mm.",0.758884238695749,0.389613640131738
+"GTEX-WH7G",1,"40-49",0,6.4,374,"clean_specimens","2 pieces, 9x8 & 10x8mm; Only small central 'unfixed' holes. Otherwise good specimen.",-0.199536657552851,-0.0871626786726975
+"GTEX-WHPG",1,"50-59",0,5.9,303,"","2 pieces, 8x8 & 8x6mm; Fibroadipose tissue (~30% fibrous stroma admixed); no fixation or traumatic artifacts",0.915526408854943,0.172022205059112
+"GTEX-WI4N",2,"40-49",0,6.4,692,"","2 pieces ~8x6mm",0.928328320273358,-0.251875512748326
+"GTEX-WL46",1,"50-59",2,7.5,946,"","2 pieces ~9x7mm",-0.501982330455334,0.182364149280571
+"GTEX-WVJS",1,"50-59",0,7.4,729,"","2 pieces, 9x7 & 9x7mm; 1 with 50% fibrous tissue (tendon)",0.362705766668221,0.180695291068342
+"GTEX-WVLH",1,"50-59",2,6.5,767,"fibrosis","2 pieces `7x7mm ~10 fibrous tissue, delineated",-0.184259470811153,0.0559064150755181
+"GTEX-WY7C",1,"50-59",0,7,236,"","1 pieces  ~8x7mm",0.104689435601052,-0.145088873530475
+"GTEX-WYJK",1,"50-59",0,5.6,706,"","2 pieces, 10x9 & 9x8mm;",0.8091074368564,0.10053585404369
+"GTEX-X15G",2,"50-59",0,5.8,362,"","2 pieces, 12x8.5 & 12x9mm;",0.838470168758531,0.152622546215882
+"GTEX-X261",1,"50-59",4,6.2,749,"","2 pieces, 8x5 & 8x5mm; no artifacts",-0.509604597230153,0.266437806951218
+"GTEX-X4EO",2,"60-69",3,6.3,782,"","2 pieces, 8x7 & 10x5.5mm; 10% central hole in one piece",0.508779492809099,0.0188049011539562
+"GTEX-X4LF",1,"50-59",0,7.1,185,"","2 pieces, 15x10 & 16x11mm;",0.0421790269574712,0.410152929070682
+"GTEX-X4XY",1,"60-69",0,7.3,611,"","2 pieces, 10x8 & 10x7mm; 1 is all adipose, other contains 40% fibrovascular tissue",0.774569018151922,-0.0122644125466421
+"GTEX-X5EB",1,"40-49",0,6.4,283,"","2 pieces, 10x9 & 10x8mm;",-0.529182665601051,0.272951113909892
+"GTEX-X638",2,"70-79",NA,6.6,46,"","2 pieces, 11x8 & 12x8mm; Small artefactual holes",0.764372979350015,-0.296889168566647
+"GTEX-X88G",1,"30-39",NA,6.9,132,"","2 pieces  ~11x9mm",-0.435604015786376,0.0610866541811982
+"GTEX-X8HC",2,"50-59",0,6.5,752,"","2 pieces, 11x7 & 8x7mm; No defects",0.778549891942821,0.504150167138045
+"GTEX-XAJ8",1,"40-49",0,6.8,178,"","2 pieces ~10x6mm, fibrous bands noted",0.670828062030553,0.0873060956686119
+"GTEX-XBEC",1,"50-59",2,7.1,426,"","2 pieces 9x7 & 8.5x7mm;",0.910127819071986,0.281785771284654
+"GTEX-XBED",1,"60-69",0,7.4,212,"","2 pieces, 7x6 & 14x9mm; Larger piece is adipose tissue, smaller piece is skin",0.747995922553013,0.265844227415632
+"GTEX-XBEW",1,"40-49",0,7.2,441,"","2 pieces, 11x9 & 8x6mm;",-0.53025787089822,0.135811953096833
+"GTEX-XGQ4",1,"50-59",0,7.2,196,"","2 pieces 11x7 & 15x7mm;  ~20-30% fibrous bands, rep. areas delineated",0.48976250298304,0.169168208003959
+"GTEX-XK95",1,"40-49",0,6.3,695,"","2 pieces. 9x5 & 8x7mm; Well fixed. 5-10% fibrous content.",0.670828062030553,0.0655455769298009
+"GTEX-XLM4",1,"60-69",3,6.5,656,"","2 pieces, 9x9 & 9x8mm;",-0.318116749460451,0.243953417215424
+"GTEX-XMD2",2,"60-69",0,7.2,1341,"calcification","2 pieces, 8.5x8 & 10x7.5mm; 1 piece has focal calcification and possible ossification; other has 50% blood vessels",-0.434669362188154,-0.016400741646297
+"GTEX-XMK1",1,"40-49",0,7.5,249,"","2 pieces. 10x7 & 12x6.5mm;",-0.601277334218237,0.270373885896146
+"GTEX-XOT4",2,"60-69",2,7.6,643,"","2 pieces. 9x8 & 9.5x6mm. well fixed; 10% stroma in one",0.698966344122068,-0.104366648925382
+"GTEX-XPVG",1,"50-59",0,6.7,222,"","2 pieces. 10x8 & 12x5mm; 1 with 20% fibrous tissue",-0.244949319913036,0.187044395676765
+"GTEX-XQ3S",1,"20-29",1,5.8,897,"","2 pieces, 9.5x8 & 8x7mm;",-0.552289878577352,0.699316618990249
+"GTEX-XQ8I",1,"50-59",0,7.3,414,"","2 pieces, 9x8 & 9x8mm; no unfixed center; 1 piece has 20% loose  fibrous stroma centrally",0.311425261724528,0.391424583789748
+"GTEX-XUW1",2,"50-59",0,7.4,341,"","2 pieces, 10x7 & 7x6mm; no fixation artifacts",0.437489363816517,0.282898085392771
+"GTEX-XUYS",1,"50-59",NA,8,32,"","2 pieces, 11.5x9 & 9x8.5mm.  Well fixed, no artifacts",0.0365964949773474,0.256439402448227
+"GTEX-XUZC",2,"30-39",0,7.8,163,"","2 pieces, 17x12 & 17x16mm;",0.276251623693664,0.358919281363499
+"GTEX-XV7Q",2,"40-49",0,7.4,148,"","2 pieces, 13x9.5 & 17x9mm;",0.884561323307256,-0.040777671780859
+"GTEX-XXEK",1,"50-59",0,6.1,226,"","2 pieces, 9x8 & 11x8mm; embedded ~0.5mm vessel, foci of fibrous tissue",-0.277870709263935,0.550056544941104
+"GTEX-XYKS",2,"60-69",0,7.5,239,"","2 pieces, 12x11 & 11x8mm; 1 has ~15% nerve and blood vessels",-0.522292556031321,-0.245395391389331
+"GTEX-Y111",1,"50-59",1,6.4,1400,"","2 pieces, 11x7 & 12x8mm;",0.0542609011444809,0.81709193342289
+"GTEX-Y114",2,"50-59",0,8,226,"","2 pieces, 11x7.5 & 9.5x8mm;",0.745403227172335,0.0935524769400461
+"GTEX-Y3I4",1,"50-59",0,7.6,182,"","2 pieces, 12x9 & 9x8mm; ~10-15% fibrous tissue, delineated (rep areas )",0.22912261228963,0.491504362585991
+"GTEX-Y3IK",2,"50-59",0,7.5,176,"","2 pieces, 15x12 & 12x11mm. 2525 composed of adipose tissue, centrally unfixed. Apparently switched with 2625",0.884006333863639,-0.00141523951008564
+"GTEX-Y5V5",2,"60-69",0,6.6,269,"","2 pieces, 12x11 & 15x7.5mm;  ~19% fibrous tissue, delineated",0.589039064724558,-0.0850669479256556
+"GTEX-Y5V6",1,"60-69",0,6.2,215,"","2 pieces, 9x9 & 9x7mm; several centrall holes",0.201168550718628,-0.029611656110539
+"GTEX-Y8E4",1,"40-49",0,6.3,379,"","2 pieces, 12x9 & 10x8mm;scant fibrous stroma.",-0.0191192822928969,0.544742745044636
+"GTEX-Y8E5",1,"60-69",NA,6.8,60,"","2 pieces, 9x8 & 10x10mm; dense pink fidbrosu tissue is ~50% of both sections, delineated",0.806889611606582,0.248923843263443
+"GTEX-Y8LW",2,"50-59",0,5.8,343,"","2 pieces, 11x10 & 12x8mm; ~10% fibrous tissue, rep. areas delineated",-0.537916251274597,-0.0988182840139338
+"GTEX-Y9LG",1,"30-39",0,6.1,154,"","2 pieces. 13x10 & 16x10mm;  10% stroma in 1.",-0.132705149074643,-0.375701801671891
+"GTEX-YB5E",1,"40-49",0,7.9,263,"","2 pieces, 12x9 & 17x10mm; fibrous tissue is ~20% specimen, delineated",0.135326492662015,-0.374747142159227
+"GTEX-YB5K",2,"40-49",0,6.5,287,"","2 pieces. 12x11 & 12x12mm; Central holes.",-0.383829058233976,0.342201886418565
+"GTEX-YEC3",1,"50-59",0,6.6,256,"","2 pieces, 13x11 and 13x9.5mm; ~20% fibrous tissue with small vessels noted, rep. areas delineated",0.705199053351993,0.400376184634276
+"GTEX-YEC4",1,"40-49",0,7.1,265,"","2 pieces, 11x10 and 18x8.5mm.",-0.62541338919316,0.230110015682419
+"GTEX-YECK",1,"60-69",3,7.3,554,"","2 pieces, 9x6.5 and 18x9mm; ~25-30% fibrous tissue/bands, rep. areas delineated",-0.350526978024833,0.445587278385075
+"GTEX-YF7O",1,"50-59",0,7.8,220,"","2 pieces,  12x8.5 and 12x9mm; fibrofatty tissue in one, skin and fatty tissue in other",0.165939153007268,0.0552772414759739
+"GTEX-YFC4",2,"40-49",1,6.8,691,"","2 pieces, ~5% fibrous tissue, rep. areas delineated",0.284541012307278,0.103612237554316
+"GTEX-YFCO",1,"40-49",0,7.7,208,"","2 pieces; central holes in both; 5-10% fibrous tissue.",0.882925502639122,0.295350498866457
+"GTEX-YJ89",1,"60-69",2,6.4,1139,"","2 pieces; approximately 20% fibrovascular tissue and nerve present",0.880378178156866,0.198829809898714
+"GTEX-YJ8A",1,"20-29",0,7.8,215,"","2 pieces; 20-30% fibrous tissue admixed",1.01401527628972,0.448037820467983
+"GTEX-YJ8O",2,"40-49",1,6.6,806,"","2 pieces; a few foci fibrous tissue/vessels",0.909317422392827,0.21464354994306
+"GTEX-Z93S",1,"50-59",2,5.9,1040,"","2 pieces, one is ~10%  fibrous tissue, delineated",-0.337236212968404,0.0144809280726315
+"GTEX-Z93T",1,"50-59",NA,6.7,21,"","2 pieces. Large aliquots, some holes",0.846582142275063,0.222775505523746
+"GTEX-Z9EW",1,"40-49",0,6.4,248,"","2 pieces, ~15-20% fibrous/vascular tissue, rep. foci delineated",0.0248361279118374,0.64023974219713
+"GTEX-ZAJG",2,"50-59",3,6.7,726,"","2 pieces,  ~10% fibrous tissue, rep. areas delineated",0.64075808863535,0.503542844442951
+"GTEX-ZAK1",2,"50-59",2,6.8,712,"","2 pieces, ~5-10% fibrous tissue/vessels",0.841407920949918,0.317737042907163
+"GTEX-ZC5H",2,"40-49",0,6.1,208,"","2 pieces, minimal fibrous tissue",0.859686654668227,0.0785212565914854
+"GTEX-ZDTS",1,"60-69",2,6.8,631,"","2 pieces; large vein =10% of 1 piece",0.844857461805602,0.52535610431278
+"GTEX-ZDTT",1,"60-69",0,7.1,181,"","2 pieces, both disrupted centrally",0.905293315667576,-0.301284980218205
+"GTEX-ZDXO",1,"60-69",2,7.7,1075,"","2 pieces, both ~60% contaminating fibroconnective tissue/fascia",1.0623108333305,0.246281961037114
+"GTEX-ZDYS",1,"50-59",0,8,208,"","2 pieces, one piece with central defect (poor fixation) and attached vessel, second piece is 10-20% fibroconnective tissue",-0.575754907941167,-0.191362726107151
+"GTEX-ZE7O",2,"50-59",2,6.5,1068,"","2 pieces",0.632091918089725,-0.00722511206983243
+"GTEX-ZE9C",1,"60-69",2,7.3,685,"","2 pieces,  ~10-20% fibrous bands/fascia",-0.444649155389383,0.310398797760281
+"GTEX-ZEX8",1,"50-59",0,5.8,195,"","3 pieces.",0.611493922648151,0.200255885788055
+"GTEX-ZF28",1,"60-69",4,5.9,465,"","2 pieces. 10% fibrous tissue admixed",0.844857461805602,0.33962215355518
+"GTEX-ZF29",2,"60-69",0,8.1,178,"","2 pieces, both with some central defects suggesting incomplete fixation. One piece predominantly fat, second is 50% fibroconnective tissue.",-0.155743385901379,0.131491270129753
+"GTEX-ZF3C",2,"50-59",0,6.3,455,"","2 pieces, one is fat with attached larger vessel, second has ~15% fibrovascular tissue",-0.507761386092357,0.0810108086171832
+"GTEX-ZGAY",2,"40-49",0,7.2,231,"","2 pieces, ~10-15% fibrous tissue, rep. areas delineated",0.626546798497771,0.21247571326035
+"GTEX-ZLFU",1,"40-49",0,8.1,215,"","2 pieces, overly large with central holes",-0.380923557778995,0.190939418401741
+"GTEX-ZLV1",2,"60-69",0,6.7,1629,"","2 pieces, ~10% fibrous/fascial tissue, rep foci delineated",-0.408830447503249,0.433508597784182
+"GTEX-ZLWG",2,"50-59",0,6.7,174,"","2 pieces, both with ~10% fibrous tissue and nerve, few defects in one centrally (?poor fixation)",-0.475916377116212,0.07600456159499
+"GTEX-ZP4G",2,"20-29",0,7.1,268,"","2 pieces, ~10% fascia/vessels,  rep. areas delineated",0.214754402841104,0.48491302560311
+"GTEX-ZPCL",2,"60-69",0,7.1,150,"","2 pieces. Large size needed refixing.",0.786910252373752,0.521671575613228
+"GTEX-ZPIC",2,"40-49",0,7.2,165,"","2 pieces, ~5-10% fibrous/fascial tissue, rep foci delineated",0.638420898786063,0.286769495607664
+"GTEX-ZPU1",1,"40-49",0,6.1,172,"","3 pieces, scant fibrous tissue, central defect (? incomplete fixation)",-0.51864973683316,0.585470832986953
+"GTEX-ZQG8",2,"60-69",0,6.9,178,"","2 pieces; fat (not skin as originally labeled)",0.894452072828903,0.728952177976828
+"GTEX-ZT9X",1,"40-49",0,8,251,"","2 pieces, ~30% fibrous/fascial tissue, rep foci delineated",0.784376358279512,0.206016592382603
+"GTEX-ZTPG",2,"20-29",0,6.7,207,"","2 pieces, internal holes",0.0810584215292151,0.507842981876577
+"GTEX-ZTSS",1,"40-49",0,7.5,246,"","1 pieces",-0.59729616539986,0.0544526086779356
+"GTEX-ZTX8",1,"20-29",0,7,185,"fibrosis","2 pieces, ~20% loose fibrous tissue",1.10652503187549,0.361709774194497
+"GTEX-ZUA1",1,"40-49",2,6.2,867,"","2 pieces",-0.546670092329892,0.0828630731478736
+"GTEX-ZV68",2,"50-59",2,6.8,1248,"","2 pieces, minimal fibrous tissue, <~2%",0.725995439500118,-0.0882248341833192
+"GTEX-ZVE2",1,"50-59",0,7.1,523,"fibrosis","2 pieces, septal fibrosis 20%",0.829212280928767,-0.0296116561105389
+"GTEX-ZVP2",1,"50-59",0,7.1,171,"","1 piece, oversized specimen (18mm) with central defects (?poor fixation)",-0.564558619124579,0.0617286554278869
+"GTEX-ZVT2",2,"50-59",0,6.6,145,"","1 piece with central empty spaces",-0.0805712616398838,0.570180037473241
+"GTEX-ZVT4",2,"50-59",3,6.5,605,"","2 pieces ~10% fibrous tissue, rep. areas delineated",0.188309402129597,0.36664664338811
+"GTEX-ZVTK",1,"20-29",1,7.1,948,"","2 pieces; 20 and 30% fibrous component",0.880378178156866,-0.0915394052537408
+"GTEX-ZVZO",1,"40-49",NA,7.3,145,"","2 pieces, ~10% of specimen is fibrous tissue (combined), few small nerves",-0.274030383776986,0.0317888885536044
+"GTEX-ZVZP",1,"50-59",0,7.9,156,"","2 pieces; large central hole (unfixed)",0.357411466998708,0.45737568504732
+"GTEX-ZXES",2,"30-39",0,7.6,157,"","2 pieces, defects in section (? poor fixation), one is about 15% fibrous tissue",0.155142538194398,0.186337159797992
+"GTEX-ZXG5",1,"60-69",3,7.4,1067,"","2 pieces",-0.501363546383704,0.322063782170875
+"GTEX-ZYFC",1,"50-59",2,6.5,1323,"sweat_glands","2 pieces, one  piece includes ~40% fibrous tissue, hair follicles, vessels, sweat glands",0.825748638857898,0.205491816975463
+"GTEX-ZYFD",1,"50-59",3,6.7,527,"","2 pieces",-0.572625974833724,0.666382156999361
+"GTEX-ZYT6",1,"30-39",1,7.4,1403,"","2 pieces, fibroadipose tissue; prominent 3x1 mm segment of nerve embedded in specimen, delineated.",0.964046817015635,0.351336952589024
+"GTEX-ZYVF",2,"50-59",0,7.1,568,"","2 pieces, ~15-20% fibrous tissue, rep. foci delineated",0.637294233331779,0.401580433497497
+"GTEX-ZYW4",1,"60-69",3,7.5,746,"","2 pieces; 10% fibrovascular component",0.713113207344352,0.215500841725993
+"GTEX-ZYY3",2,"60-69",4,6.4,485,"","2 pieces, ~10% fibrous tissue/vessel",0.178989280148766,0.966601858584738
+"GTEX-ZZ64",1,"20-29",0,7.7,232,"","2 pieces",-0.474274324498661,-0.0163148334970812
+"GTEX-ZZPU",2,"50-59",0,6.8,249,"","2 pieces",0.793798719011769,0.279225546182011
