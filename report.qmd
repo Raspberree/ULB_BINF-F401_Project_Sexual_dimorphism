@@ -34,7 +34,7 @@ toc-depth: 3
 number-sections: true
 
 execute:
-  cache: true
+  cache: false
   warning: false
             
 editor: source 
@@ -53,9 +53,7 @@ library(GGally) # install.packages("GGally")
 library(viridis)
 library(VennDiagram)
 library(corrplot)
-library(fgsea)
-
-#library(clusterProfiler) #BiocManager::install("clusterProfiler")
+library(fgsea) #BiocManager::install("fgsea")
 
 options(knitr.kable.NA = '', digits = 3) # For table formating
 
@@ -230,9 +228,18 @@ horm_receptors <- read.csv("data/results_hgnc_hormone_rcpt_strict.csv", sep = "\
 
 # Introduction {#sec-introduction}
 
-- Definition of the dimorphism indices.
-- It is an exploratory analysis.
-- Importance: diseases related to adipose tissue more prevalent in men or women.
+Many animal species are subject to sexual dimorphism. In humans, sexual dimorphism can be expressed as observable differences in physical traits between male and female individuals such as individual height, breast tissue development, muscular mass or hip-to-waist ratio. Furthermore, these dimorphic traits differences were extended to organs and health observations such as disease incidence or treatment response in recent years [1], leading to new considerations aligned with a more personalized medicine. Thus, health and clinical implications from sexual dimorphism knowledge cannot be underestimated.
+
+Among all organs, the adipose tissue presents interesting multi-faceted metabolic, endocrinologic and immune roles with important medical consequences that were shown to differ between men and women. For example, differences in fat tissue distribution (under hormone control) between men and women have been shown with men storing more visceral fat than women, which is a known risk factor for cardiovascular diseases, type 2 diabetes, cancers and other chronic diseases [2]. This justifies the attention of this project for the adipose tissue. But what methods to use?
+
+With the advent of new computing technologies and the recent rise of more data-driven approaches to study biological systems, researchers are now able to use more quantitative and less biased approaches to study gene expression in organisms with the help of new developped analysis tools and big database projects such as GTEx (Genotype-Tissue Expression) [3].
+
+These new tools and approaches have led to the observation of a continuous sexual dimorphism spectrum within each sex, further complexifying the dimorphism problem, with now each human (and each of its organs) being more or less sexually dimorphic on the male or female end of this spectrum, as opposed to the previous strictly binary categorization.
+
+Following this trend and knowing the importance of adipose tissue as an organ, this project aims to test new methods to characterize gene expression differences related to sexual dimorphism in the adipose tissue using patient gene expression data from the GTEx Database, quantitative analysis techniques such as Differential Gene Expression Analysis or Gene Set Enrichment Analysis (GSEA), and a new metric called the Dimorphism Index. The Dimorphism Index we use later in this project is a metric that takes into account the sexual dimorphism as a continuous parameter. It is defined as such : given the matrix of similarities between the same organ from all individuals in the population, the dimorphism index of person A’s organ is defined as the median across all pairs [person A, person X] of the following ratio : proportion of males that have this organ more similar to the person A’s organ than person X’s organisms divided by the proportion of females that have this organ more similar to the person A’s organ than person X’s organisms It is to be noted that similarity in this context refers to the Spearman’s correlation across all genes of any pair of genome-wide expression profiles.
+
+More intuitively, it represents the probability that a subject’s organ is more similar to the same organ of a same-sex subject in the population than the same organ of an individual of the opposite sex in the population. In other words, for a male, the higher this ratio is, the more “masculine” the organ of the subject is. For a female, the higher the ratio is, the more "feminine" the organ of the subject is.
+This way of defining the dimorphism index presents 4 main advantages. It makes no prior assumptions about dimorphism traits and is thus unbiased in that regard. Moreover, it gives a quantitative continuous value corresponding to the new realities of sexual dimorphism. Also, this approach has the benefit of being universal, as it is applied/applicable to the entire phenotypic space and at all scales (populations, organs, etc.). Finally, it is meaningful to individuals and not limited to population-level investigations only.
 
 # Methods {#sec-methods}
 ## Available Data and Preprocessing
@@ -266,13 +273,19 @@ The Hardy scale and age were included as covariates in the generalized linear mo
 
 Afterwards, the continuous variable `AGE_CONTINUOUS` was centered and scaled to improve convergence of the GLM, as recommended by `DESeq2`. The `RNA_DI` variable was not centered nor scaled as the value `RNA_DI` = 0 has a biological meaning, and centering that variable would erase this meaning, especially since there are many more males than females in our data set.
 
-To identify genes associated with the dimorphism indices, with sex or with age, the Wald significance test was used. To identify genes associated with the Hardy scale covariate, the likelihood ratio test (LRT) was used instead. The LRT can be used when evaluating expression change across more than two levels (the Hardy scale has 5 levels). For this test, a full model, containing the covariate of interest (i.e., `HARDY_SCALE`), is compared to a reduced model, with the covariate of interest removed. If a significant amount of variation is explained by the covariate of interest, this suggests that the gene is differentially expressed across the different levels. The reduced model used in our analysis is: `~ AGE_CONTINUOUS + SEX + SEX:RNA_DI` [(source)](https://hbctraining.github.io/DGE_workshop_salmon/lessons/08_DGE_LRT.html).
+To identify genes associated with the dimorphism indices, with sex or with age, the Wald significance test was used. To identify genes associated with the Hardy scale covariate, the likelihood ratio test (LRT) was used instead. The LRT can be used when evaluating expression change across more than two levels (the Hardy scale has 5 levels). For this test, a full model, containing the covariate of interest (i.e., `HARDY_SCALE`), is compared to a reduced model, with the covariate of interest removed. If a significant amount of variation is explained by the covariate of interest, this suggests that the gene is differentially expressed across the different levels. The reduced model used in our analysis is: `~ AGE_CONTINUOUS + SEX + SEX:RNA_DI` [7].
 
 Finally, a Benjamini-Hochberg correction was applied to all the p-values to control the false discovery rate at a level of 0.05.
 
 ## Identification of Hormone Receptors Associated with the Male and Female Dimorphism Indices and with Sex
 
 In order to identify hormone receptors that are associated with the female and male dimorphism indices and sex, a list of `r horm_receptors$Approved.symbol |> unique() |> length()` hormonal receptors was created. This list contains the protein names, the corresponding gene names, the HGNC gene IDs, the family names and alias.
+
+To get a comprehensive list of hormone receptors expressed in the human genome, we used the HGNC (HUGO Gene Nomenclature Committee) [1] as a resource to find approved gene nomenclature. We searched on the database with keywords “hormone receptor” and filtered by protein families. We then downloaded the results as a `.txt` file, converted it to a `.csv` file to easily extract the family IDs. We then used the HGNC Biomart tool [6] (for families) with the appropriate filters to return all proteins parts of requested family IDs and downloaded the results as a csv file. This csv file contained a column with the gene approved nomenclature and another column with the associated approved gene complete name (which corresponds most often to the protein receptor name).
+
+At first, this method yielded 200 protein groups and a total of more than 19000 protein entries in the final csv, which we considered too high of a number and with a lot of false positives (ie. non-hormonal receptors). We thus decided to conduct a more strict selection and only include the results including explicitly the word “hormone”, namely the first 9 families with ID : 71,199,227,235,266,270,1175,1896,2070. This yielded only 87 protein entries, which was more manageable and interpretable for this project.
+
+Finally, it was used as a reference to map every gene of interest in our dataset to a complete approved gene name.
 
 Based on the significant (FDR < 0.05) genes found by the Wald tests for the dimorphism indices and sex in the DGE analysis, we determined which ones were in the list of hormonal receptors.
 
@@ -788,9 +801,9 @@ Among the `r horm_receptors$Approved.symbol |> unique() |> length()` hormone rec
 
 We noticed that most of those receptors had positive associations with the male DI but negative associations with the female DI. The log2 fold changes of the hormone receptors associated with the sex (when RNA_DI = 0) were much closer to zero compared to the dimorphism indices.
 
-Among this list of significant receptors, we found some related to sex hormones, such as the androgen receptor (androgens refer to testosterone and dihydrotestosterone (DHT), the male sex hormones), the estrogen receptors 1 and 2, the progesterone receptor, and the luteinizing hormone/choriogonadotropin receptor, which is a protein associated with disorders of male secondary sexual character development when mutations are present in the gene [(source)](https://www.ncbi.nlm.nih.gov/gene/3973). Interestingly, the androgen receptor was positively associated with the female DI and sex, but not with the male DI.
+Among this list of significant receptors, we found some related to sex hormones, such as the androgen receptor (androgens refer to testosterone and dihydrotestosterone (DHT), the male sex hormones), the estrogen receptors 1 and 2, the progesterone receptor, and the luteinizing hormone/choriogonadotropin receptor, which is a protein associated with disorders of male secondary sexual character development when mutations are present in the gene [8]. Interestingly, the androgen receptor was positively associated with the female DI and sex, but not with the male DI.
 
-Some of those significant receptors do not have a direct sexual function, such as the nuclear receptor subfamily 1 group D members 1 and 2, which play roles in circadian rhythms and carbohydrate and lipid metabolism [(source)](https://www.ncbi.nlm.nih.gov/gene/9975). The  RAR related orphan receptors A and B also regulate the expression of genes involved in the circadian rhythm [(source)](https://www.ncbi.nlm.nih.gov/gene/6096). 
+Some of those significant receptors do not have a direct sexual function, such as the nuclear receptor subfamily 1 group D members 1 and 2, which play roles in circadian rhythms and carbohydrate and lipid metabolism [9]. The  RAR related orphan receptors A and B also regulate the expression of genes involved in the circadian rhythm [10]. 
 
 
 ```{r}
@@ -855,7 +868,7 @@ ranked_genes_sex <- sort(ranked_genes_sex, decreasing = TRUE)
 ```{r}
 #| label: fig-gsea_di_f
 #| out-width: "80%"
-#| fig-cap: Results of fgsea for the female dimorphism index
+#| fig-cap: 10 significant Reactome pathways with the highest (in blue) and lowest (in red) enrichment scores from the GSEA for the female dimorphism index. A positive Normalized Enrichment Score (NES) indicates that the gene set is enriched in genes that are positively associated (positive log2 Fold Change) with the female dimorphism index. A negative NES indicates a gene set enriched in genes that are negatively associated with the female dimorphism index.
 #| fig-pos: "H"
 
 set.seed(1)
@@ -875,7 +888,7 @@ gsea_res_plots(fgsea_results_di_F)
 ```{r}
 #| label: fig-gsea_di_m
 #| out-width: "80%"
-#| fig-cap: Results of fgsea for the male dimorphism index
+#| fig-cap: 10 significant Reactome pathways with the highest (in blue) and lowest (in red) enrichment scores from the GSEA for the male dimorphism index. A positive Normalized Enrichment Score (NES) indicates that the gene set is enriched in genes that are positively associated (positive log2 Fold Change) with the male dimorphism index. A negative NES indicates a gene set enriched in genes that are negatively associated with the male dimorphism index.
 #| fig-pos: "H"
 
 set.seed(1)
@@ -900,7 +913,7 @@ gsea_res_plots(fgsea_results_di_M)
 ```{r}
 #| label: fig-gsea_sex
 #| out-width: "80%"
-#| fig-cap: Results of fgsea for sex
+#| fig-cap: 10 Reactome pathways with the highest (in blue) and lowest (in red) enrichment scores from the GSEA for the sex. A positive Normalized Enrichment Score (NES) indicates that the gene set is enriched in genes present at the top of the ranked list. The genes were ranked by log2 Fold Change, so a positive NES indicates that many genes that were up-regulated in males are present in the gene set. A negative NES indicates that many genes with very low (negative) log2 Fold Changes, at the bottom of the ranked list, are present in the gene set.
 #| fig-pos: "H"
 
 set.seed(1)
@@ -933,7 +946,12 @@ gsea_res_plots(fgsea_results_sex)
 # Annexes {#sec-annexes}
 ## Alternative design for DGE analysis {#sec-annex_alt}
 
-Alternative design to determine the overall effect of sex, without controlling for the dimorphism indices: `~ HARDY_SCALE + AGE_CONTINUOUS + SEX`
+The plots in @fig-volcano_plot_alt show the results of the Wald tests when using an alternative design to determine the overall effect of sex, without controlling for the dimorphism indices: `~ HARDY_SCALE + AGE_CONTINUOUS + SEX`.
+
+For the sex variable ([@fig-volcano_plot_alt]a), while the number of significant genes, both up-regulated and down-regulated has changed compared to the results in [@fig-volcano_plot_age]b, the identity of the most significant genes (the genes with the lowest adjusted p-values) remain very similar. XIST and KDM6A are still the most strongly down-regulated genes, and RPS4Y1, DDX3Y USP9Y, TXLNGY and KDM5D are still the most up-regulated genes (in males compared to females).
+
+For the age ([@fig-volcano_plot_alt]b), the conclusion is reached: the number of significant genes has changed drastically, but the identity of the most significant genes remain the same (EYA4, LMO3, RANBP17, NNAT, etc.). With this alternative design, the number of genes positively associated with age as been increased by a factor of 3.78, and by a factor of 1.7 for the genes that were negatively associated with age.
+
 
 ```{r}
 # Alternative design
@@ -951,7 +969,6 @@ filtered_counts_ds_alt <- DESeq(filtered_counts_ds_alt)
 #resultsNames(filtered_counts_ds_alt)
 ```
 
-New volcano plots for sex and age:
 
 ```{r}
 sex_res <- results(filtered_counts_ds_alt, contrast = c("SEX", "M", "F")) # log2 Fold-Change = Male / Female
@@ -992,10 +1009,12 @@ volcano_plot_sex + volcano_plot(age_res, "Age (continuous)") + plot_annotation(t
 ```
 
 
+For the Hardy scale, the number of significant genes has also changed with the alternative design compared to the original design, but the change, in relative terms, is less significant. With this alternative design `r 2423 + 3584` genes were associated with the Hardy scale covariate. The identity of the 9 most significant genes has changed for just one gene: in the alternative design, the TRIL gene replaces the MMP15 gene.
+
 ```{r}
 #| label: fig-boxplot_hardy_alt
-#| fig-cap: (a) Vocano plot Hardy scale (b) Top 9 genes with lowest adjusted p-value for the likelihood ratio test on Hardy scale covariate
-#| out-width: "90%"
+#| fig-cap: Top 9 genes with lowest adjusted p-value for the likelihood ratio test on Hardy scale covariate
+#| out-width: "55%"
 #| fig-pos: "H"
 #| message: false
 
@@ -1025,9 +1044,33 @@ boxplot_hardy <- fcounts_long |>
   theme(legend.position = "bottom")
 
 
-volcano_plot_hardy + boxplot_hardy + plot_annotation(tag_levels = "a")
+boxplot_hardy
 ```
 
+In conclusion, when changing the original design by the alternative design to determine the genes that are differently expressed in males and females, the number of differently expressed genes for all the covariates in the design change. However, the identity of the most significant (lowest adjusted p-values) genes remains very similar between the two designs. Therefore, the biological conclusions that we would reach would overall remain the same when limiting ourselves to those most significant genes.
+
+## References
+[0] Parts of the introduction were heavily inspired by the BINF-F401-2025 project presentation slides.
+
+[1] Mauvais-Jarvis F, Bairey Merz N, Barnes PJ, Brinton RD, Carrero JJ, DeMeo DL, De Vries GJ, Epper- son CN, Govindan R, Klein SL, Lonardo A, Maki PM, McCullough LD, Regitz-Zagrosek V, Regensteiner JG, Rubin JB, Sandberg K, Suzuki A. Sex and gender: modifiers of health, disease, and medicine. *Lancet*. 2020 Aug 22;396(10250):565-582. doi: 10.1016/S0140-6736(20)31561-0. Erratum in: *Lancet*. 2020 Sep 5;396(10252):668. doi: 10.1016/S0140-6736(20)31827-4. PMID: 32828189; PMCID: PMC7440877.
+
+[2] Karastergiou, K., Smith, S.R., Greenberg, A.S. et al. Sex differences in human adipose tissues – the biology of pear shape. *Biol Sex Differ* 3, 13 (2012). <https://doi.org/10.1186/2042-6410-3-13>
+
+[3] <https://www.gtexportal.org/home/>
+
+[4] Seal RL, Braschi B, Gray K, Jones TEM, Tweedie S, Haim-Vilmovsky L, Bruford EA. Genenames.org: the HGNC resources in 2023. Nucleic Acids Res. PMID: 36243972 DOI: 10.1093/nar/gkac888
+
+[5] <https://www.genenames.org/tools/search/#!/?query=hormone%20receptor&filter=document_type:%22group%22&start=0&rows=20>
+
+[6] <https://biomart.genenames.org/martform/#!/default/HGNC?datasets=hgnc_gene_mart_2025_06_20>
+
+[7] <https://hbctraining.github.io/DGE_workshop_salmon/lessons/08_DGE_LRT.html>
+
+[8] <https://www.ncbi.nlm.nih.gov/gene/3973>
+
+[9] <https://www.ncbi.nlm.nih.gov/gene/9975>
+
+[10] <https://www.ncbi.nlm.nih.gov/gene/6096>
 
 ## Session Information {#sec-session_info}
 
