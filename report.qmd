@@ -253,8 +253,6 @@ Finally, `r n_na_samples` samples had missing values for the Hardy scale. For si
 
 All the analyses were performed with R (version 4.4.1 (2024-06-14)). For more details about the R version information, the OS and attached or loaded packages, see @sec-session_info.
 
-CODE and DATA AVAILABILITY?
-
 ## Principal Component Analysis
 
 The PCAs in @sec-descriptive_analysis were performed on the counts after a variance stabilizing transformation (using the `vst` function from `DESeq2` with its default arguments). Since the log geometric means could not be computed because every gene contained at least one zero, a pseudo-count of 1 was added to every entry of the count matrix. 
@@ -700,7 +698,7 @@ Finally, with the likelihood ratio test (LRT), `r 2015 + 3875` genes were consid
 
 ```{r}
 #| label: fig-boxplot_hardy
-#| fig-cap: Boxplots of the counts of the 9 genes with the lowest adjusted p-value (by Benjamini-Hochberg method) for the likelihood ratio test on the Hardy scale covariate.
+#| fig-cap: Boxplots of the counts of the 9 genes with the lowest adjusted p-values (by Benjamini-Hochberg method) for the likelihood ratio test on the Hardy scale covariate.
 #| out-width: "50%"
 #| fig-pos: "H"
 #| message: false
@@ -738,7 +736,7 @@ boxplot_hardy
 
 
 ## Interpretation of the DI-associated transcriptome
-### Hormone Receptors Associated with the Dimorphism Indices and with Sex
+### Hormone Receptors Associated with the Dimorphism Indices and with Sex {#sec-receptors}
 
 ```{r}
 # Significant genes
@@ -842,6 +840,7 @@ ggplot(rcpt_long, aes(x = covariate, y = receptor_name)) +
 
 
 ### Gene Set Enrichment Analysis
+
 ```{r}
 # Importing the REACTOME GMT file
 
@@ -883,7 +882,20 @@ fgsea_results_di_F <- fgsea(
 
 gsea_res_plots(fgsea_results_di_F)
 
+n_sig_path_di_F <- fgsea_results_di_F |> 
+  filter(padj < 0.05) |> 
+  nrow()
+n_sig_up_path_di_F <- fgsea_results_di_F |> 
+  filter(padj < 0.05 & NES > 0) |> 
+  nrow()
+n_sig_down_path_di_F <- fgsea_results_di_F |> 
+  filter(padj < 0.05 & NES < 0) |> 
+  nrow()
+
 ```
+
+The GSEA was first performed on the list of genes ranked by their log2 Fold Changes for the female dimorphism index. `r n_sig_path_di_F` pathways were significantly (adjusted p-value < 0.05) associated with the female DI. Among them, `r n_sig_up_path_di_F` had a positive normalized enrichment score, and `r n_sig_down_path_di_F` had a negative one.
+
 
 ```{r}
 #| label: fig-gsea_di_m
@@ -906,8 +918,20 @@ topPathwaysDown_M <- fgsea_results_di_M |> filter(ES < 0 & padj < alpha)
 
 # Plots of the results
 gsea_res_plots(fgsea_results_di_M)
+
+
+n_sig_path_di_M <- fgsea_results_di_M |> 
+  filter(padj < 0.05) |> 
+  nrow()
+n_sig_up_path_di_M <- fgsea_results_di_M |> 
+  filter(padj < 0.05 & NES > 0) |> 
+  nrow()
+n_sig_down_path_di_M <- fgsea_results_di_M |> 
+  filter(padj < 0.05 & NES < 0) |> 
+  nrow()
 ```
 
+The GSEA was then performed on the list of genes ranked by their log2 Fold Changes for the male dimorphism index. `r n_sig_path_di_M` pathways were significantly (adjusted p-value < 0.05) associated with the male DI. Among them, `r n_sig_up_path_di_M` had a positive normalized enrichment score, and `r n_sig_down_path_di_M` had a negative one.
 
 
 ```{r}
@@ -931,16 +955,49 @@ topPathwaysDown_sex <- fgsea_results_sex |> filter(ES < 0 & padj < alpha)
 
 # Plots of the results
 gsea_res_plots(fgsea_results_sex)
+
+
+n_sig_path_sex <- fgsea_results_sex |> 
+  filter(padj < 0.05) |> 
+  nrow()
+n_sig_up_path_sex <- fgsea_results_sex |> 
+  filter(padj < 0.05 & NES > 0) |> 
+  nrow()
+n_sig_down_path_sex <- fgsea_results_sex |> 
+  filter(padj < 0.05 & NES < 0) |> 
+  nrow()
 ```
 
 
+GSEA results for female and male dimorphism indices seem to indicate a general tendency to positively express aerobic and lipid metabolism genes and cell respiration pathway related genes in adipose tissue when the female dimorphism index is high and negatively express those genes in high male dimorphism index adipose tissue (@fig-gsea_di_f and @fig-gsea_di_m). Namely, the pathways that led to this interpretation were the "respiratory electron transport", "aerobic respiration and respiratory electron transport", "mitochondrial protein degradation", "mitochondrial fatty acid beta-oxydation", "triglyceride metabolism", "vitamin and cofactors metabolism", which are all processes or essential components in the management of energy for the organism (primary function of the adipose tissue).
+
+These pathways might correlate with an established observation that “in women, starvation resistance and propensity to obesity have evolved in tandem, and the current prevalence of obesity is greater in women than in men.” [11] with women being more likely to incorporate NEFAs into triacylglycerols, thus promoting fat storage, whereas men are more prone to produce energy through plasma NEFA oxidation mainly due to sexual hormones concentration levels [11].
+
+However, our observations are to be nuanced as many factors such as fat tissue distribution, diet, education, cultural and societal influences on gender and many other factors all certainly play an important part in the propensity of women to become overweight or develop chronic diseases.
+
+Furthermore, some interesting observations can be made, such as up-regulation of muscle contraction related genes in high male dimorphism index (@fig-gsea_di_m) and down-regulated muscle contraction genes in females (@fig-gsea_di_f), which is counter-intuitive to the observed fact that “metabolic adaptation during exercise also differs between the sexes since women preferentially oxidize lipids while men use carbohydrates as the predominant fuel source” [11].
+
+It is difficult for us to draw any further conclusions without additional analysis of pathway genes.
+
+
+Finally, the GSEA was performed on the list of genes ranked by their log2 Fold Changes for the sex (when RNA_DI = 0, see @sec-dge_analysis). `r n_sig_path_sex` pathways were significantly (adjusted p-value < 0.05) enriched in genes that were differently expressed between men and women. Among them, `r n_sig_up_path_sex` pathways were enriched in genes up-regulated in men, and `r n_sig_down_path_di_M` pathways were enriched in genes down-regulated in men.
 
 
 # Discussion and Conclusion {#sec-discussion_and_conclusion}
+In this study, we aimed to explore the differences in the transcriptomes of males and females subcutaneous adipose tissue by using a new metric: the dimorphism index. This index creates a continuous spectrum of sexual dimorphism in a quantitative and unbiased way.
 
-- The fact that the sexual dimorphism index has a different meaning for men and women makes its use in statistical "tests" more difficult, such as the choice of the design for DESeq2 DGE analysis.
+A descriptive analysis of the count data and sample data allowed us to compare the distribution different clinical and technical covariates. We then determined, with the Pearson correlation index, if those variables were correlated with each other and with the dimorphism indices. Interestingly, we observed that the female and male dimorphism indices computed from whole RNA_seq transcriptomes were only lowly positively correlated with the same indices computed from AI-based histology profiles. Nonetheless, this correlation was statistically significant.
 
-- GSEA: the ranking of the genes passed to the fgsea algorithm can be based on different statistics (log2FC, test statistic, adjusted p-value, log2FC * (log10(padj))), and the choice of this ranking changes the results of GSEA, making interpretation of results difficult.
+By plotting the first two principal components of PCAs performed on the 500 most variant genes in the data set, we identified that the age and the Hardy scale were potential confounding factors for the dimorphism indices. We also observed that the sex and the dimorphism indices were great sources of variation in gene expression: the samples formed clusters based on the sex that were partially separated along PC1. A clear gradient of RNA DI values could also be observed along PC1.
+
+This descriptive analysis allowed us to determine an appropriate design for the differential gene expression analysis. Of note, we decided to not include too many covariates in the design because the other covariates did not seem to be great sources of variation in gene expression and because by adding more covariates, more parameters in the GLMs need to be estimated. Having more parameters in the GLMs decreases the number of degrees of freedom, and thus increases the standard error on the estimated parameters $\hat{\beta_i}$. This in turn can lower the statistical power. The standard error on the $\hat{\beta_i}$ could be decreased by having more samples.
+
+The differential gene expression analyses revealed that a large number of genes were associated with the male and female dimorphism indices. The majority of genes that were positively/negatively associated with the female dimorphism index were negatively/positively associated with the male dimorphism index.
+We also observed, in @sec-annex_alt, that the choice of the design could have a significant influence on the number of detected genes.
+
+In @sec-receptors, we determined which hormone receptors were associated with the dimorphism indices and the sex. Expected hormone receptors, the sex hormones receptors, were found in this list. But we also identified hormone receptors that do not have a direct sexual function, but instead play a role in the regulation of circadian rhythms. In the future, it would be interesting to further study this phenomenon and the differences in males and females as it is already known that the circadian clock controls the transcription of genes involved in carbohydrate and lipid metabolism and perturbation of circadian rhythms is linked to obesity and type 2 diabetes [12].
+
+We ended this exploratory study with a Gene Set Enrichment Analysis (GSEA), which revealed that the dimorphism indices and the sex are associated with aerobic and lipid metabolism genes and cell respiration pathways. However, this analysis also highlighted a limitation of GSEA, which is related to the fact that the ranked list of the genes passed to the GSEA algorithm can be based on different statistics (log2FCs, test statistics, adjusted p-values, log2FC * (log10(padj)), etc.). The choice of this ranking changes the results of GSEA (results not shown), making interpretation of results difficult.
 
 
 # Annexes {#sec-annexes}
@@ -1071,6 +1128,11 @@ In conclusion, when changing the original design by the alternative design to de
 [9] <https://www.ncbi.nlm.nih.gov/gene/9975>
 
 [10] <https://www.ncbi.nlm.nih.gov/gene/6096>
+
+[11] Mauvais-Jarvis F. Sex differences in energy metabolism: natural selection, mechanisms and consequences. *Nat Rev Nephrol*. 2024 Jan;20(1):56-69. doi: 10.1038/s41581-023-00781-2. Epub 2023 Nov 3. PMID: 37923858.
+
+[12] Hansen, J., Timmers, S., Moonen-Kornips, E., Duez, H., Staels, B., Hesselink, M. K. C., and Schrauwen, P. (2016). Synchronized human skeletal myotubes of lean, obese and type 2 diabetic patients maintain circadian oscillation of clock genes. *Scientific Reports*, 6(1):35047.
+
 
 ## Session Information {#sec-session_info}
 
